@@ -1,129 +1,102 @@
 "use client"
 
 import { useState } from "react"
-import { ChevronDown, ChevronUp } from "lucide-react"
-import { motion } from "framer-motion"
-import { useInView } from "react-intersection-observer"
-import localFont from "next/font/local"
+import { Plus, Minus } from "lucide-react"
 
-const Hacked_KerX = localFont({
-  src: "../public/fonts/Hacked-KerX.ttf",
-  variable: "--custom-font",
-})
-const faqs = [
+interface FAQItem {
+  question: string
+  answer: string
+}
+
+// TODO: swap in real Hack 6.0 copy
+const faqs: FAQItem[] = [
   {
-    question: "What exactly is Hack 5.0 - Obsidian Saga?",
+    question: "What exactly is Hack 6.0?",
     answer:
-      "It is not just a hackathon—it is an epic fusion of creativity, caffeine, and code! Think of it as a 48-hour sprint where brilliant minds come together to solve real problems, build cool stuff, and maybe win some brag-worthy prizes",
+      "It's a 48-hour national-level onsite hackathon where teams build real projects, get mentored by industry experts, and compete for prizes.",
   },
   {
     question: "Who can participate?",
     answer:
-      "Whether you're a coding ninja, a design wizard, or just someone with crazy ideas—everyone is welcome! Students, beginners, pros... if you have got the passion, you have got a spot here.",
+      "Anyone with an idea and the drive to build it — students, beginners, and pros are all welcome.",
   },
   {
     question: "How do I register?",
     answer:
-      'Just click that big, shiny "Register Now" button on our website, fill in your details, and boom—you are in! Do not wait too long though; spots fill up fast!',
+      "Hit the Register Now button, fill in your details, and you're in. Spots are limited, so don't wait too long.",
   },
   {
-    question: "What if I do not have a team?",
+    question: "What if I don't have a team?",
     answer:
-      "No worries! We have got a team formation session before the hackathon kicks off. So, you will find your crew and maybe your next best friends.",
+      "No problem — we run a team formation session before hacking begins so you can find teammates on the spot.",
   },
   {
     question: "Can I participate solo?",
-    answer: "No, teams must have a minimum of 2 members (maximum 4). We will help you find teammates if needed!",
+    answer:
+      "Teams need a minimum of 2 members (max 4). We'll help you find teammates if you're short.",
   },
   {
     question: "Is there a registration fee?",
-    answer: "No, Hack 5.0 is completely free! Just register and you are in. There are no registration fees or hidden charges.",
+    answer: "No, Hack 6.0 is completely free to participate in.",
+  },
+  {
+  question: "Can I use my own problem statement?",
+  answer:
+    "Yes! We don't hand out fixed problem statements — you're free to bring your own idea and build it, as long as it fits within our tracks.",
   },
 ]
 
-export default function FaqSection() {
-  const [openIndex, setOpenIndex] = useState<number | null>(null)
-  const [ref, inView] = useInView({
-    triggerOnce: true,
-    threshold: 0.1,
-  })
+export default function FAQ() {
+  const [openIndex, setOpenIndex] = useState<number | null>(0)
 
-  const toggleFaq = (index: number) => {
-    setOpenIndex(openIndex === index ? null : index)
-  }
-
-  const container = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.2,
-        delayChildren: 0.3,
-      },
-    },
-  }
-
-  const item = {
-    hidden: { y: 20, opacity: 0 },
-    visible: { y: 0, opacity: 1, transition: { duration: 0.8, ease: "easeOut" } },
+  const toggle = (index: number) => {
+    setOpenIndex((prev) => (prev === index ? null : index))
   }
 
   return (
-    <section id="faq" className="py-20 bg-background relative">
-      <div className="absolute inset-0 -z-10">
-        <div className="absolute top-1/4 right-1/4 w-72 h-72 rounded-full bg-gray-700/20 filter blur-[120px]"></div>
-        <div className="absolute bottom-1/2 left-1/2 w-80 h-80 rounded-full bg-gray-700/20 filter blur-[100px]"></div>
-      </div>
-
-      <motion.div
-        ref={ref}
-        className="container mx-auto px-4"
-        variants={container}
-        initial="hidden"
-        animate={inView ? "visible" : "hidden"}
-      >
-        <motion.div variants={item} className="text-center mb-16">
-          <h2 className={`text-3xl md:text-5xl  mb-4 ${Hacked_KerX.className}`}>
-            Frequently <span className="text-primary">Asked Questions</span>
+    <section id="faq" className="w-full bg-black py-20 px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-3xl">
+        <div className="text-center mb-12">
+          <h2 className="text-3xl sm:text-4xl font-bold text-white">
+            Frequently Asked Questions
           </h2>
-          <div className="w-20 h-1 bg-primary mx-auto mb-6"></div>
-          <p className="text-xl max-w-2xl mx-auto text-gray-300">Got questions? We've got answers!</p>
-        </motion.div>
-
-        <div className="max-w-3xl mx-auto">
-          {faqs.map((faq, index) => (
-            <motion.div key={index} variants={item} className="mb-4">
-              <div className="bg-gradient-to-br from-gray-900/80 to-gray-800/40 backdrop-blur-sm rounded-lg border border-gray-700 overflow-hidden transition-all duration-300 hover:shadow-lg">
-                <button
-                  className="w-full p-4 md:p-6 text-left flex justify-between items-center"
-                  onClick={() => toggleFaq(index)}
-                >
-                  <h3 className="text-base md:text-lg font-medium pr-4">{faq.question}</h3>
-                  {openIndex === index ? (
-                    <ChevronUp className="text-primary flex-shrink-0" />
-                  ) : (
-                    <ChevronDown className="text-primary flex-shrink-0" />
-                  )}
-                </button>
-                <motion.div
-                  initial={false}
-                  animate={{
-                    height: openIndex === index ? "auto" : 0,
-                    opacity: openIndex === index ? 1 : 0,
-                  }}
-                  transition={{ duration: 0.3 }}
-                  className="overflow-hidden"
-                >
-                  <div className="p-4 md:p-6 pt-0 text-sm md:text-base text-gray-300 border-t border-primary/10">
-                    {faq.answer}
-                  </div>
-                </motion.div>
-              </div>
-            </motion.div>
-          ))}
+          <p className="mt-3 text-gray-400">Got questions? We've got answers!</p>
         </div>
-      </motion.div>
+
+        <div className="space-y-4">
+          {faqs.map((faq, index) => {
+            const isOpen = openIndex === index
+            return (
+              <div
+                key={index}
+                className="rounded-xl border border-white/10 bg-white/5 overflow-hidden transition-colors hover:border-white/20"
+              >
+                <button
+                  type="button"
+                  onClick={() => toggle(index)}
+                  aria-expanded={isOpen}
+                  className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left"
+                >
+                  <span className="font-medium text-white">{faq.question}</span>
+                  <span className="shrink-0 text-purple-400">
+                    {isOpen ? <Minus size={20} /> : <Plus size={20} />}
+                  </span>
+                </button>
+
+                <div
+                  className={`grid transition-all duration-300 ease-in-out ${
+                    isOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
+                  }`}
+                >
+                  <div className="overflow-hidden">
+                    <p className="px-5 pb-4 text-gray-400 leading-relaxed">{faq.answer}</p>
+                  </div>
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      </div>
     </section>
   )
 }
-

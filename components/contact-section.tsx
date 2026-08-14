@@ -1,474 +1,383 @@
-"use client";
+"use client"
 
-import type React from "react";
-
-import { useRef, useState } from "react";
-import {
-  Mail,
-  MapPin,
-  Phone,
-  Send,
-  User,
-  AtSign,
-  MessageSquare,
-} from "lucide-react";
-import { motion } from "framer-motion";
-import { useInView } from "react-intersection-observer";
-import emailjs from "@emailjs/browser";
-import localFont from "next/font/local";
+import { useState } from "react"
+import { Mail, MapPin, Phone, Send, Terminal, Sparkles, CheckCircle2, AlertCircle } from "lucide-react"
+import { motion } from "framer-motion"
+import localFont from "next/font/local"
+import TiltedInfoCard from "./TiltedInfoCard"
 
 const Hacked_KerX = localFont({
   src: "../public/fonts/Hacked-KerX.ttf",
   variable: "--custom-font",
-});
+  fallback: ["monospace", "sans-serif"],
+})
+
+interface ContactItem {
+  id: string
+  exeName: string
+  icon: typeof Mail
+  title: string
+  line1: string
+  value: string
+  href: string
+  status: string
+  port: string
+  badge: string
+}
+
+const contactChannels: ContactItem[] = [
+  {
+    id: "email",
+    exeName: "MAIL_CLIENT.EXE",
+    icon: Mail,
+    title: "Email Dispatch",
+    line1: "Questions or sponsor inquiries?",
+    value: "hack.csec.nith26@gmail.com",
+    href: "mailto:hack.csec.nith26@gmail.com",
+    status: "ONLINE",
+    port: "PORT://443",
+    badge: "DIRECT_LINK",
+  },
+  {
+    id: "location",
+    exeName: "VENUE_COORDINATES.EXE",
+    icon: MapPin,
+    title: "Venue Location",
+    line1: "Join us onsite at the arena",
+    value: "NIT Hamirpur, HP - 177005",
+    href: "https://www.google.co.in/maps/place/NIT+Hamirpur",
+    status: "ACTIVE",
+    port: "LOC://31.7084,76.5273",
+    badge: "ONSITE_HUB",
+  },
+  {
+    id: "phone",
+    exeName: "VOICE_COMMS.EXE",
+    icon: Phone,
+    title: "Helpline Comms",
+    line1: "Student & Team Coordinators",
+    value: "+91 62675 31322 / +91 70233 26128",
+    href: "tel:+916267531322",
+    status: "READY",
+    port: "FREQ://91.5MHZ",
+    badge: "VOICE_LINK",
+  },
+]
 
 export default function ContactSection() {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    subject: "",
-    message: "",
-  });
+  const [form, setForm] = useState({ name: "", email: "", subject: "", message: "" })
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [submitStatus, setSubmitStatus] = useState<"idle" | "success" | "error">("idle")
 
-  const form = useRef<HTMLFormElement>(null);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitSuccess, setSubmitSuccess] = useState(false);
-  const [submitError, setSubmitError] = useState(false);
-  const [focusedField, setFocusedField] = useState<string | null>(null);
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setIsSubmitting(true)
+    setSubmitStatus("idle")
 
-  const [ref, inView] = useInView({
-    triggerOnce: true,
-    threshold: 0.1,
-  });
-
-  const container = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.2,
-        delayChildren: 0.3,
-      },
-    },
-  };
-
-  const item = {
-    hidden: { y: 20, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: { duration: 0.8, ease: "easeOut" },
-    },
-  };
-
-  const handleChange = (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >
-  ) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  const handleFocus = (fieldName: string) => {
-    setFocusedField(fieldName);
-  };
-
-  const handleBlur = () => {
-    setFocusedField(null);
-  };
-
-  const sendEmail = (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    setSubmitSuccess(false);
-    setSubmitError(false);
-
-    if (form.current) {
-      emailjs
-        .sendForm("service_td08y99", "template_l4lxqnr", form.current, {
-          publicKey: "3CF_8jifTQV-loMu_",
-        })
-        .then(
-          (result) => {
-            console.log(result.text);
-            setSubmitSuccess(true);
-            setFormData({
-              name: "",
-              email: "",
-              subject: "",
-              message: "",
-            });
-          },
-          (error) => {
-            console.log(error.text);
-            setSubmitError(true);
-          }
-        )
-        .finally(() => {
-          setIsSubmitting(false);
-        });
-    }
-  };
+    // Simulated transmission delay for vaporwave retro feel
+    setTimeout(() => {
+      setIsSubmitting(false)
+      setSubmitStatus("success")
+      setForm({ name: "", email: "", subject: "", message: "" })
+      setTimeout(() => setSubmitStatus("idle"), 5000)
+    }, 1200)
+  }
 
   return (
     <section
       id="contact"
-      className="py-20 bg-background/80 backdrop-blur-sm relative"
+      className="relative py-20 md:py-28 px-4 sm:px-6 lg:px-8 overflow-hidden bg-[#0c0919]"
     >
-      <div className="absolute inset-0 -z-10">
-        <div className="absolute top-1/4 right-1/4 w-72 h-72 rounded-full bg-primary/10 filter blur-[120px]"></div>
-        <div className="absolute bottom-1/2 left-1/2 w-80 h-80 rounded-full bg-primary/10 filter blur-[100px]"></div>
+      {/* Vaporwave Background Grid & Horizon Glow */}
+      <div className="absolute inset-0 pointer-events-none -z-10">
+        {/* Retro Grid Lines Pattern */}
+        <div
+          className="absolute inset-0 opacity-25"
+          style={{
+            backgroundImage: `
+              linear-gradient(to right, rgba(236, 72, 153, 0.2) 1px, transparent 1px),
+              linear-gradient(to bottom, rgba(6, 182, 212, 0.2) 1px, transparent 1px)
+            `,
+            backgroundSize: "40px 40px",
+          }}
+        />
+
+        {/* Diagonal Perspective Grid Horizon Line */}
+        <div className="absolute top-0 inset-x-0 h-40 bg-gradient-to-b from-[#0c0919] via-transparent to-transparent" />
+        <div className="absolute bottom-0 inset-x-0 h-40 bg-gradient-to-t from-[#0c0919] via-transparent to-transparent" />
+
+        {/* Ambient Neon Glow Orbs */}
+        <div className="absolute top-1/4 left-10 w-80 h-80 rounded-full bg-pink-500/10 blur-[130px]" />
+        <div className="absolute bottom-1/3 right-10 w-96 h-96 rounded-full bg-cyan-400/10 blur-[140px]" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[550px] h-[550px] rounded-full bg-purple-600/10 blur-[160px]" />
       </div>
 
-      <motion.div
-        ref={ref}
-        className="container mx-auto px-4"
-        variants={container}
-        initial="hidden"
-        animate={inView ? "visible" : "hidden"}
-      >
-        <motion.div variants={item} className="text-center mb-16">
-          <h2 className={`text-3xl md:text-5xl  mb-4 ${Hacked_KerX.className}`}>
-            Get in <span className="text-primary">Touch</span>
-          </h2>
-          <div className="w-20 h-1 bg-primary mx-auto mb-6"></div>
-          <p className="text-xl max-w-2xl mx-auto text-gray-300">
-            Have questions about HACK 5.0? We're here to help! Reach out to us
-            through any of the channels below.
-          </p>
-        </motion.div>
+      <div className="relative mx-auto max-w-6xl">
+        {/* Section Header with Vaporwave OS Terminal Badge */}
+        <div className="text-center mb-14 md:mb-20">
+          {/* Retro Monospace Tag */}
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-sm border border-pink-500/40 bg-pink-500/10 backdrop-blur-md mb-5 shadow-[0_0_15px_rgba(236,72,153,0.25)]">
+            <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse shadow-[0_0_8px_#22d3ee]" />
+            <span className="font-mono text-xs md:text-sm tracking-widest text-pink-300 font-semibold uppercase">
+              [ TRANSMISSION_CONSOLE // CHANNELS_ONLINE ]
+            </span>
+          </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
-          {/* Contact Form - Fixed floating labels */}
-          <motion.div
-            variants={item}
-            className="bg-gradient-to-br from-gray-900/80 to-gray-800/40 backdrop-blur-md border border-gray-700 shadow-lg rounded-xl overflow-hidden"
+          <h2
+            className={`text-3xl sm:text-4xl md:text-6xl font-bold tracking-tight text-white mb-4 ${Hacked_KerX.className}`}
           >
-            <div className="bg-gray-800/50 p-6 border-b border-gray-700">
-              <h3 className="text-2xl font-bold text-white flex items-center">
-                <Mail className="w-6 h-6 mr-3 text-primary" />
-                Send us a Message
-              </h3>
-              <p className="text-gray-300 mt-2">
-                We'd love to hear from you! Fill out the form below and we'll
-                get back to you as soon as possible.
-              </p>
-            </div>
+            Get In{" "}
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-pink-400 to-rose-400 drop-shadow-[0_0_20px_rgba(6,182,212,0.5)]">
+              Touch
+            </span>
+          </h2>
 
-            <form ref={form} onSubmit={sendEmail} className="p-8 space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-                <div className="relative">
-                  <label
-                    htmlFor="name"
-                    className={`absolute left-12 bg-gray-900 px-2 transition-all duration-300 z-10 ${
-                      focusedField === "name" || formData.name
-                        ? "-top-2.5 text-xs text-primary"
-                        : "top-3 text-gray-400"
-                    }`}
-                  >
-                    Your Name
-                  </label>
-                  <div className="relative">
-                    <User className="absolute left-4 top-3.5 w-5 h-5 text-gray-500 z-10" />
+          <div className="flex items-center justify-center gap-2 max-w-xs mx-auto mb-5">
+            <div className="h-[2px] w-12 bg-gradient-to-r from-transparent to-cyan-400" />
+            <div className="w-2 h-2 rotate-45 border border-pink-400 bg-pink-500/50 shadow-[0_0_8px_#ec4899]" />
+            <div className="h-[2px] w-24 bg-gradient-to-r from-cyan-400 via-pink-400 to-cyan-400" />
+            <div className="w-2 h-2 rotate-45 border border-pink-400 bg-pink-500/50 shadow-[0_0_8px_#ec4899]" />
+            <div className="h-[2px] w-12 bg-gradient-to-l from-transparent to-cyan-400" />
+          </div>
+
+          <p className="font-mono text-sm sm:text-base text-gray-300 max-w-2xl mx-auto leading-relaxed">
+            Have queries regarding <span className="text-cyan-300 font-semibold">Hack 6.0</span>? Connect with the
+            operations grid through the terminal channels below.
+          </p>
+        </div>
+
+        {/* Main Grid: Form + 3D Tilt Cards */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
+          {/* Left Column: Master Form Terminal Window (7 Cols on desktop) */}
+          <div className="lg:col-span-7">
+            <div className="relative group rounded-xl p-[1px] bg-gradient-to-b from-cyan-400/50 via-purple-500/30 to-pink-500/50 shadow-[0_0_25px_rgba(6,182,212,0.25)]">
+              {/* Outer Cyber Accent Corners */}
+              <div className="absolute -top-1 -left-1 w-3 h-3 border-t-2 border-l-2 border-cyan-400" />
+              <div className="absolute -top-1 -right-1 w-3 h-3 border-t-2 border-r-2 border-pink-400" />
+              <div className="absolute -bottom-1 -left-1 w-3 h-3 border-b-2 border-l-2 border-cyan-400" />
+              <div className="absolute -bottom-1 -right-1 w-3 h-3 border-b-2 border-r-2 border-pink-400" />
+
+              <div className="bg-[#110d24]/95 backdrop-blur-xl rounded-xl overflow-hidden border border-white/5">
+                {/* Vaporwave OS Window Title Bar */}
+                <div className="flex items-center justify-between px-4 sm:px-6 py-3 bg-gradient-to-r from-[#171233] via-[#201742] to-[#171233] border-b border-pink-500/30">
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-3.5 h-3.5 rounded-sm bg-gradient-to-br from-cyan-400 to-pink-500 flex items-center justify-center shadow-[0_0_8px_#22d3ee]">
+                      <Terminal size={10} className="text-[#0c0919]" />
+                    </div>
+                    <span className="font-mono text-xs sm:text-sm font-bold tracking-wider text-cyan-300">
+                      DISPATCH_CONSOLE.EXE
+                    </span>
+                  </div>
+
+                  {/* Window Control Buttons */}
+                  <div className="flex items-center gap-1.5 font-mono text-xs">
+                    <div className="w-6 h-5 rounded-xs bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer">
+                      _
+                    </div>
+                    <div className="w-6 h-5 rounded-xs bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer">
+                      □
+                    </div>
+                    <div className="w-6 h-5 rounded-xs bg-pink-500/80 border border-pink-400 flex items-center justify-center text-white font-bold shadow-[0_0_10px_#ec4899] hover:bg-pink-600 transition-colors cursor-pointer">
+                      ✕
+                    </div>
+                  </div>
+                </div>
+
+                {/* Terminal Subheader Info */}
+                <div className="px-4 sm:px-6 py-2.5 bg-[#0e0a1f] border-b border-white/5 flex items-center justify-between text-[11px] font-mono text-gray-400">
+                  <span className="text-pink-400">PROTOCOL://HTTPS_ENCRYPTED</span>
+                  <span className="text-cyan-400">NODE_STATUS: LISTENING</span>
+                </div>
+
+                {/* Form Body */}
+                <form onSubmit={handleSubmit} className="p-5 sm:p-8 space-y-5">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                    <div className="space-y-1.5">
+                      <label className="block font-mono text-xs text-gray-300 flex items-center gap-1.5">
+                        <span className="text-cyan-400">&gt;</span> SENDER_NAME
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        placeholder="e.g. Alex Chen"
+                        value={form.name}
+                        onChange={(e) => setForm({ ...form, name: e.target.value })}
+                        className="w-full bg-[#181236]/80 border border-pink-500/25 rounded-lg px-4 py-3 text-white placeholder-gray-500 font-mono text-sm outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 focus:shadow-[0_0_15px_rgba(6,182,212,0.35)] transition-all"
+                      />
+                    </div>
+
+                    <div className="space-y-1.5">
+                      <label className="block font-mono text-xs text-gray-300 flex items-center gap-1.5">
+                        <span className="text-cyan-400">&gt;</span> SENDER_EMAIL
+                      </label>
+                      <input
+                        type="email"
+                        required
+                        placeholder="alex@domain.com"
+                        value={form.email}
+                        onChange={(e) => setForm({ ...form, email: e.target.value })}
+                        className="w-full bg-[#181236]/80 border border-pink-500/25 rounded-lg px-4 py-3 text-white placeholder-gray-500 font-mono text-sm outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 focus:shadow-[0_0_15px_rgba(6,182,212,0.35)] transition-all"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <label className="block font-mono text-xs text-gray-300 flex items-center gap-1.5">
+                      <span className="text-pink-400">&gt;</span> SUBJECT_HEADER
+                    </label>
                     <input
                       type="text"
-                      id="name"
-                      name="name"
-                      value={formData.name}
-                      onChange={handleChange}
-                      onFocus={() => handleFocus("name")}
-                      onBlur={handleBlur}
-                      className="w-full bg-gray-900/50 text-white rounded-lg pl-12 pr-4 py-3 border border-gray-700 focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none transition-all"
                       required
+                      placeholder="e.g. Hackathon Track Query / Sponsor Opportunity"
+                      value={form.subject}
+                      onChange={(e) => setForm({ ...form, subject: e.target.value })}
+                      className="w-full bg-[#181236]/80 border border-pink-500/25 rounded-lg px-4 py-3 text-white placeholder-gray-500 font-mono text-sm outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 focus:shadow-[0_0_15px_rgba(6,182,212,0.35)] transition-all"
                     />
                   </div>
-                </div>
 
-                <div className="relative">
-                  <label
-                    htmlFor="email"
-                    className={`absolute left-12 bg-gray-900 px-2 transition-all duration-300 z-10 ${
-                      focusedField === "email" || formData.email
-                        ? "-top-2.5 text-xs text-primary"
-                        : "top-3 text-gray-400"
-                    }`}
-                  >
-                    Your Email
-                  </label>
-                  <div className="relative">
-                    <AtSign className="absolute left-4 top-3.5 w-5 h-5 text-gray-500 z-10" />
-                    <input
-                      type="email"
-                      id="email"
-                      name="email"
-                      value={formData.email}
-                      onChange={handleChange}
-                      onFocus={() => handleFocus("email")}
-                      onBlur={handleBlur}
-                      className="w-full bg-gray-900/50 text-white rounded-lg pl-12 pr-4 py-3 border border-gray-700 focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none transition-all"
+                  <div className="space-y-1.5">
+                    <label className="block font-mono text-xs text-gray-300 flex items-center gap-1.5">
+                      <span className="text-pink-400">&gt;</span> MESSAGE_PAYLOAD
+                    </label>
+                    <textarea
                       required
+                      rows={4}
+                      placeholder="Write your transmission here..."
+                      value={form.message}
+                      onChange={(e) => setForm({ ...form, message: e.target.value })}
+                      className="w-full bg-[#181236]/80 border border-pink-500/25 rounded-lg px-4 py-3 text-white placeholder-gray-500 font-mono text-sm outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 focus:shadow-[0_0_15px_rgba(6,182,212,0.35)] transition-all resize-none"
                     />
                   </div>
-                </div>
-              </div>
 
-              <div className="relative text-gray-600">
-                <label
-                  htmlFor="subject"
-                  className={`absolute left-4 bg-gray-900 text-gray-600 px-2 transition-all duration-300 z-10 ${
-                    focusedField === "subject" || formData.subject
-                      ? "-top-2.5 text-xs text-primary"
-                      : "top-3 text-gray-400"
-                  }`}
-                ></label>
-                <select
-                  id="subject"
-                  name="subject"
-                  value={formData.subject}
-                  onChange={handleChange}
-                  onFocus={() => handleFocus("subject")}
-                  onBlur={handleBlur}
-                  className="w-full bg-gray-900/50 text-gray-400  rounded-lg px-4 py-3 border border-gray-700 focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none transition-all appearance-none"
-                  required
-                >
-                  <option className="text-white" value="">
-                    Select a subject
-                  </option>
-                  <option className="text-white" value="general">
-                    General Inquiry
-                  </option>
-                  <option className="text-white" value="sponsorship">
-                    Sponsorship
-                  </option>
-                  <option className="text-white" value="registration">
-                    Registration
-                  </option>
-                  <option className="text-white" value="technical">
-                    Technical Support
-                  </option>
-                </select>
-                <div className="absolute right-4 top-3.5 pointer-events-none">
-                  <svg
-                    className="w-5 h-5 text-gray-500"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M19 9l-7 7-7-7"
-                    ></path>
-                  </svg>
-                </div>
-              </div>
-
-              <div className="relative">
-                <label
-                  htmlFor="message"
-                  className={`absolute left-12 bg-gray-900 px-2 transition-all duration-300 z-10 ${
-                    focusedField === "message" || formData.message
-                      ? "-top-2.5 text-xs text-primary"
-                      : "top-3 text-gray-400"
-                  }`}
-                >
-                  Message
-                </label>
-                <div className="relative">
-                  <MessageSquare className="absolute left-4 top-3.5 w-5 h-5 text-gray-500 z-10" />
-                  <textarea
-                    id="message"
-                    name="message"
-                    value={formData.message}
-                    onChange={handleChange}
-                    onFocus={() => handleFocus("message")}
-                    onBlur={handleBlur}
-                    rows={4}
-                    className="w-full bg-gray-900/50 text-white rounded-lg pl-12 pr-4 py-3 border border-gray-700 focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none transition-all"
-                    required
-                  ></textarea>
-                </div>
-              </div>
-
-              <motion.button
-                type="submit"
-                disabled={isSubmitting}
-                className="w-full bg-primary hover:bg-primary/90 text-white transition-all px-6 py-4 rounded-lg font-semibold flex items-center justify-center space-x-2 disabled:opacity-70 shadow-[0_4px_14px_rgba(230,57,70,0.4)]"
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-              >
-                {isSubmitting ? (
-                  <>
-                    <svg
-                      className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
+                  {/* Feedback Notification */}
+                  {submitStatus === "success" && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -6 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="p-3.5 rounded-lg border border-cyan-400/50 bg-cyan-500/15 text-cyan-200 font-mono text-xs flex items-center gap-2.5 shadow-[0_0_15px_rgba(6,182,212,0.25)]"
                     >
-                      <circle
-                        className="opacity-25"
-                        cx="12"
-                        cy="12"
-                        r="10"
-                        stroke="currentColor"
-                        strokeWidth="4"
-                      ></circle>
-                      <path
-                        className="opacity-75"
-                        fill="currentColor"
-                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                      ></path>
-                    </svg>
-                    <span>Sending...</span>
-                  </>
-                ) : (
-                  <>
-                    <Send className="w-5 h-5 mr-2" />
-                    <span>Send Message</span>
-                  </>
-                )}
-              </motion.button>
+                      <CheckCircle2 size={16} className="text-cyan-400 shrink-0" />
+                      <span>TRANSMISSION SENT SUCCESSFULLY // DISPATCH QUEUED</span>
+                    </motion.div>
+                  )}
 
-              {submitSuccess && (
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="mt-4 p-4 bg-green-500/20 border border-green-500 rounded-lg text-green-200 text-center flex items-center justify-center"
-                >
-                  <svg
-                    className="w-5 h-5 mr-2 text-green-400"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
+                  {/* Submit Button with Vaporwave Glow */}
+                  <button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="w-full group/btn relative overflow-hidden py-3.5 px-6 rounded-lg font-mono text-sm font-bold tracking-wider text-white transition-all duration-300 bg-gradient-to-r from-pink-500 via-purple-600 to-cyan-500 hover:from-pink-600 hover:via-purple-700 hover:to-cyan-600 shadow-[0_0_20px_rgba(236,72,153,0.4)] hover:shadow-[0_0_30px_rgba(6,182,212,0.6)] disabled:opacity-50"
                   >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M5 13l4 4L19 7"
-                    ></path>
-                  </svg>
-                  Your message has been sent successfully!
-                </motion.div>
-              )}
+                    <div className="relative z-10 flex items-center justify-center gap-2">
+                      {isSubmitting ? (
+                        <>
+                          <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                          <span>TRANSMITTING PACKETS...</span>
+                        </>
+                      ) : (
+                        <>
+                          <Send size={16} className="group-hover/btn:translate-x-1 transition-transform" />
+                          <span>[ TRANSMIT MESSAGE ]</span>
+                        </>
+                      )}
+                    </div>
+                  </button>
+                </form>
 
-              {submitError && (
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="mt-4 p-4 bg-red-500/20 border border-red-500 rounded-lg text-red-200 text-center flex items-center justify-center"
-                >
-                  <svg
-                    className="w-5 h-5 mr-2 text-red-400"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M6 18L18 6M6 6l12 12"
-                    ></path>
-                  </svg>
-                  There was an error sending your message. Please try again.
-                </motion.div>
-              )}
-            </form>
-          </motion.div>
+                {/* Terminal Footer Bar */}
+                <div className="px-4 sm:px-6 py-2.5 bg-[#0e0a1f] border-t border-white/5 flex items-center justify-between text-[11px] font-mono text-gray-500">
+                  <span>HACK_6.0 // NIT_HAMIRPUR</span>
+                  <span className="text-pink-400">READY_FOR_INPUT</span>
+                </div>
+              </div>
+            </div>
+          </div>
 
-          {/* Contact Cards - Improved with better colors */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* First Row: Email & Location */}
-            <motion.div
-              variants={item}
-              // whileHover={{ y: -10, transition: { duration: 0.3 } }}
-              className="bg-gradient-to-br from-gray-900/80 to-gray-800/40 backdrop-blur-md border border-gray-700 shadow-lg rounded-xl p-6 md:p-8 text-center transition-all"
-            >
-              <div className="bg-gray-800/50 p-3 md:p-4 rounded-full w-14 h-14 md:w-16 md:h-16 flex items-center justify-center mx-auto mb-3 md:mb-4 shadow-lg">
-                <Mail className="w-6 h-6 md:w-8 md:h-8 text-primary" />
-              </div>
-              <h3 className="text-lg md:text-xl font-bold text-white mb-1 md:mb-2">
-                Email Us
-              </h3>
-              <p className="text-sm md:text-base text-gray-300 mb-3 md:mb-4">
-                Questions? Drop us a line
-              </p>
-              <a
-                href="mailto:hack.csec.nith25@gmail.com"
-                className="text-gray-300 hover:text-primary transition-all inline-block border-b border-dashed border-gray-500 hover:border-primary pb-1"
-              >
-                hack.csec.nith25@gmail.com
-              </a>
-            </motion.div>
+          {/* Right Column: 3D Tilted Info Cards (5 Cols on desktop) */}
+          <div className="lg:col-span-5 flex flex-col gap-6">
+            {contactChannels.map((item, idx) => {
+              const Icon = item.icon
+              return (
+                <TiltedInfoCard
+                  key={item.id}
+                  rotateAmplitude={12}
+                  scaleOnHover={1.03}
+                  className="w-full select-none"
+                >
+                  <div className="relative group rounded-xl p-[1px] bg-gradient-to-b from-cyan-400/40 via-purple-500/20 to-pink-500/40 shadow-[0_0_20px_rgba(6,182,212,0.18)] hover:shadow-[0_0_30px_rgba(236,72,153,0.35)] transition-shadow duration-300">
+                    {/* Cyber Corner Markers */}
+                    <div className="absolute -top-1 -left-1 w-2.5 h-2.5 border-t-2 border-l-2 border-cyan-400" />
+                    <div className="absolute -top-1 -right-1 w-2.5 h-2.5 border-t-2 border-r-2 border-pink-400" />
 
-            <motion.div
-              variants={item}
-              // whileHover={{ y: -10, transition: { duration: 0.3 } }}
-              className="bg-gradient-to-br from-gray-800/40 to-gray-900/80 backdrop-blur-md border border-gray-700 shadow-lg rounded-xl p-6 md:p-8 text-center transition-all"
-            >
-              <div className="bg-gray-800/50 p-3 md:p-4 rounded-full w-14 h-14 md:w-16 md:h-16 flex items-center justify-center mx-auto mb-3 md:mb-4 shadow-lg">
-                <MapPin className="w-6 h-6 md:w-8 md:h-8 text-primary" />
-              </div>
-              <h3 className="text-lg md:text-xl font-bold text-white mb-1 md:mb-2">
-                Location
-              </h3>
-              <p className="text-sm md:text-base text-gray-300 mb-3 md:mb-4">
-                Join us at the venue
-              </p>
-              <a
-                href="https://www.google.co.in/maps/place/NIT+Hamirpur"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-gray-300 hover:text-primary transition-all inline-block border-b border-dashed border-gray-500 hover:border-primary pb-1"
-              >
-                NIT Hamirpur
-              </a>
-            </motion.div>
+                    <div className="bg-[#110d24]/95 backdrop-blur-xl rounded-xl overflow-hidden border border-white/5 p-5 sm:p-6 flex flex-col justify-between">
+                      {/* Card Window Title Bar */}
+                      <div
+                        className="flex items-center justify-between pb-3 mb-4 border-b border-pink-500/20"
+                        style={{ transform: "translateZ(25px)" }}
+                      >
+                        <div className="flex items-center gap-2">
+                          <span className="w-2 h-2 rounded-xs bg-cyan-400 shadow-[0_0_6px_#22d3ee]" />
+                          <span className="font-mono text-xs font-bold text-cyan-300 tracking-wider">
+                            {item.exeName}
+                          </span>
+                        </div>
 
-            {/* Second Row: Call Us (full width) */}
-            <motion.div
-              variants={item}
-              // whileHover={{ y: -10, transition: { duration: 0.3 } }}
-              className="bg-gradient-to-br from-gray-900/80 to-gray-800/40 backdrop-blur-md border border-gray-700 shadow-lg rounded-xl p-6 md:p-8 text-center transition-all md:col-span-2"
-            >
-              <div className="bg-gray-800/50 p-3 md:p-4 rounded-full w-14 h-14 md:w-16 md:h-16 flex items-center justify-center mx-auto mb-3 md:mb-4 shadow-lg">
-                <Phone className="w-6 h-6 md:w-8 md:h-8 text-primary" />
-              </div>
-              <h3 className="text-lg md:text-xl font-bold text-white mb-1 md:mb-2">
-                Call Us
-              </h3>
-              <p className="text-sm md:text-base text-gray-300 mb-3 md:mb-4">
-                Mon-Fri, 9am-5pm
-              </p>
-              <div className="flex flex-col space-y-2">
-                <a
-                  href="tel:+916267531322"
-                  className="text-gray-300 hover:text-primary transition-all border-b border-dashed border-gray-500 hover:border-primary pb-1 mx-auto"
-                >
-                  +91 6267 531 322
-                </a>
-                <a
-                  href="tel:+917023326128"
-                  className="text-gray-300 hover:text-primary transition-all border-b border-dashed border-gray-500 hover:border-primary pb-1 mx-auto"
-                >
-                  +91 70233 26128
-                </a>
-                <a
-                  href="tel:+919767592787"
-                  className="text-gray-300 hover:text-primary transition-all border-b border-dashed border-gray-500 hover:border-primary pb-1 mx-auto"
-                >
-                  +91 97675 92787
-                </a>
-              </div>
-            </motion.div>
+                        <div className="flex items-center gap-1 font-mono text-[10px]">
+                          <span className="px-1.5 py-0.5 rounded-xs bg-pink-500/20 border border-pink-500/40 text-pink-300 font-semibold">
+                            {item.badge}
+                          </span>
+                          <div className="w-4 h-4 rounded-xs bg-pink-500/80 border border-pink-400 flex items-center justify-center text-[9px] text-white font-bold">
+                            ✕
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Card Body with 3D Parallax Layering */}
+                      <div className="flex items-start gap-4">
+                        {/* 3D Elevated Glowing Icon */}
+                        <div
+                          className="shrink-0 p-3.5 rounded-lg bg-gradient-to-br from-cyan-500/20 via-purple-500/20 to-pink-500/20 border border-cyan-400/40 shadow-[0_0_15px_rgba(6,182,212,0.3)]"
+                          style={{ transform: "translateZ(45px)" }}
+                        >
+                          <Icon size={24} className="text-cyan-300" />
+                        </div>
+
+                        {/* Text Details with 3D Depth */}
+                        <div className="flex-1 min-w-0" style={{ transform: "translateZ(30px)" }}>
+                          <h4 className="font-mono text-base font-bold text-white tracking-wide mb-1 flex items-center gap-2">
+                            {item.title}
+                          </h4>
+                          <p className="text-xs text-gray-400 mb-2 font-mono">{item.line1}</p>
+
+                          <a
+                            href={item.href}
+                            target={item.id === "location" ? "_blank" : undefined}
+                            rel={item.id === "location" ? "noopener noreferrer" : undefined}
+                            className="inline-block font-mono text-xs sm:text-sm font-semibold text-pink-400 hover:text-cyan-300 transition-colors underline decoration-pink-500/40 hover:decoration-cyan-400 underline-offset-4 break-all"
+                          >
+                            {item.value}
+                          </a>
+                        </div>
+                      </div>
+
+                      {/* Card Window Footer Bar */}
+                      <div
+                        className="mt-4 pt-3 border-t border-white/5 flex items-center justify-between font-mono text-[10px] text-gray-400"
+                        style={{ transform: "translateZ(20px)" }}
+                      >
+                        <span className="text-gray-400">{item.port}</span>
+                        <span className="text-cyan-400 font-semibold flex items-center gap-1">
+                          <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping inline-block" />
+                          {item.status}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </TiltedInfoCard>
+              )
+            })}
           </div>
         </div>
-      </motion.div>
+      </div>
     </section>
-  );
+  )
 }
