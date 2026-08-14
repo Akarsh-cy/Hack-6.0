@@ -148,7 +148,7 @@ export default function Footer() {
                   className="text-gray-400 text-lg cursor-pointer hover:text-primary transition-colors"
                   rel="noreferrer"
                 >
-                  Hacker's Guide
+                  Hacker&apos;s Guide
                 </a>
               </li>
               <li>

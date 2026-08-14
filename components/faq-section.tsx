@@ -87,7 +87,7 @@ export default function FaqSection() {
             Frequently <span className="text-primary">Asked Questions</span>
           </h2>
           <div className="w-20 h-1 bg-primary mx-auto mb-6"></div>
-          <p className="text-xl max-w-2xl mx-auto text-gray-300">Got questions? We've got answers!</p>
+          <p className="text-xl max-w-2xl mx-auto text-gray-300">Got questions? We&apos;ve got answers!</p>
         </motion.div>
 
         <div className="max-w-3xl mx-auto">

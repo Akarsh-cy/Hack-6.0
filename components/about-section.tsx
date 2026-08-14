@@ -57,7 +57,7 @@ export default function AboutSection() {
           <motion.div variants={item} className="px-5 md:px-0">
             <p className="text-lg mb-6 leading-relaxed text-justify md:text-left">
               HACK 5.0 is the fifth edition of the national-level onsite
-              hackathon organized by the Computer Science Engineers' Community
+              hackathon organized by the Computer Science Engineers&apos; Community
               (CSEC) of the Department of Computer Science and Engineering, NIT
               Hamirpur. This premier event brings together the brightest minds
               in technology to solve real-world problems through innovation and
@@ -67,11 +67,11 @@ export default function AboutSection() {
               Over 48 hours, participants will form teams, ideate, build, and
               present their solutions to a panel of industry experts. With
               mentorship, workshops, and networking opportunities, HACK 5.0 is
-              more than just a competition—it's a platform for growth, learning,
+              more than just a competition—it&apos;s a platform for growth, learning,
               and technological advancement.
             </p>
             <p className="text-lg leading-relaxed text-justify md:text-left">
-              Whether you're a seasoned developer or just starting your coding
+              Whether you&apos;re a seasoned developer or just starting your coding
               journey, HACK 5.0 welcomes all passionate individuals ready to
               make an impact. Join us for this thrilling onsite experience and
               push the boundaries of innovation!

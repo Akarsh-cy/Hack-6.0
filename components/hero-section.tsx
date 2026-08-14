@@ -41,38 +41,37 @@ export default function HeroSection() {
     }
   }, [])
 
-  // Countdown timer logic
-  function calculateTimeLeft() {
-    const now = new Date().getTime();
-    const difference = targetDate - now;
-
-    if (difference <= 0) return {
-      days: "00",
-      hours: "00",
-      minutes: "00",
-      seconds: "00"
-    };
-
-    return {
-      days: formatTime(Math.floor(difference / (1000 * 60 * 60 * 24))),
-      hours: formatTime(Math.floor((difference / (1000 * 60 * 60)) % 24)),
-      minutes: formatTime(Math.floor((difference / 1000 / 60) % 60)),
-      seconds: formatTime(Math.floor((difference / 1000) % 60)),
-    };
-  }
-
-  function formatTime(time: number) {
-    return time < 10 ? `0${time}` : `${time}`;
-  }
-
   // Set up timer interval
   useEffect(() => {
+    function formatTime(time: number) {
+      return time < 10 ? `0${time}` : `${time}`;
+    }
+
+    function calculateTimeLeft() {
+      const now = new Date().getTime();
+      const difference = targetDate - now;
+
+      if (difference <= 0) return {
+        days: "00",
+        hours: "00",
+        minutes: "00",
+        seconds: "00"
+      };
+
+      return {
+        days: formatTime(Math.floor(difference / (1000 * 60 * 60 * 24))),
+        hours: formatTime(Math.floor((difference / (1000 * 60 * 60)) % 24)),
+        minutes: formatTime(Math.floor((difference / 1000 / 60) % 60)),
+        seconds: formatTime(Math.floor((difference / 1000) % 60)),
+      };
+    }
+
     const timer = setInterval(() => {
       setTimeLeft(calculateTimeLeft());
     }, 1000);
 
     return () => clearInterval(timer);
-  }, []);
+  }, [targetDate]);
 
   const container = {
     hidden: { opacity: 0 },

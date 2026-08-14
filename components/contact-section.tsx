@@ -133,7 +133,7 @@ export default function ContactSection() {
           </h2>
           <div className="w-20 h-1 bg-primary mx-auto mb-6"></div>
           <p className="text-xl max-w-2xl mx-auto text-gray-300">
-            Have questions about HACK 5.0? We're here to help! Reach out to us
+            Have questions about HACK 5.0? We&apos;re here to help! Reach out to us
             through any of the channels below.
           </p>
         </motion.div>
@@ -150,7 +150,7 @@ export default function ContactSection() {
                 Send us a Message
               </h3>
               <p className="text-gray-300 mt-2">
-                We'd love to hear from you! Fill out the form below and we'll
+                We&apos;d love to hear from you! Fill out the form below and we&apos;ll
                 get back to you as soon as possible.
               </p>
             </div>

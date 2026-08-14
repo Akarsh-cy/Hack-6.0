@@ -13,9 +13,6 @@ interface Particle {
 
 export default function ParticleBackground() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
-  const particles: Particle[] = []
-  const particleCount = 50
-  const colors = ["#75020f", "#51080d", "#2b0307"]
 
   useEffect(() => {
     const canvas = canvasRef.current
@@ -23,6 +20,10 @@ export default function ParticleBackground() {
 
     const ctx = canvas.getContext("2d")
     if (!ctx) return
+
+    const particles: Particle[] = []
+    const particleCount = 50
+    const colors = ["#75020f", "#51080d", "#2b0307"]
 
     const resizeCanvas = () => {
       canvas.width = window.innerWidth

@@ -168,7 +168,7 @@ function Page() {
             Code of <span className="text-gradient">Conduct</span>
           </h1>
           <p className="text-xl text-gray-300 w-full text-balance mb-2">
-            We, as members of the Computer Science and Engineers' Community
+            We, as members of the Computer Science and Engineers&apos; Community
             (CSEC) at NIT Hamirpur, pledge to create an inclusive, respectful,
             and secure environment for all participants of HACK 5.0. We are
             committed to ensuring that involvement in our community is free from
@@ -221,7 +221,7 @@ function Page() {
               <h2 className="text-2xl font-semibold mb-4">Need Help?</h2>
               <p className="text-gray-300 mb-6">
                 If you have any questions about our Code of Conduct or need to
-                report an incident, please don't hesitate to reach out to our
+                report an incident, please don&apos;t hesitate to reach out to our
                 team.
               </p>
               <div className="flex gap-6">
