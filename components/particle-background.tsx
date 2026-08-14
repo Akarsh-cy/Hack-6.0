@@ -114,10 +114,9 @@ export default function ParticleBackground() {
 
   // Update the background to match the original
   return (
-    <>
-      <div className="fixed top-0 left-0 w-full h-full -z-20 bg-background"></div>
-      <canvas ref={canvasRef} className="fixed top-0 left-0 w-full h-full -z-10" />
-    </>
+      <>
+        <div className="fixed top-0 left-0 w-full h-full -z-20 bg-background"></div>
+        <canvas ref={canvasRef} className="fixed top-0 left-0 w-full h-full -z-10" />
+      </>
   )
 }
-
