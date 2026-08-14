@@ -137,7 +137,13 @@ const teamData: TeamGroup[] = [
     },
 ];
 
-const TeamCard = ({ member, index }: { member: TeamMember; index: number }) => {
+const TeamCard = ({
+                      member,
+                      index,
+                  }: {
+    member: TeamMember;
+    index: number;
+}) => {
     const [glitching, setGlitching] = useState(false);
 
     const handleMouseEnter = () => {
@@ -157,204 +163,206 @@ const TeamCard = ({ member, index }: { member: TeamMember; index: number }) => {
                 duration: 0.6,
                 delay: index * 0.04,
             }}
-            whileHover={{ y: -6 }}
+            whileHover={{ y: -7 }}
             onMouseEnter={handleMouseEnter}
             className="group relative"
         >
-            {/* Vaporwave window */}
-            <div className="relative">
-                {/* Cyan offset border */}
-                <div className="pointer-events-none absolute -right-1 -bottom-1 left-1 top-1 border border-[#00ffff]" />
+            {/* Cyan offset window */}
+            <div className="pointer-events-none absolute -right-2 -bottom-2 left-2 top-2 border-2 border-[#00ffff]" />
 
-                {/* Pink offset border */}
-                <div className="pointer-events-none absolute -top-1 right-1 -bottom-1 left-[-4px] border border-[#ff1493]" />
+            {/* Pink offset window */}
+            <div className="pointer-events-none absolute -top-2 right-2 -bottom-1 left-[-5px] border-2 border-[#ff4fd8]" />
 
-                {/* Main window */}
-                <div
-                    className="relative overflow-hidden border-2 border-[#8a2be2] bg-[#0b0612]"
-                    style={{
-                        boxShadow:
-                            "6px 6px 0 #4b0082, -3px -3px 0 rgba(0,255,255,0.7)",
-                    }}
-                >
-                    {/* Retro title bar */}
-                    <div className="relative flex h-9 items-center justify-between border-b-2 border-[#8a2be2] bg-gradient-to-r from-[#4b0082] via-[#8a2be2] to-[#ff1493] px-2">
+            {/* Main retro window */}
+            <div
+                className="relative overflow-hidden border-2 border-[#292929] bg-[#f2f2f2]"
+                style={{
+                    boxShadow:
+                        "5px 5px 0 #8a2be2, -3px -3px 0 #ff4fd8",
+                }}
+            >
+                {/* Classic title bar */}
+                <div className="flex h-10 items-center justify-between border-b-2 border-[#292929] bg-[#e7e7e7] px-2">
+                    <div className="flex items-center gap-2">
+                        {/* Small retro icon */}
+                        <div className="relative h-5 w-5 border border-[#555] bg-[#ff9edc]">
+                            <div className="absolute left-[3px] top-[3px] h-2 w-3 bg-[#8a2be2]" />
+                        </div>
+
+                        <span className="font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-[#222]">
+                            MEMBER_{String(index + 1).padStart(2, "0")}.EXE
+                        </span>
+                    </div>
+
+                    {/* Classic window buttons */}
+                    <div className="flex items-center gap-1">
+                        <div className="flex h-5 w-5 items-center justify-center border border-[#555] bg-[#f8f8f8] text-[10px] text-black">
+                            _
+                        </div>
+
+                        <div className="flex h-5 w-5 items-center justify-center border border-[#555] bg-[#f8f8f8] text-[9px] text-black">
+                            □
+                        </div>
+
+                        <div className="flex h-5 w-5 items-center justify-center border border-[#555] bg-[#ff7bcf] text-[10px] font-bold text-black">
+                            ×
+                        </div>
+                    </div>
+                </div>
+
+                {/* Photo */}
+                <div className="relative aspect-[4/5] overflow-hidden bg-[#d8d8d8]">
+                    <img
+                        src={member.image}
+                        alt={member.name}
+                        className={`relative z-10 h-full w-full object-cover transition-all duration-300 ${
+                            glitching
+                                ? "scale-[1.025] brightness-110 saturate-150"
+                                : "brightness-[0.96] saturate-[0.95]"
+                        }`}
+                    />
+
+                    {/* Cyan glitch ghost */}
+                    <motion.img
+                        src={member.image}
+                        alt=""
+                        aria-hidden="true"
+                        className="pointer-events-none absolute inset-0 z-20 h-full w-full object-cover mix-blend-screen"
+                        style={{
+                            filter:
+                                "sepia(1) saturate(8) hue-rotate(135deg)",
+                        }}
+                        initial={{ opacity: 0 }}
+                        animate={
+                            glitching
+                                ? {
+                                    opacity: [0, 0.65, 0, 0.4, 0],
+                                    x: [0, -5, 4, -2, 0],
+                                    clipPath: [
+                                        "inset(0 0 100% 0)",
+                                        "inset(12% 0 62% 0)",
+                                        "inset(48% 0 35% 0)",
+                                        "inset(73% 0 10% 0)",
+                                        "inset(0 0 100% 0)",
+                                    ],
+                                }
+                                : { opacity: 0 }
+                        }
+                        transition={{
+                            duration: 0.5,
+                            ease: "linear",
+                        }}
+                    />
+
+                    {/* Pink glitch ghost */}
+                    <motion.img
+                        src={member.image}
+                        alt=""
+                        aria-hidden="true"
+                        className="pointer-events-none absolute inset-0 z-20 h-full w-full object-cover mix-blend-screen"
+                        style={{
+                            filter:
+                                "sepia(1) saturate(8) hue-rotate(275deg)",
+                        }}
+                        initial={{ opacity: 0 }}
+                        animate={
+                            glitching
+                                ? {
+                                    opacity: [0, 0.5, 0, 0.35, 0],
+                                    x: [0, 5, -4, 3, 0],
+                                    clipPath: [
+                                        "inset(100% 0 0 0)",
+                                        "inset(55% 0 18% 0)",
+                                        "inset(20% 0 57% 0)",
+                                        "inset(65% 0 25% 0)",
+                                        "inset(100% 0 0 0)",
+                                    ],
+                                }
+                                : { opacity: 0 }
+                        }
+                        transition={{
+                            duration: 0.5,
+                            ease: "linear",
+                        }}
+                    />
+
+                    {/* Glitch bars */}
+                    {glitching && (
+                        <>
+                            <motion.div
+                                className="pointer-events-none absolute left-0 right-0 z-30 h-[3px] bg-[#00ffff]"
+                                initial={{ top: "18%", opacity: 0 }}
+                                animate={{
+                                    top: ["18%", "42%", "72%", "31%"],
+                                    opacity: [0, 0.8, 0.5, 0],
+                                }}
+                                transition={{
+                                    duration: 0.45,
+                                    ease: "linear",
+                                }}
+                            />
+
+                            <motion.div
+                                className="pointer-events-none absolute left-0 right-0 z-30 h-[2px] bg-[#ff1493]"
+                                initial={{ top: "70%", opacity: 0 }}
+                                animate={{
+                                    top: ["70%", "25%", "58%", "84%"],
+                                    opacity: [0, 0.7, 0.4, 0],
+                                }}
+                                transition={{
+                                    duration: 0.4,
+                                    ease: "linear",
+                                }}
+                            />
+                        </>
+                    )}
+
+                    {/* CRT scanlines */}
+                    <div
+                        className="pointer-events-none absolute inset-0 z-40 opacity-[0.1]"
+                        style={{
+                            backgroundImage:
+                                "repeating-linear-gradient(to bottom, transparent 0px, transparent 2px, rgba(0,0,0,0.3) 3px)",
+                        }}
+                    />
+
+                    {/* Dither / old screen texture */}
+                    <div
+                        className="pointer-events-none absolute inset-0 z-40 opacity-[0.07]"
+                        style={{
+                            backgroundImage:
+                                "radial-gradient(circle, rgba(0,0,0,0.9) 0.6px, transparent 0.7px)",
+                            backgroundSize: "4px 4px",
+                        }}
+                    />
+
+                    {/* Slight vaporwave color wash */}
+                    <div className="pointer-events-none absolute inset-0 z-40 bg-gradient-to-br from-[#00ffff]/10 via-transparent to-[#ff4fd8]/20 mix-blend-screen" />
+
+                    {/* Information panel */}
+                    <div className="absolute bottom-0 left-0 right-0 z-50 border-t-2 border-[#292929] bg-[#eeeeee]/95 px-4 py-3">
                         <div className="flex items-center gap-2">
-                            {/* Fake application icon */}
-                            <div className="h-4 w-4 border border-white bg-[#ff4fd8] shadow-[2px_2px_0_#00ffff]" />
+                            <span className="h-3 w-3 border border-[#333] bg-[#ff4fd8]" />
 
-                            <span className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-white">
-                                member_{String(index + 1).padStart(2, "0")}.exe
-                            </span>
+                            <h4 className="font-mono text-lg font-bold text-[#222] md:text-xl">
+                                {member.name}
+                            </h4>
                         </div>
 
-                        {/* Fake window controls */}
-                        <div className="flex items-center gap-1">
-                            <div className="flex h-4 w-4 items-center justify-center border border-white/80 bg-[#8a2be2] text-[9px] text-white">
-                                _
-                            </div>
-                            <div className="flex h-4 w-4 items-center justify-center border border-white/80 bg-[#8a2be2] text-[8px] text-white">
-                                □
-                            </div>
-                            <div className="flex h-4 w-4 items-center justify-center border border-white/80 bg-[#ff1493] text-[8px] text-white">
-                                ×
-                            </div>
-                        </div>
+                        <p className="mt-1 font-mono text-xs uppercase tracking-[0.1em] text-[#8a2be2] md:text-sm">
+                            {member.role}
+                        </p>
                     </div>
+                </div>
 
-                    {/* Image */}
-                    <div className="relative aspect-[4/5] overflow-hidden bg-[#09040f]">
-                        <img
-                            src={member.image}
-                            alt={member.name}
-                            className={`relative z-10 h-full w-full object-cover brightness-[0.86] saturate-[0.82] contrast-[1.05] transition-all duration-300 ${
-                                glitching
-                                    ? "scale-[1.025] brightness-110 saturate-150"
-                                    : "scale-100"
-                            }`}
-                        />
+                {/* Retro status bar */}
+                <div className="flex h-7 items-center justify-between border-t-2 border-[#292929] bg-[#dedede] px-2 font-mono text-[8px] uppercase tracking-[0.12em] text-[#333]">
+                    <span className="flex items-center gap-1">
+                        <span className="h-2 w-2 bg-[#00bfff]" />
+                        SYSTEM ONLINE
+                    </span>
 
-                        {/* Cyan RGB ghost */}
-                        <motion.img
-                            src={member.image}
-                            alt=""
-                            aria-hidden="true"
-                            className="pointer-events-none absolute inset-0 z-20 h-full w-full object-cover mix-blend-screen"
-                            style={{
-                                filter:
-                                    "sepia(1) saturate(8) hue-rotate(135deg)",
-                            }}
-                            initial={{ opacity: 0 }}
-                            animate={
-                                glitching
-                                    ? {
-                                        opacity: [0, 0.65, 0, 0.4, 0],
-                                        x: [0, -5, 4, -2, 0],
-                                        clipPath: [
-                                            "inset(0 0 100% 0)",
-                                            "inset(12% 0 62% 0)",
-                                            "inset(48% 0 35% 0)",
-                                            "inset(73% 0 10% 0)",
-                                            "inset(0 0 100% 0)",
-                                        ],
-                                    }
-                                    : { opacity: 0 }
-                            }
-                            transition={{
-                                duration: 0.5,
-                                ease: "linear",
-                            }}
-                        />
-
-                        {/* Pink RGB ghost */}
-                        <motion.img
-                            src={member.image}
-                            alt=""
-                            aria-hidden="true"
-                            className="pointer-events-none absolute inset-0 z-20 h-full w-full object-cover mix-blend-screen"
-                            style={{
-                                filter:
-                                    "sepia(1) saturate(8) hue-rotate(275deg)",
-                            }}
-                            initial={{ opacity: 0 }}
-                            animate={
-                                glitching
-                                    ? {
-                                        opacity: [0, 0.5, 0, 0.35, 0],
-                                        x: [0, 5, -4, 3, 0],
-                                        clipPath: [
-                                            "inset(100% 0 0 0)",
-                                            "inset(55% 0 18% 0)",
-                                            "inset(20% 0 57% 0)",
-                                            "inset(65% 0 25% 0)",
-                                            "inset(100% 0 0 0)",
-                                        ],
-                                    }
-                                    : { opacity: 0 }
-                            }
-                            transition={{
-                                duration: 0.5,
-                                ease: "linear",
-                            }}
-                        />
-
-                        {/* Glitch scan bars */}
-                        {glitching && (
-                            <>
-                                <motion.div
-                                    className="pointer-events-none absolute left-0 right-0 z-30 h-[3px] bg-[#00ffff]"
-                                    initial={{ top: "18%", opacity: 0 }}
-                                    animate={{
-                                        top: ["18%", "42%", "72%", "31%"],
-                                        opacity: [0, 0.8, 0.5, 0],
-                                    }}
-                                    transition={{
-                                        duration: 0.45,
-                                        ease: "linear",
-                                    }}
-                                />
-
-                                <motion.div
-                                    className="pointer-events-none absolute left-0 right-0 z-30 h-[2px] bg-[#ff4fd8]"
-                                    initial={{ top: "70%", opacity: 0 }}
-                                    animate={{
-                                        top: ["70%", "25%", "58%", "84%"],
-                                        opacity: [0, 0.7, 0.4, 0],
-                                    }}
-                                    transition={{
-                                        duration: 0.4,
-                                        ease: "linear",
-                                    }}
-                                />
-                            </>
-                        )}
-
-                        {/* CRT scanlines */}
-                        <div
-                            className="pointer-events-none absolute inset-0 z-40 opacity-[0.12]"
-                            style={{
-                                backgroundImage:
-                                    "repeating-linear-gradient(to bottom, transparent 0px, transparent 2px, rgba(255,255,255,0.22) 3px)",
-                            }}
-                        />
-
-                        {/* Pixel / dither texture */}
-                        <div
-                            className="pointer-events-none absolute inset-0 z-40 opacity-[0.08] mix-blend-screen"
-                            style={{
-                                backgroundImage:
-                                    "radial-gradient(circle, #ffffff 0.7px, transparent 0.8px)",
-                                backgroundSize: "4px 4px",
-                            }}
-                        />
-
-                        {/* Color wash */}
-                        <div className="pointer-events-none absolute inset-0 z-40 bg-gradient-to-br from-[#00ffff]/10 via-transparent to-[#ff1493]/20 mix-blend-screen" />
-
-                        {/* Bottom dark gradient */}
-                        <div className="pointer-events-none absolute inset-0 z-50 bg-gradient-to-t from-[#09040f] via-[#09040f]/20 to-transparent" />
-
-                        {/* Information panel */}
-                        <div className="absolute bottom-0 left-0 right-0 z-[60] border-t border-[#8a2be2]/70 bg-[#09040f]/85 px-4 py-4 backdrop-blur-[2px]">
-                            <div className="mb-1 flex items-center gap-2">
-                                <span className="h-2 w-2 bg-[#00ffff] shadow-[0_0_6px_#00ffff]" />
-
-                                <h4 className="font-mono text-lg font-bold uppercase tracking-tight text-white md:text-xl">
-                                    {member.name}
-                                </h4>
-                            </div>
-
-                            <p className="font-mono text-xs uppercase tracking-[0.12em] text-[#00ffff] md:text-sm">
-                                {member.role}
-                            </p>
-                        </div>
-                    </div>
-
-                    {/* Bottom status bar */}
-                    <div className="flex h-6 items-center justify-between border-t border-[#8a2be2] bg-[#10071c] px-2 font-mono text-[8px] uppercase tracking-[0.15em] text-[#ff4fd8]">
-                        <span>SYS://ONLINE</span>
-                        <span>HACK_5.0</span>
-                    </div>
+                    <span>HACK 5.0</span>
                 </div>
             </div>
         </motion.div>
@@ -367,37 +375,59 @@ export default function TeamSection() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
-            className="relative overflow-hidden bg-[#09040f] py-24"
+            className="relative overflow-hidden bg-[#d9a7f0] py-24"
         >
-            {/* Vaporwave grid */}
+            {/* Pastel vaporwave background */}
             <div
-                className="pointer-events-none absolute inset-0 opacity-[0.13]"
+                className="pointer-events-none absolute inset-0"
+                style={{
+                    background: `
+                        linear-gradient(
+                            180deg,
+                            #c77de8 0%,
+                            #e4a6d9 48%,
+                            #b58be3 100%
+                        )
+                    `,
+                }}
+            />
+
+            {/* Retro grid */}
+            <div
+                className="pointer-events-none absolute inset-0 opacity-[0.3]"
                 style={{
                     backgroundImage: `
-                        linear-gradient(rgba(138,43,226,0.65) 1px, transparent 1px),
-                        linear-gradient(90deg, rgba(0,255,255,0.5) 1px, transparent 1px)
+                        linear-gradient(
+                            rgba(75,0,130,0.65) 1px,
+                            transparent 1px
+                        ),
+                        linear-gradient(
+                            90deg,
+                            rgba(75,0,130,0.65) 1px,
+                            transparent 1px
+                        )
                     `,
                     backgroundSize: "48px 48px",
                 }}
             />
 
-            {/* Perspective horizon glow */}
+            {/* Large soft cyan glow */}
             <div
-                className="pointer-events-none absolute left-1/2 top-[38%] h-[420px] w-[900px] -translate-x-1/2 opacity-30"
+                className="pointer-events-none absolute left-[-150px] top-20 h-[500px] w-[500px] rounded-full opacity-40"
                 style={{
                     background:
-                        "radial-gradient(ellipse, #ff1493 0%, #8a2be2 30%, transparent 70%)",
-                    filter: "blur(80px)",
+                        "radial-gradient(circle, #00ffff 0%, transparent 68%)",
+                    filter: "blur(90px)",
                 }}
             />
 
-            {/* Cyan glow */}
+            {/* Pink glow */}
             <div
-                className="pointer-events-none absolute -right-40 top-20 h-[400px] w-[400px] opacity-20"
+                className="pointer-events-none absolute right-[-150px] top-[30%] h-[500px] w-[500px] rounded-full opacity-40"
                 style={{
                     background:
-                        "radial-gradient(circle, #00ffff 0%, transparent 70%)",
-                    filter: "blur(70px)",
+                        "radial-gradient(circle, #ff4fd8 0%, transparent 68%)",
+                    filter: "blur(90px)",
                 }}
             />
 
@@ -405,15 +435,15 @@ export default function TeamSection() {
                 id="team-section"
                 className="container relative mx-auto px-6"
             >
-                {/* Section heading */}
+                {/* Header */}
                 <motion.div className="mb-16 text-center">
-                    <div className="mx-auto mb-5 inline-flex items-center gap-2 border border-[#00ffff] bg-[#0b0612] px-4 py-2 font-mono text-[10px] uppercase tracking-[0.25em] text-[#00ffff] shadow-[4px_4px_0_#ff1493]">
-                        <span className="h-2 w-2 bg-[#ff1493]" />
+                    <div className="mx-auto mb-6 inline-flex items-center gap-2 border-2 border-[#333] bg-[#eeeeee] px-5 py-2 font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-[#333] shadow-[5px_5px_0_#ff1493]">
+                        <span className="h-3 w-3 border border-[#333] bg-[#8a2be2]" />
                         SYSTEM_DIRECTORY://TEAM
                     </div>
 
                     <h2
-                        className={`mb-4 text-3xl text-white md:text-5xl ${Hacked_KerX.className}`}
+                        className={`mb-4 text-3xl text-[#ffffff] drop-shadow-[3px_3px_0_#8a2be2] md:text-5xl ${Hacked_KerX.className}`}
                     >
                         Lead{" "}
                         <span className="text-[#ff4fd8]">
@@ -421,37 +451,38 @@ export default function TeamSection() {
                         </span>
                     </h2>
 
-                    <p className="mx-auto max-w-2xl font-mono text-sm text-gray-300 md:text-base">
+                    <p className="mx-auto max-w-2xl font-mono text-sm text-[#3b1647] md:text-base">
                         Meet the passionate individuals who made HACK 5.0
                         possible
                     </p>
                 </motion.div>
 
                 {/* Team groups */}
-                <div className="space-y-16">
+                <div className="space-y-20">
                     {teamData.map((group, groupIndex) => (
                         <div key={group.title}>
-                            {/* Group header */}
-                            <div className="mb-6 flex items-center gap-3">
-                                <div className="h-[2px] flex-1 bg-gradient-to-r from-transparent via-[#8a2be2] to-[#00ffff]" />
+                            {/* Group label */}
+                            <div className="mb-8 flex items-center gap-4">
+                                <div className="h-[2px] flex-1 bg-[#4b0082]" />
 
-                                <div className="border border-[#ff1493] bg-[#0b0612] px-4 py-2 font-mono text-xs uppercase tracking-[0.2em] text-[#ff4fd8]">
-                                    DIRECTORY_{String(
-                                    groupIndex + 1
-                                ).padStart(2, "0")}
+                                <div className="border-2 border-[#333] bg-[#eeeeee] px-5 py-2 font-mono text-xs font-bold uppercase tracking-[0.2em] text-[#333] shadow-[4px_4px_0_#00ffff]">
+                                    DIRECTORY_
+                                    {String(groupIndex + 1).padStart(2, "0")}
                                 </div>
 
-                                <div className="h-[2px] flex-1 bg-gradient-to-r from-[#00ffff] via-[#8a2be2] to-transparent" />
+                                <div className="h-[2px] flex-1 bg-[#4b0082]" />
                             </div>
 
-                            <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                                {group.members.map((member, memberIndex) => (
-                                    <TeamCard
-                                        key={member.name}
-                                        member={member}
-                                        index={memberIndex}
-                                    />
-                                ))}
+                            <div className="grid grid-cols-1 gap-9 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                                {group.members.map(
+                                    (member, memberIndex) => (
+                                        <TeamCard
+                                            key={member.name}
+                                            member={member}
+                                            index={memberIndex}
+                                        />
+                                    )
+                                )}
                             </div>
                         </div>
                     ))}
