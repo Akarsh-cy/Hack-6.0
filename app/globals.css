@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+
+/* ========================================================================
+   THEME
+   ======================================================================== */
+
 :root {
   --background: 260 10% 10%;
   --foreground: 0 0% 98%;
@@ -12,13 +17,13 @@
   --popover: 260 10% 10%;
   --popover-foreground: 0 0% 98%;
 
-  --primary: 354 77% 56%; /* Updated to match E63946 */
+  --primary: 354 77% 56%;
   --primary-foreground: 0 0% 98%;
 
-  --secondary: 355 82% 41%; /* Updated to match c1121f */
+  --secondary: 355 82% 41%;
   --secondary-foreground: 0 0% 98%;
 
-  --muted: 0 100% 24%; /* Updated to match 780000 */
+  --muted: 0 100% 24%;
   --muted-foreground: 0 0% 70%;
 
   --accent: 355 82% 41%;
@@ -34,12 +39,18 @@
   --radius: 0.5rem;
 }
 
+
+/* ========================================================================
+   BASE
+   ======================================================================== */
+
 html {
   scroll-behavior: smooth;
+  background: #19171b;
 }
 
 body {
-  background-color: #19171b;
+  background: transparent;
   color: white;
   font-family: "Inter", sans-serif;
 }
@@ -57,7 +68,11 @@ section {
   overflow: hidden;
 }
 
-/* Add glow effects */
+
+/* ========================================================================
+   GLOBAL GLOW UTILITIES
+   ======================================================================== */
+
 .shadow-glow {
   box-shadow: 0 0 15px rgba(230, 57, 70, 0.5);
 }
@@ -70,14 +85,20 @@ section {
   filter: drop-shadow(0 0 8px rgba(230, 57, 70, 0.7));
 }
 
-/* Animations */
+
+/* ========================================================================
+   FLOAT
+   ======================================================================== */
+
 @keyframes float {
   0% {
     transform: translateY(0px);
   }
+
   50% {
     transform: translateY(-10px);
   }
+
   100% {
     transform: translateY(0px);
   }
@@ -87,24 +108,40 @@ section {
   animation: float 6s ease-in-out infinite;
 }
 
-/* Improved transitions */
+
+/* ========================================================================
+   TRANSITIONS
+   ======================================================================== */
+
 .transition-all {
   transition-property: all;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   transition-duration: 300ms;
 }
 
-/* Scroll effects */
+
+/* ========================================================================
+   SCROLL
+   ======================================================================== */
+
 .scroll-smooth {
   scroll-behavior: smooth;
 }
 
-/* Better backdrop blur */
+
+/* ========================================================================
+   BACKDROP
+   ======================================================================== */
+
 .backdrop-blur-md {
   backdrop-filter: blur(16px);
 }
 
-/* Responsive text utilities */
+
+/* ========================================================================
+   RESPONSIVE
+   ======================================================================== */
+
 @media (max-width: 640px) {
   .container {
     padding-left: 1rem;
@@ -115,23 +152,23 @@ section {
     padding-top: 3rem;
     padding-bottom: 3rem;
   }
-}
 
-/* Improved touch targets for mobile */
-@media (max-width: 640px) {
   button,
   a {
-    cursor: default; /* Better for touch devices */
+    cursor: default;
   }
 
-  /* Ensure minimum touch target size */
   .touch-target {
     min-height: 44px;
     min-width: 44px;
   }
 }
 
-/* Responsive spacing */
+
+/* ========================================================================
+   RESPONSIVE SPACING
+   ======================================================================== */
+
 .space-y-responsive > * + * {
   margin-top: clamp(1rem, 5vw, 2rem);
 }
@@ -139,6 +176,11 @@ section {
 .space-x-responsive > * + * {
   margin-left: clamp(1rem, 5vw, 2rem);
 }
+
+
+/* ========================================================================
+   SCROLLBAR
+   ======================================================================== */
 
 ::-webkit-scrollbar {
   display: none;
@@ -149,7 +191,788 @@ section {
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
+
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
+  }
+}
+
+
+/* ========================================================================
+   ========================================================================
+   HACK 5.0 GLOBAL VAPORWAVE ATMOSPHERE
+   ========================================================================
+   This is the shared visual identity of the entire site.
+   Sections should NOT create their own full-screen backgrounds.
+   ========================================================================
+   ======================================================================== */
+
+
+/* ========================================================================
+   BASE ATMOSPHERE
+   ======================================================================== */
+
+.hack-atmosphere {
+  background:
+          radial-gradient(
+                  ellipse 75% 60% at 12% 18%,
+                  rgba(0, 255, 255, 0.13),
+                  transparent 65%
+          ),
+          radial-gradient(
+                  ellipse 80% 65% at 88% 28%,
+                  rgba(255, 79, 216, 0.18),
+                  transparent 65%
+          ),
+          radial-gradient(
+                  ellipse 75% 70% at 48% 92%,
+                  rgba(138, 43, 226, 0.22),
+                  transparent 70%
+          ),
+          linear-gradient(
+                  180deg,
+                  #24104F 0%,
+                  #8A2BE2 46%,
+                  #FF4FD8 100%
+          );
+
+  background-size:
+          150% 150%,
+          155% 155%,
+          160% 160%,
+          100% 100%;
+
+  background-position:
+          0% 0%,
+          100% 0%,
+          50% 100%,
+          50% 50%;
+
+  animation: hackAtmosphereDrift 70s ease-in-out infinite alternate;
+
+  will-change: background-position;
+}
+
+
+/* ========================================================================
+   DEEP VIOLET HAZE
+   ======================================================================== */
+
+.hack-violet-haze {
+  background:
+          radial-gradient(
+                  ellipse at 50% 45%,
+                  rgba(104, 44, 170, 0.08),
+                  transparent 55%
+          ),
+          radial-gradient(
+                  ellipse at 20% 80%,
+                  rgba(67, 34, 130, 0.10),
+                  transparent 55%
+          );
+
+  animation: hackHazeDrift 80s ease-in-out infinite alternate;
+}
+
+
+/* ========================================================================
+   MAIN GRID
+   ======================================================================== */
+
+.hack-grid {
+  pointer-events: none;
+  will-change: transform;
+}
+
+.hack-grid-main {
+  opacity: 0.28;
+
+  animation:
+          hackGridHorizontal
+          42s
+          ease-in-out
+          infinite
+          alternate;
+}
+
+
+/* ========================================================================
+   SECOND GRID
+   ======================================================================== */
+
+.hack-grid-depth {
+  opacity: 0.07;
+
+  animation:
+          hackGridDepth
+          74s
+          ease-in-out
+          infinite
+          alternate;
+}
+
+
+/* ========================================================================
+   GRID MOTION
+   ======================================================================== */
+
+@keyframes hackGridHorizontal {
+  0% {
+    transform: translate3d(-34px, 0, 0);
+  }
+
+  100% {
+    transform: translate3d(34px, 0, 0);
+  }
+}
+
+@keyframes hackGridDepth {
+  0% {
+    transform: translate3d(25px, -12px, 0) scale(1);
+  }
+
+  100% {
+    transform: translate3d(-30px, 18px, 0) scale(1.015);
+  }
+}
+
+
+/* ========================================================================
+   ATMOSPHERE MOTION
+   ======================================================================== */
+
+@keyframes hackAtmosphereDrift {
+  0% {
+    background-position:
+            0% 0%,
+            100% 0%,
+            50% 100%,
+            50% 50%;
+  }
+
+  50% {
+    background-position:
+            12% 8%,
+            88% 12%,
+            45% 92%,
+            50% 50%;
+  }
+
+  100% {
+    background-position:
+            20% 16%,
+            78% 22%,
+            58% 84%,
+            50% 50%;
+  }
+}
+
+@keyframes hackHazeDrift {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+
+  100% {
+    transform: translate3d(-25px, 20px, 0) scale(1.04);
+  }
+}
+
+
+/* ========================================================================
+   GLOW SYSTEM
+   ======================================================================== */
+
+.hack-glow {
+  position: absolute;
+
+  width: 520px;
+  height: 520px;
+
+  border-radius: 50%;
+
+  filter: blur(115px);
+
+  will-change: transform;
+}
+
+
+/* ------------------------------------------------------------------------
+   CYAN
+   ------------------------------------------------------------------------ */
+
+.hack-glow-cyan {
+  left: -190px;
+  top: 6%;
+
+  background:
+          radial-gradient(
+                  circle,
+                  rgba(0, 255, 255, 0.34) 0%,
+                  rgba(0, 255, 255, 0.12) 35%,
+                  transparent 70%
+          );
+
+  animation:
+          hackCyanDrift
+          46s
+          ease-in-out
+          infinite
+          alternate;
+}
+
+
+/* ------------------------------------------------------------------------
+   PINK
+   ------------------------------------------------------------------------ */
+
+.hack-glow-pink {
+  right: -190px;
+  top: 30%;
+
+  background:
+          radial-gradient(
+                  circle,
+                  rgba(255, 79, 216, 0.34) 0%,
+                  rgba(255, 79, 216, 0.11) 36%,
+                  transparent 70%
+          );
+
+  animation:
+          hackPinkDrift
+          52s
+          ease-in-out
+          infinite
+          alternate;
+}
+
+
+/* ------------------------------------------------------------------------
+   PURPLE
+   ------------------------------------------------------------------------ */
+
+.hack-glow-purple {
+  left: 32%;
+  bottom: -340px;
+
+  width: 620px;
+  height: 620px;
+
+  background:
+          radial-gradient(
+                  circle,
+                  rgba(138, 43, 226, 0.27) 0%,
+                  rgba(138, 43, 226, 0.08) 40%,
+                  transparent 72%
+          );
+
+  animation:
+          hackPurpleDrift
+          64s
+          ease-in-out
+          infinite
+          alternate;
+}
+
+
+/* ========================================================================
+   GLOW MOTION
+   ======================================================================== */
+
+@keyframes hackCyanDrift {
+  0% {
+    transform:
+            translate3d(0, 0, 0)
+            scale(1);
+  }
+
+  50% {
+    transform:
+            translate3d(70px, 35px, 0)
+            scale(1.08);
+  }
+
+  100% {
+    transform:
+            translate3d(25px, 105px, 0)
+            scale(0.96);
+  }
+}
+
+@keyframes hackPinkDrift {
+  0% {
+    transform:
+            translate3d(0, 0, 0)
+            scale(1);
+  }
+
+  50% {
+    transform:
+            translate3d(-65px, -45px, 0)
+            scale(1.08);
+  }
+
+  100% {
+    transform:
+            translate3d(-25px, 75px, 0)
+            scale(0.96);
+  }
+}
+
+@keyframes hackPurpleDrift {
+  0% {
+    transform:
+            translate3d(0, 0, 0)
+            scale(1);
+  }
+
+  100% {
+    transform:
+            translate3d(-110px, -80px, 0)
+            scale(1.09);
+  }
+}
+
+
+/* ========================================================================
+   LIGHT HAZE
+   ======================================================================== */
+
+.hack-haze {
+  opacity: 0.18;
+
+  background:
+          radial-gradient(
+                  ellipse at 50% 10%,
+                  rgba(255, 255, 255, 0.25),
+                  transparent 45%
+          );
+
+  mix-blend-mode: screen;
+
+  animation:
+          hackHazePulse
+          18s
+          ease-in-out
+          infinite
+          alternate;
+}
+
+@keyframes hackHazePulse {
+  0% {
+    opacity: 0.12;
+  }
+
+  100% {
+    opacity: 0.21;
+  }
+}
+
+
+/* ========================================================================
+   SCANLINES
+   ======================================================================== */
+
+.hack-scanlines {
+  opacity: 0.045;
+
+  background:
+          repeating-linear-gradient(
+                  to bottom,
+                  transparent 0px,
+                  transparent 3px,
+                  rgba(50, 0, 80, 0.7) 4px
+          );
+
+  animation:
+          hackScanlineDrift
+          24s
+          linear
+          infinite;
+}
+
+@keyframes hackScanlineDrift {
+  from {
+    transform: translateY(0);
+  }
+
+  to {
+    transform: translateY(12px);
+  }
+}
+
+
+/* ========================================================================
+   PARTICLES
+   ======================================================================== */
+
+.hack-particles {
+  opacity: 0.65;
+}
+
+
+.hack-particle {
+  position: absolute;
+
+  width: 2px;
+  height: 2px;
+
+  border-radius: 50%;
+
+  background: rgba(255, 255, 255, 0.65);
+
+  box-shadow:
+          0 0 5px rgba(255, 255, 255, 0.3);
+
+  animation:
+          hackParticleFloat
+          var(--particle-speed)
+          ease-in-out
+          infinite
+          alternate;
+}
+
+
+/* ========================================================================
+   PARTICLE POSITIONS
+   ======================================================================== */
+
+.p1 {
+  left: 7%;
+  top: 14%;
+  --particle-speed: 52s;
+}
+
+.p2 {
+  left: 14%;
+  top: 61%;
+  --particle-speed: 67s;
+}
+
+.p3 {
+  left: 22%;
+  top: 35%;
+  --particle-speed: 58s;
+}
+
+.p4 {
+  left: 31%;
+  top: 78%;
+  --particle-speed: 74s;
+}
+
+.p5 {
+  left: 39%;
+  top: 18%;
+  --particle-speed: 63s;
+}
+
+.p6 {
+  left: 47%;
+  top: 54%;
+  --particle-speed: 70s;
+}
+
+.p7 {
+  left: 55%;
+  top: 28%;
+  --particle-speed: 56s;
+}
+
+.p8 {
+  left: 63%;
+  top: 76%;
+  --particle-speed: 81s;
+}
+
+.p9 {
+  left: 71%;
+  top: 43%;
+  --particle-speed: 64s;
+}
+
+.p10 {
+  left: 79%;
+  top: 17%;
+  --particle-speed: 73s;
+}
+
+.p11 {
+  left: 86%;
+  top: 66%;
+  --particle-speed: 59s;
+}
+
+.p12 {
+  left: 93%;
+  top: 31%;
+  --particle-speed: 77s;
+}
+
+.p13 {
+  left: 26%;
+  top: 11%;
+  --particle-speed: 88s;
+}
+
+.p14 {
+  left: 58%;
+  top: 88%;
+  --particle-speed: 69s;
+}
+
+.p15 {
+  left: 82%;
+  top: 86%;
+  --particle-speed: 84s;
+}
+
+.p16 {
+  left: 44%;
+  top: 42%;
+  --particle-speed: 92s;
+}
+
+
+/* ========================================================================
+   PARTICLE MOTION
+   ======================================================================== */
+
+@keyframes hackParticleFloat {
+  0% {
+    transform:
+            translate3d(0, 0, 0)
+            scale(0.8);
+
+    opacity: 0.15;
+  }
+
+  45% {
+    opacity: 0.6;
+  }
+
+  100% {
+    transform:
+            translate3d(22px, -16px, 0)
+            scale(1.15);
+
+    opacity: 0.2;
+  }
+}
+
+
+/* ========================================================================
+   GEOMETRIC ACCENTS
+   ======================================================================== */
+
+.hack-geometry {
+  position: absolute;
+
+  border: 1px solid rgba(255, 255, 255, 0.18);
+
+  opacity: 0.22;
+
+  will-change: transform;
+}
+
+
+/* ------------------------------------------------------------------------
+   Accent 1 — diamond
+   ------------------------------------------------------------------------ */
+
+.hack-geometry-one {
+  width: 90px;
+  height: 90px;
+
+  left: 7%;
+  top: 38%;
+
+  transform: rotate(45deg);
+
+  animation:
+          hackGeometryOne
+          55s
+          ease-in-out
+          infinite
+          alternate;
+}
+
+
+/* ------------------------------------------------------------------------
+   Accent 2 — large square
+   ------------------------------------------------------------------------ */
+
+.hack-geometry-two {
+  width: 140px;
+  height: 140px;
+
+  right: 8%;
+  top: 58%;
+
+  transform: rotate(18deg);
+
+  border-color: rgba(0, 255, 255, 0.18);
+
+  animation:
+          hackGeometryTwo
+          68s
+          ease-in-out
+          infinite
+          alternate;
+}
+
+
+/* ------------------------------------------------------------------------
+   Accent 3 — small pink square
+   ------------------------------------------------------------------------ */
+
+.hack-geometry-three {
+  width: 55px;
+  height: 55px;
+
+  left: 48%;
+  top: 24%;
+
+  transform: rotate(20deg);
+
+  border-color: rgba(255, 79, 216, 0.2);
+
+  animation:
+          hackGeometryThree
+          48s
+          ease-in-out
+          infinite
+          alternate;
+}
+
+
+/* ========================================================================
+   GEOMETRIC MOTION
+   ======================================================================== */
+
+@keyframes hackGeometryOne {
+  0% {
+    transform:
+            translate3d(0, 0, 0)
+            rotate(45deg);
+  }
+
+  100% {
+    transform:
+            translate3d(35px, -25px, 0)
+            rotate(75deg);
+  }
+}
+
+@keyframes hackGeometryTwo {
+  0% {
+    transform:
+            translate3d(0, 0, 0)
+            rotate(18deg);
+  }
+
+  100% {
+    transform:
+            translate3d(-45px, 35px, 0)
+            rotate(-12deg);
+  }
+}
+
+@keyframes hackGeometryThree {
+  0% {
+    transform:
+            translate3d(0, 0, 0)
+            rotate(20deg);
+  }
+
+  100% {
+    transform:
+            translate3d(25px, 40px, 0)
+            rotate(55deg);
+  }
+}
+
+
+/* ========================================================================
+   MOBILE
+   Everything becomes slower and slightly quieter.
+   ======================================================================== */
+
+@media (max-width: 640px) {
+
+  .hack-grid-main {
+    opacity: 0.23;
+    animation-duration: 55s;
+  }
+
+  .hack-grid-depth {
+    opacity: 0.055;
+    animation-duration: 90s;
+  }
+
+  .hack-atmosphere {
+    animation-duration: 90s;
+  }
+
+  .hack-violet-haze {
+    animation-duration: 100s;
+  }
+
+  .hack-glow-cyan {
+    animation-duration: 70s;
+  }
+
+  .hack-glow-pink {
+    animation-duration: 78s;
+  }
+
+  .hack-glow-purple {
+    animation-duration: 90s;
+  }
+
+  .hack-haze {
+    animation-duration: 28s;
+  }
+
+  .hack-scanlines {
+    animation-duration: 32s;
+    opacity: 0.035;
+  }
+
+  .hack-particle {
+    animation-duration: 100s;
+  }
+
+  .hack-geometry {
+    opacity: 0.14;
+  }
+
+  .hack-geometry-one {
+    animation-duration: 75s;
+  }
+
+  .hack-geometry-two {
+    animation-duration: 90s;
+  }
+
+  .hack-geometry-three {
+    animation-duration: 70s;
+  }
+}
+
+
+/* ========================================================================
+   REDUCED MOTION
+   ======================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .hack-atmosphere,
+  .hack-violet-haze,
+  .hack-grid,
+  .hack-glow,
+  .hack-haze,
+  .hack-scanlines,
+  .hack-particle,
+  .hack-geometry {
+    animation: none;
   }
 }

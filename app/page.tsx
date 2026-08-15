@@ -7,23 +7,21 @@ import SponsorsSection from "@/components/sponsors-section";
 import FaqSection from "@/components/faq-section";
 import ContactSection from "@/components/contact-section";
 import Footer from "@/components/footer";
-import ParticleBackground from "@/components/particle-background";
 import TeamSection from "@/components/team-section";
 
 export default function Home() {
-  return (
-    <main className="min-h-screen bg-background text-foreground">
-      <ParticleBackground />
-      <Navbar />
-      <HeroSection />
-      <AboutSection />
-      <TimelineSection />
-      <PrizeSection />
-      <SponsorsSection />
-      <FaqSection />
-      <TeamSection />
-      <ContactSection />
-      <Footer />
-    </main>
-  );
+    return (
+        <main className="min-h-screen text-foreground">
+            <Navbar />
+            <HeroSection />
+            <AboutSection />
+            <TimelineSection />
+            <PrizeSection />
+            <SponsorsSection />
+            <FaqSection />
+            <TeamSection />
+            <ContactSection />
+            <Footer />
+        </main>
+    );
 }
