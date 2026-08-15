@@ -3,6 +3,8 @@ import "./globals.css"
 import type { Metadata } from "next"
 import { Inter, Poppins } from "next/font/google"
 
+//new
+import HackBackground from "@/components/hack-background"
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
@@ -29,11 +31,15 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${inter.variable} ${poppins.variable}`}>
-      <body>{children}</body>
+
+
+    <body>
+    <HackBackground />
+    <div className="relative z-10">
+      {children}
+    </div>
+    </body>
+
     </html>
   )
 }
-
-
-
-import './globals.css'

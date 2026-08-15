@@ -1,5 +1,3 @@
-// theme 1
-
 "use client";
 
 import React, { useState } from "react";
@@ -375,62 +373,8 @@ export default function TeamSection() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
-            className="relative overflow-hidden bg-[#d9a7f0] py-24"
+            className="relative overflow-hidden py-24"
         >
-            {/* Pastel vaporwave background */}
-            <div
-                className="pointer-events-none absolute inset-0"
-                style={{
-                    background: `
-                        linear-gradient(
-                            180deg,
-                            #c77de8 0%,
-                            #e4a6d9 48%,
-                            #b58be3 100%
-                        )
-                    `,
-                }}
-            />
-
-            {/* Retro grid */}
-            <div
-                className="pointer-events-none absolute inset-0 opacity-[0.3]"
-                style={{
-                    backgroundImage: `
-                        linear-gradient(
-                            rgba(75,0,130,0.65) 1px,
-                            transparent 1px
-                        ),
-                        linear-gradient(
-                            90deg,
-                            rgba(75,0,130,0.65) 1px,
-                            transparent 1px
-                        )
-                    `,
-                    backgroundSize: "48px 48px",
-                }}
-            />
-
-            {/* Large soft cyan glow */}
-            <div
-                className="pointer-events-none absolute left-[-150px] top-20 h-[500px] w-[500px] rounded-full opacity-40"
-                style={{
-                    background:
-                        "radial-gradient(circle, #00ffff 0%, transparent 68%)",
-                    filter: "blur(90px)",
-                }}
-            />
-
-            {/* Pink glow */}
-            <div
-                className="pointer-events-none absolute right-[-150px] top-[30%] h-[500px] w-[500px] rounded-full opacity-40"
-                style={{
-                    background:
-                        "radial-gradient(circle, #ff4fd8 0%, transparent 68%)",
-                    filter: "blur(90px)",
-                }}
-            />
-
             <div
                 id="team-section"
                 className="container relative mx-auto px-6"
