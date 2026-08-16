@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>OUTRUN // Synthwave Horizon</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Audiowide&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --p: 0;
+    --vh: 1vh;
+    --scroll-p: 0;
+    --font-display: 'Audiowide', sans-serif;
+    --font-mono: 'Space Mono', monospace;
+
+    /* Palette */
+    --neon-pink: #ff007f;
+    --neon-purple: #c000ff;
+    --deep-violet: #1d033a;
+    --space-black: #060112;
+    --sun-yellow: #fff852;
+    --sun-orange: #ff3864;
+    --grid-line: #e024c3;
+  }
+
+  * { box-sizing: border-box; }
+  
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--space-black);
+    color: #fce7f3;
+    font-family: var(--font-mono);
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::selection { background: var(--neon-pink); color: #05030f; }
+
+  /* SCROLL RIG */
+  .rig { position: relative; min-height: 100vh; }
+
+  .scene {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    height: calc(var(--vh) * 100);
+    width: 100%;
+    overflow: hidden;
+    isolation: isolate;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  /* SKY GRADIENT */
+  .sky {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to bottom,
+      #08011a 0%,
+      #180336 28%,
+      #39075e 50%,
+      #7b007b 70%,
+      #e0007b 88%,
+      #ff5ea8 100%
+    );
+  }
+  .sky-dark {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, #030008 0%, #0a0117 30%, #120126 60%, #1d033a 100%);
+    opacity: var(--scroll-p);
+  }
+
+  /* ATMOSPHERIC HAZE */
+  .haze {
+    position: absolute;
+    left: 0; right: 0; bottom: 35%;
+    height: 30%;
+    background: linear-gradient(to top, rgba(255, 0, 128, 0.45), transparent);
+    filter: blur(20px);
+    pointer-events: none;
+  }
+  .haze-dark {
+    background: linear-gradient(to top, rgba(29, 3, 58, 0.8), transparent);
+    opacity: var(--scroll-p);
+  }
+
+  /* STARFIELD */
+  .stars {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+  .stars canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+
+  /* SUN WRAPPER & INTERACTIVE MOUSE LAYER */
+  .sun-wrap {
+    position: absolute;
+    left: 50%;
+    bottom: 34%;
+    width: min(52vw, 440px);
+    height: min(52vw, 440px);
+    transform: translate(-50%, 0);
+    will-change: transform;
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  .sun-glow {
+    position: absolute;
+    inset: -15%;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 60, 140, 0.6) 0%, rgba(255, 0, 128, 0.2) 45%, transparent 70%);
+    filter: blur(15px);
+  }
+
+  .sun {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: linear-gradient(to bottom, #fff75a 0%, #ffbb00 30%, #ff2a7a 80%, #b30074 100%);
+    box-shadow: 
+      0 0 50px rgba(255, 230, 0, 0.5),
+      0 0 100px rgba(255, 0, 128, 0.6);
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* SUN SLICES */
+  .sun .slice-container {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 4px;
+    padding-bottom: 2%;
+  }
+
+  .slice {
+    background: #2b0042;
+    width: 100%;
+  }
+
+  /* MOUNTAINS */
+  .mountains {
+    position: absolute;
+    left: 0; right: 0;
+    bottom: 34%;
+    height: 18%;
+    z-index: 3;
+    pointer-events: none;
+  }
+  .mountains svg { width: 100%; height: 100%; display: block; }
+  .mountains path { fill: #1d033a; }
+  .mountains path.back { fill: #100224; opacity: 0.85; }
+
+  /* CITY SILHOUETTE */
+  .city {
+    position: absolute;
+    left: 50%;
+    bottom: 34%;
+    width: min(50vw, 480px);
+    transform: translateX(-50%);
+    z-index: 4;
+    pointer-events: none;
+  }
+  .city svg { width: 100%; display: block; }
+  .city .bldg { fill: #0d011c; }
+
+  /* HORIZON LASER GLOW */
+  .horizon-line {
+    position: absolute;
+    left: 0; right: 0;
+    bottom: 34%;
+    height: 2px;
+    background: #fff;
+    box-shadow: 
+      0 0 10px #ff0099,
+      0 0 20px #ff0099,
+      0 0 40px #ff0099;
+    z-index: 5;
+  }
+  .horizon-line::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: rgba(255, 255, 255, 0.5);
+    box-shadow: 0 0 20px #641ec8, 0 0 40px #641ec8;
+    opacity: var(--scroll-p);
+  }
+
+  /* PERSPECTIVE GRID FLOOR */
+  .ground {
+    position: absolute;
+    left: 0; right: 0;
+    bottom: 0;
+    top: 66%;
+    z-index: 5;
+    overflow: hidden;
+    background: linear-gradient(to bottom, #110022 0%, #05000d 100%);
+  }
+
+  /* REFLECTIVE SUN POOL ON THE FLOOR */
+  .ground .pool {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    width: 50%;
+    height: 90%;
+    transform: translateX(-50%);
+    background: radial-gradient(ellipse at top, rgba(255, 60, 140, 0.45) 0%, rgba(138, 0, 94, 0.15) 50%, transparent 80%);
+    filter: blur(8px);
+  }
+
+  .ground .grid {
+    position: absolute;
+    left: -100%;
+    right: -100%;
+    bottom: -50%;
+    height: 300%;
+    background-image: 
+      linear-gradient(to right, rgba(240, 40, 200, 0.9) 1.5px, transparent 1.5px),
+      linear-gradient(to bottom, rgba(240, 40, 200, 0.9) 1.5px, transparent 1.5px);
+    background-size: 50px 50px;
+    transform-origin: 50% 0%;
+    transform: perspective(260px) rotateX(76deg);
+    animation: gridMove 1.2s linear infinite;
+    filter: drop-shadow(0 0 5px #ff00a0);
+    will-change: background-position;
+  }
+
+  .ground .grid-dark {
+    position: absolute;
+    left: -100%;
+    right: -100%;
+    bottom: -50%;
+    height: 300%;
+    background-image: 
+      linear-gradient(to right, rgba(100, 30, 200, 0.7) 1.5px, transparent 1.5px),
+      linear-gradient(to bottom, rgba(100, 30, 200, 0.7) 1.5px, transparent 1.5px);
+    background-size: 50px 50px;
+    transform-origin: 50% 0%;
+    transform: perspective(260px) rotateX(76deg);
+    animation: gridMove 1.2s linear infinite;
+    filter: drop-shadow(0 0 5px #641ec8);
+    will-change: background-position;
+    opacity: var(--scroll-p);
+  }
+
+  @keyframes gridMove {
+    from { background-position: 0 0, 0 0; }
+    to   { background-position: 0 0, 0 50px; }
+  }
+
+  /* CRT SCANLINE & VIGNETTE */
+  .crt {
+    position: fixed; inset: 0; z-index: 8; pointer-events: none;
+    background: repeating-linear-gradient(to bottom, rgba(255,255,255,0.03) 0px, rgba(255,255,255,0.03) 1px, transparent 2px, transparent 4px);
+    mix-blend-mode: overlay;
+  }
+  .vignette {
+    position: fixed; inset: 0; z-index: 9; pointer-events: none;
+    box-shadow: inset 0 0 14vw 4vw rgba(0,0,0,0.85);
+  }
+
+  /* FLOATING HERO */
+  .hero {
+    position: fixed;
+    inset: 0;
+    z-index: 6;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    text-align: center;
+    padding-top: 10vh;
+    pointer-events: none;
+  }
+  .hero h1 {
+    font-family: var(--font-display);
+    font-size: clamp(2.6rem, 8vw, 6.2rem);
+    letter-spacing: 0.1em;
+    margin: 0;
+    background: linear-gradient(to bottom, #fff 15%, #ff4fa8 60%, #9e00ff 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    filter: drop-shadow(0 0 20px rgba(255, 47, 176, 0.7));
+  }
+  .hero p {
+    font-family: var(--font-mono);
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    font-size: clamp(0.7rem, 1.5vw, 0.9rem);
+    color: #ffb7ea;
+    margin-top: 0.8rem;
+  }
+
+  /* SCROLL CONTENT & TIMELINE CARDS */
+  .content-wrapper {
+    position: relative;
+    z-index: 10;
+    padding-top: 100vh;
+    padding-bottom: 20vh;
+    /* allow pointer events through to maybe the scene if we wanted, but not needed */
+  }
+
+  .timeline {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-auto-rows: 600px;
+    position: relative;
+    width: 90%;
+    max-width: 1200px;
+    margin: 5rem auto;
+    align-items: center;
+  }
+  .snake-svg-container {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+  }
+  .snake-svg-container svg {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+  .bright-snake {
+    filter: drop-shadow(0 0 10px rgba(0, 243, 255, 0.6)) drop-shadow(0 0 20px rgba(255, 0, 127, 0.6));
+    transition: opacity 0.5s;
+  }
+  .dark-snake {
+    filter: drop-shadow(0 0 15px rgba(138, 43, 226, 0.8));
+    opacity: var(--scroll-p);
+  }
+  
+  .card {
+    position: relative;
+    width: 45%;
+    z-index: 10;
+    opacity: 0;
+    transform: translateY(50px);
+    transition: all 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  .card.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .card.left { 
+    grid-column: 1; 
+    justify-self: start; 
+    margin-left: 10%; 
+  }
+  .card.right { 
+    grid-column: 2; 
+    justify-self: end; 
+    margin-right: 10%; 
+  }
+  
+  .card::after {
+    display: none;
+  }
+
+  .panel {
+    position: relative;
+    background: linear-gradient(135deg, #1d033a 0%, #39075e 25%, #180336 50%, #4b0082 75%, #1d033a 100%);
+    border: 1px solid rgba(138, 43, 226, 0.4);
+    backdrop-filter: blur(10px);
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 
+      inset 0 1px 1px rgba(138, 43, 226, 0.4), 
+      inset 0 -1px 1px rgba(0, 0, 0, 0.5),
+      0 20px 40px rgba(0, 0, 0, 0.6),
+      0 0 20px rgba(138, 43, 226, 0.2);
+    overflow: hidden;
+    transform-style: preserve-3d;
+    perspective: 1000px;
+    will-change: transform;
+  }
+
+  .metal-ripples {
+    position: absolute;
+    inset: 0;
+    background: 
+      radial-gradient(ellipse 80% 50% at 20% 30%, rgba(138, 43, 226, 0.3) 0%, transparent 50%),
+      radial-gradient(ellipse 60% 40% at 80% 70%, rgba(255, 0, 127, 0.2) 0%, transparent 50%),
+      radial-gradient(ellipse 100% 60% at 50% 50%, rgba(138, 43, 226, 0.2) 0%, transparent 60%);
+    background-size: 200% 200%;
+    animation: rippleMove 8s infinite alternate ease-in-out;
+    pointer-events: none;
+    z-index: 1;
+  }
+  @keyframes rippleMove {
+    0% { background-position: 0% 0%; }
+    100% { background-position: 100% 100%; }
+  }
+
+  .metal-surface {
+    position: absolute;
+    inset: 0;
+    background: conic-gradient(
+      from 0deg at 30% 30%, 
+      transparent 0deg, 
+      rgba(138, 43, 226, 0.2) 60deg, 
+      transparent 120deg,
+      rgba(255, 0, 127, 0.1) 180deg,
+      transparent 240deg,
+      rgba(138, 43, 226, 0.15) 300deg,
+      transparent 360deg
+    );
+    animation: pulseOpacity 4s infinite alternate;
+    pointer-events: none;
+    z-index: 2;
+  }
+  @keyframes pulseOpacity {
+    0% { opacity: 0.6; }
+    100% { opacity: 1; }
+  }
+
+  .metal-glare {
+    position: absolute;
+    top: 0; bottom: 0;
+    left: -100%; width: 50%;
+    background: linear-gradient(90deg, transparent, rgba(138, 43, 226, 0.5), transparent);
+    transform: skewX(-25deg);
+    animation: sweepGlare 6s infinite;
+    pointer-events: none;
+    z-index: 3;
+  }
+  @keyframes sweepGlare {
+    0% { left: -100%; }
+    20% { left: 200%; }
+    100% { left: 200%; }
+  }
+
+  .panel-content {
+    position: relative;
+    z-index: 10;
+    transform: translateZ(30px);
+  }
+
+  .panel .eyebrow {
+    font-size: 0.7rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: #d1a3ff;
+    margin: 0 0 0.8em;
+  }
+  .panel h2 {
+    font-family: var(--font-display);
+    font-size: clamp(1rem, 2.5vw, 1.6rem);
+    margin: 0 0 0.6em;
+    background: linear-gradient(90deg, #ff007f 0%, #fff 50%, #8A2BE2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .panel p {
+    margin: 0;
+    line-height: 1.6;
+    color: #b0b0b0;
+    font-size: 0.85rem;
+  }
+
+  /* Responsive timeline */
+  @media (max-width: 768px) {
+    .timeline {
+      grid-template-columns: 1fr;
+      grid-auto-rows: 450px;
+      margin: 2rem auto;
+    }
+    .card.left, .card.right {
+      grid-column: 1;
+      width: 48%;
+      margin: 0 auto;
+      justify-self: center;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="rig" id="rig">
+  <div class="scene" id="scene">
+    <div class="sky"></div>
+    <div class="sky sky-dark"></div>
+    <div class="stars"><canvas id="starfield"></canvas></div>
+    <div class="haze"></div>
+    <div class="haze haze-dark"></div>
+
+    <!-- SUN WITH PARALLAX -->
+    <div class="sun-wrap" id="sunWrap">
+      <div class="sun-glow"></div>
+      <div class="sun">
+        <div class="slice-container" id="sliceContainer"></div>
+      </div>
+    </div>
+
+    <!-- LAYERED MOUNTAINS -->
+    <div class="mountains" id="mountains">
+      <svg viewBox="0 0 1200 200" preserveAspectRatio="none">
+        <path class="back" d="M0,200 L0,110 L90,50 L200,120 L310,35 L450,110 L580,45 L700,120 L840,40 L970,115 L1080,60 L1200,110 L1200,200 Z"/>
+        <path d="M0,200 L0,140 L110,80 L230,135 L360,70 L480,140 L600,85 L720,130 L850,75 L990,145 L1110,95 L1200,140 L1200,200 Z"/>
+      </svg>
+    </div>
+
+    <!-- PROCEDURAL SILHOUETTE SKYLINE -->
+    <div class="city" id="city">
+      <svg viewBox="0 0 600 140" preserveAspectRatio="none" id="citySvg"></svg>
+    </div>
+
+    <div class="horizon-line"></div>
+
+    <!-- PERSPECTIVE GRID -->
+    <div class="ground">
+      <div class="pool" id="sunPool"></div>
+      <div class="grid"></div>
+      <div class="grid grid-dark"></div>
+    </div>
+  </div>
+
+  <div class="hero" id="hero">
+    <h1>Hack 6.0</h1>
+    <p>Subheading</p>
+  </div>
+
+  <div class="crt"></div>
+  <div class="vignette"></div>
+
+  <div class="content-wrapper">
+    <div class="timeline">
+      <div class="snake-svg-container">
+        <svg viewBox="0 0 1000 1000" preserveAspectRatio="none">
+          <defs>
+            <linearGradient id="minimal-grad" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stop-color="#00f3ff" />
+              <stop offset="50%" stop-color="#ff007f" />
+              <stop offset="100%" stop-color="#8A2BE2" />
+            </linearGradient>
+            <linearGradient id="minimal-grad-dark" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stop-color="#8A2BE2" />
+              <stop offset="100%" stop-color="#39075e" />
+            </linearGradient>
+          </defs>
+          
+          <g class="bright-snake">
+            <!-- Sleek Minimalist Neon Line -->
+            <path d="M 100,125 C 100,250 900,250 900,375 S 100,500 100,625 S 900,750 900,875" fill="none" stroke="url(#minimal-grad)" stroke-width="8" stroke-linecap="round" />
+          </g>
+
+          <g class="dark-snake">
+            <!-- Smooth Dark Mode Fade -->
+            <path d="M 100,125 C 100,250 900,250 900,375 S 100,500 100,625 S 900,750 900,875" fill="none" stroke="url(#minimal-grad-dark)" stroke-width="8" stroke-linecap="round" />
+          </g>
+        </svg>
+      </div>
+      
+      <div class="card left">
+        <div class="panel">
+          <div class="metal-ripples"></div>
+          <div class="metal-surface"></div>
+          <div class="metal-glare"></div>
+          <div class="panel-content">
+            <p class="eyebrow">1984 // INITIATION</p>
+            <h2>The First Connection</h2>
+            <p>Booting up the mainframe. The neon grid was just a theoretical construct until the first packets traversed the network.</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="card right">
+        <div class="panel">
+          <div class="metal-ripples"></div>
+          <div class="metal-surface"></div>
+          <div class="metal-glare"></div>
+          <div class="panel-content">
+            <p class="eyebrow">1989 // EXPANSION</p>
+            <h2>Neon Sprawl</h2>
+            <p>The grid expanded infinitely. Horizons glowed with the data of a million interconnected nodes, forming the new digital frontier.</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="card left">
+        <div class="panel">
+          <div class="metal-ripples"></div>
+          <div class="metal-surface"></div>
+          <div class="metal-glare"></div>
+          <div class="panel-content">
+            <p class="eyebrow">1995 // OVERDRIVE</p>
+            <h2>Maximum Velocity</h2>
+            <p>Processors overclocked. The speed of light became the speed of thought. The sunset became a permanent fixture of our virtual sky.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="card right">
+        <div class="panel">
+          <div class="metal-ripples"></div>
+          <div class="metal-surface"></div>
+          <div class="metal-glare"></div>
+          <div class="panel-content">
+            <p class="eyebrow">2049 // DARK MODE</p>
+            <h2>The Fade</h2>
+            <p>As the system ages, the bright pinks fade into deep purples. The sun finally sets on the golden era of the synthwave horizon.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  // Dynamic Viewport Height Fix
+  function setVH(){
+    document.documentElement.style.setProperty('--vh', (window.innerHeight * 0.01) + 'px');
+  }
+  setVH();
+  window.addEventListener('resize', setVH);
+
+  // Generate Sun Slices
+  const sliceContainer = document.getElementById('sliceContainer');
+  const sliceHeights = [2, 3, 4, 6, 8, 10, 13, 16]; 
+  sliceHeights.forEach(h => {
+    const s = document.createElement('div');
+    s.className = 'slice';
+    s.style.height = h + 'px';
+    sliceContainer.appendChild(s);
+  });
+
+  // Procedural Skyline
+  const svgNS = 'http://www.w3.org/2000/svg';
+  const citySvg = document.getElementById('citySvg');
+  const totalBldgs = 18;
+  const widthTotal = 600, baseline = 140;
+  let curX = 0;
+  const rng = (seed => () => (seed = (seed * 9301 + 49297) % 233280) / 233280)(1337);
+
+  for (let i = 0; i < totalBldgs; i++){
+    const w = 18 + rng() * 26;
+    const h = 25 + rng() * 85;
+    const rect = document.createElementNS(svgNS, 'rect');
+    rect.setAttribute('class', 'bldg');
+    rect.setAttribute('x', curX);
+    rect.setAttribute('y', baseline - h);
+    rect.setAttribute('width', w);
+    rect.setAttribute('height', h);
+    citySvg.appendChild(rect);
+    curX += w + (2 + rng() * 6);
+  }
+  const scaleRatio = widthTotal / curX;
+  citySvg.querySelectorAll('rect').forEach(r => {
+    r.setAttribute('transform', `scale(${scaleRatio}, 1)`);
+  });
+
+  // Starfield
+  const canvas = document.getElementById('starfield');
+  const ctx = canvas.getContext('2d');
+  let stars = [];
+
+  function seedStars(){
+    const w = canvas.clientWidth, h = canvas.clientHeight;
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    canvas.width = w * dpr;
+    canvas.height = h * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+    const count = Math.round((w * h) / 3800);
+    stars = new Array(count).fill(0).map(() => ({
+      x: Math.random() * w,
+      y: Math.random() * h * 0.65,
+      r: Math.random() * 1.2 + 0.3,
+      alpha: Math.random(),
+      speed: 0.02 + Math.random() * 0.03
+    }));
+  }
+  seedStars();
+  window.addEventListener('resize', seedStars);
+
+  // Intersection Observer for Timeline Cards
+  const cards = document.querySelectorAll('.card');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if(e.isIntersecting) {
+        e.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.15 });
+  
+  cards.forEach(card => {
+    observer.observe(card);
+
+    // 3D Tilt Effect on Liquid Metal Panels
+    const panel = card.querySelector('.panel');
+    card.addEventListener('mousemove', (e) => {
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      
+      const centerX = rect.width / 2;
+      const centerY = rect.height / 2;
+      
+      // Calculate rotation based on cursor distance from center
+      const rotateX = ((y - centerY) / centerY) * -12;
+      const rotateY = ((x - centerX) / centerX) * 12;
+      
+      panel.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+    });
+    
+    card.addEventListener('mouseleave', () => {
+      panel.style.transform = `rotateX(0deg) rotateY(0deg)`;
+      panel.style.transition = `transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1)`;
+    });
+    
+    card.addEventListener('mouseenter', () => {
+      panel.style.transition = `none`;
+    });
+  });
+
+  // Mouse & Scroll Parallax Physics
+  let mouseX = 0, mouseY = 0;
+  let targetMouseX = 0, targetMouseY = 0;
+  let scrollProgress = 0, targetScrollProgress = 0;
+
+  const root = document.documentElement;
+  const rig = document.getElementById('rig');
+  const sunWrap = document.getElementById('sunWrap');
+  const city = document.getElementById('city');
+  const hero = document.getElementById('hero');
+  const sunPool = document.getElementById('sunPool');
+
+  window.addEventListener('mousemove', (e) => {
+    targetMouseX = (e.clientX / window.innerWidth - 0.5) * 2;
+    targetMouseY = (e.clientY / window.innerHeight - 0.5) * 2;
+  });
+
+  function computeScroll(){
+    // Max scrollable distance
+    const max = document.body.scrollHeight - window.innerHeight;
+    targetScrollProgress = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
+  }
+  window.addEventListener('scroll', computeScroll, { passive: true });
+  // Initial compute
+  computeScroll();
+
+  // Main Render Loop (Linear Interpolation)
+  function render(now){
+    // Lerp mouse & scroll
+    mouseX += (targetMouseX - mouseX) * 0.05;
+    mouseY += (targetMouseY - mouseY) * 0.05;
+    scrollProgress += (targetScrollProgress - scrollProgress) * 0.08;
+
+    // Apply scroll progress to CSS variables for dark mode transition
+    root.style.setProperty('--scroll-p', scrollProgress);
+
+    // Transform Sun: Sinks with scroll, subtly follows cursor
+    const sunX = mouseX * 25;
+    // Base parallax for mouse + scroll-based setting
+    // By multiplying scrollProgress by ~65vh, the sun sets fully down.
+    const sunY = (mouseY * 15) + (scrollProgress * window.innerHeight * 0.65);
+    sunWrap.style.transform = `translate(calc(-50% + ${sunX}px), ${sunY}px)`;
+    
+    sunPool.style.transform = `translateX(calc(-50% + ${sunX * 0.5}px))`;
+    sunPool.style.opacity = Math.max(0, 1 - scrollProgress * 1.5);
+
+    // Parallax Skyline & Hero
+    city.style.transform = `translateX(calc(-50% + ${mouseX * 12}px))`;
+    hero.style.transform = `translateY(${scrollProgress * -60}px) scale(${1 - scrollProgress * 0.15})`;
+    hero.style.opacity = `${Math.max(0, 1 - scrollProgress * 2.5)}`;
+
+    // Draw Twinkling Stars
+    const w = canvas.clientWidth, h = canvas.clientHeight;
+    ctx.clearRect(0, 0, w, h);
+    for (let s of stars){
+      s.alpha += s.speed;
+      const a = (Math.sin(s.alpha) + 1) / 2;
+      // Stars become slightly brighter/more visible in dark mode
+      const baseOpacity = 0.2 + (scrollProgress * 0.2); 
+      ctx.fillStyle = `rgba(255, 255, 255, ${baseOpacity + a * 0.8})`;
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    requestAnimationFrame(render);
+  }
+  requestAnimationFrame(render);
+
+})();
+</script>
+</body>
+</html>
