@@ -17,18 +17,30 @@ module.exports = {
       },
     },
     extend: {
+      fontFamily: {
+        heading: ["var(--font-orbitron)", "sans-serif"],
+        subheading: ["var(--font-space-grotesk)", "sans-serif"],
+        body: ["var(--font-rajdhani)", "sans-serif"],
+        mono: ["var(--font-space-grotesk)", "sans-serif"],
+        sans: ["var(--font-rajdhani)", "sans-serif"],
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
-        background: "#19171b",
+        background: "#4B0082",
         foreground: "hsl(var(--foreground))",
+        "indigo-deep": "#4B0082",
+        "blue-violet": "#8A2BE2",
+        "vapor-pink": "#FF4FD8",
+        "deep-pink": "#FF1493",
+        "electric-cyan": "#00FFFF",
         primary: {
-          DEFAULT: "#E63946", // Updated to a more vibrant red
+          DEFAULT: "#FF4FD8",
           foreground: "hsl(var(--primary-foreground))",
         },
         secondary: {
-          DEFAULT: "#c1121f", // Updated secondary red
+          DEFAULT: "#8A2BE2",
           foreground: "hsl(var(--secondary-foreground))",
         },
         destructive: {
@@ -36,7 +48,7 @@ module.exports = {
           foreground: "hsl(var(--destructive-foreground))",
         },
         muted: {
-          DEFAULT: "#780000", // Updated muted red
+          DEFAULT: "#4B0082",
           foreground: "hsl(var(--muted-foreground))",
         },
         accent: {
@@ -51,29 +63,6 @@ module.exports = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-      },
-      borderRadius: {
-        lg: "var(--radius)",
-        md: "calc(var(--radius) - 2px)",
-        sm: "calc(var(--radius) - 4px)",
-      },
-      keyframes: {
-        "accordion-down": {
-          from: { height: 0 },
-          to: { height: "var(--radix-accordion-content-height)" },
-        },
-        "accordion-up": {
-          from: { height: "var(--radix-accordion-content-height)" },
-          to: { height: 0 },
-        },
-      },
-      animation: {
-        "accordion-down": "accordion-down 0.2s ease-out",
-        "accordion-up": "accordion-up 0.2s ease-out",
-      },
-      fontFamily: {
-        sans: ["var(--font-inter)"],
-        heading: ["var(--font-poppins)"],
       },
     },
   },

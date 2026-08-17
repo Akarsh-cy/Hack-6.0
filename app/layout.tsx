@@ -1,18 +1,24 @@
 import type React from "react"
 import "./globals.css"
 import type { Metadata } from "next"
-import { Inter, Poppins } from "next/font/google"
+import { Orbitron, Space_Grotesk, Rajdhani } from "next/font/google"
 
-const inter = Inter({
+const orbitron = Orbitron({
   subsets: ["latin"],
-  variable: "--font-inter",
+  variable: "--font-orbitron",
   display: "swap",
 })
 
-const poppins = Poppins({
+const spaceGrotesk = Space_Grotesk({
+  subsets: ["latin"],
+  variable: "--font-space-grotesk",
+  display: "swap",
+})
+
+const rajdhani = Rajdhani({
   weight: ["400", "500", "600", "700"],
   subsets: ["latin"],
-  variable: "--font-poppins",
+  variable: "--font-rajdhani",
   display: "swap",
 })
 
@@ -28,12 +34,8 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className={`${inter.variable} ${poppins.variable}`}>
-      <body>{children}</body>
+    <html lang="en" className={`${orbitron.variable} ${spaceGrotesk.variable} ${rajdhani.variable}`}>
+      <body className="bg-[#4B0082] text-white font-body">{children}</body>
     </html>
   )
-}
-
-
-
-import './globals.css'
+}

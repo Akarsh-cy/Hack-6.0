@@ -116,6 +116,14 @@ export default function Footer() {
                 </a>
               </li>
               <li>
+                <Link
+                  href="/judges"
+                  className="text-gray-400 text-lg hover:text-primary transition-colors flex items-center"
+                >
+                  <ChevronRight className="w-4 h-4 mr-1" /> Judges
+                </Link>
+              </li>
+              <li>
                 <a
                   href="#sponsors"
                   onClick={(e) => handleLinkClick(e, "#sponsors")}
