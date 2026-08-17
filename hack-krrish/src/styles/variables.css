@@ -1,0 +1,23 @@
+:root {
+  --p: 0;
+  --vh: 1vh;
+  --scroll-p: 0;
+  --font-display: 'Audiowide', sans-serif;
+  --font-mono: 'Space Mono', monospace;
+
+  /* Vaporwave Palette */
+  --cyan: #00FFF0;
+  --teal: #7EFFF5;
+  --magenta: #FF71CE;
+  --pink: #FF6AD5;
+  --lavender: #C4B5FD;
+  --purple: #B967FF;
+  --deep-violet: #2D1B4E;
+  --space-black: #050510;
+  
+  /* Dynamic Sun Colors (Written by useParallaxEngine hook) */
+  --sun-c1: #7EFFF5;
+  --sun-c2: #FF71CE;
+  --sun-c3: #B967FF;
+  --sun-c4: #2D1B4E;
+}

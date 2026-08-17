@@ -1,0 +1,186 @@
+/* FLOATING HERO */
+.hero {
+  position: fixed;
+  inset: 0;
+  z-index: 7;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  text-align: center;
+  padding-top: 15vh;
+  pointer-events: none;
+  will-change: transform;
+}
+
+.hero-title-wrap {
+  position: relative;
+  cursor: default;
+  pointer-events: auto;
+}
+
+.hero h1 {
+  font-family: var(--font-display);
+  font-size: clamp(2.8rem, 8vw, 6.5rem);
+  letter-spacing: 0.15em;
+  margin: 0;
+  background: linear-gradient(to bottom, #fff 15%, var(--teal) 45%, var(--pink) 70%, var(--purple) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 0 20px rgba(0, 255, 240, 0.6));
+  position: relative;
+  z-index: 2;
+}
+
+.hero h1::before, .hero h1::after {
+  content: 'Hack 6.0';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(to bottom, #fff 15%, var(--teal) 45%, var(--pink) 70%, var(--purple) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  z-index: -1;
+  opacity: 0;
+}
+
+/* Chromatic split glitch on hover */
+.hero-title-wrap:hover h1 {
+  animation: textJitter 0.2s infinite;
+}
+.hero-title-wrap:hover h1::before {
+  opacity: 0.8;
+  transform: translate(-3px, 1px);
+  text-shadow: 2px 0 var(--cyan);
+  animation: textJitter 0.15s infinite reverse;
+}
+.hero-title-wrap:hover h1::after {
+  opacity: 0.8;
+  transform: translate(3px, -1px);
+  text-shadow: -2px 0 var(--magenta);
+  animation: textJitter 0.25s infinite;
+}
+
+@keyframes textJitter {
+  0% { transform: translate(0, 0); }
+  20% { transform: translate(-1px, 1px); }
+  40% { transform: translate(1px, -1px); }
+  60% { transform: translate(-1px, -1px); }
+  80% { transform: translate(1px, 1px); }
+  100% { transform: translate(0, 0); }
+}
+
+.hero p {
+  font-family: var(--font-mono);
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  font-size: clamp(0.7rem, 1.5vw, 0.9rem);
+  color: var(--teal);
+  margin-top: 0.5rem;
+  text-shadow: 0 0 10px rgba(0, 255, 240, 0.5);
+}
+
+/* CTA BUTTON */
+.hero-cta {
+  position: absolute;
+  bottom: 22vh;
+  pointer-events: auto;
+  z-index: 10;
+}
+
+.register-btn {
+  position: relative;
+  background: rgba(29, 27, 78, 0.4);
+  backdrop-filter: blur(8px);
+  border: none;
+  color: var(--cyan);
+  font-family: var(--font-mono);
+  font-size: clamp(0.9rem, 2vw, 1.2rem);
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  padding: 1.2rem 3.5rem;
+  border-radius: 50px;
+  cursor: pointer;
+  outline: none;
+  overflow: hidden;
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), color 0.3s, box-shadow 0.3s;
+  animation: buttonPulse 5s ease-in-out infinite alternate;
+}
+
+/* Gradient Border */
+.register-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50px;
+  padding: 2px;
+  background: linear-gradient(90deg, var(--cyan), var(--magenta), var(--lavender), var(--cyan));
+  background-size: 300% 300%;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation: spinBorder 4s linear infinite;
+  pointer-events: none;
+}
+
+/* Sweep Glare */
+.register-btn::after {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%; width: 50%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  transform: skewX(-20deg);
+  animation: sweepBtn 6s infinite;
+  pointer-events: none;
+  border-radius: 50px;
+}
+
+@keyframes buttonPulse {
+  0% { box-shadow: 0 0 15px rgba(0, 255, 240, 0.2), inset 0 0 10px rgba(0, 255, 240, 0.1); }
+  100% { box-shadow: 0 0 35px rgba(0, 255, 240, 0.5), inset 0 0 20px rgba(0, 255, 240, 0.3); }
+}
+
+@keyframes spinBorder {
+  100% { background-position: -300% 0; }
+}
+
+@keyframes sweepBtn {
+  0%, 30% { left: -100%; }
+  50%, 100% { left: 200%; }
+}
+
+.register-btn .text {
+  position: relative;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: text-shadow 0.3s;
+}
+
+.register-btn .arr {
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.register-btn:hover {
+  transform: scale(1.08);
+  color: #fff;
+  box-shadow: 0 0 45px rgba(255, 113, 206, 0.6), inset 0 0 20px rgba(255, 113, 206, 0.4);
+  animation: none;
+}
+
+.register-btn:hover::before {
+  background: linear-gradient(90deg, var(--magenta), var(--lavender), var(--cyan), var(--magenta));
+  background-size: 300% 300%;
+  animation: spinBorder 2s linear infinite;
+}
+
+.register-btn:hover .text {
+  animation: textJitter 0.2s infinite;
+  text-shadow: 2px 0 var(--cyan), -2px 0 var(--magenta);
+}
+
+.register-btn:hover .arr {
+  transform: translateX(10px);
+}
