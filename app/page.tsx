@@ -3,6 +3,7 @@ import HeroSection from "@/components/hero-section";
 import AboutSection from "@/components/about-section";
 import TimelineSection from "@/components/timeline-section";
 import PrizeSection from "@/components/prize-section";
+import JudgesSection from "@/components/judges-section";
 import SponsorsSection from "@/components/sponsors-section";
 import FaqSection from "@/components/faq-section";
 import ContactSection from "@/components/contact-section";
@@ -17,6 +18,7 @@ export default function Home() {
             <AboutSection />
             <TimelineSection />
             <PrizeSection />
+            <JudgesSection />
             <SponsorsSection />
             <FaqSection />
             <TeamSection />

@@ -24,6 +24,7 @@ const navLinks = [
   { name: "About", href: "#about" },
   { name: "Timeline", href: "#timeline" },
   { name: "Prizes", href: "#prizes" },
+  { name: "Judges", href: "#judges" },
   { name: "Sponsors", href: "#sponsors" },
   { name: "FAQ", href: "#faq" },
   { name: "Organizers", href: "#team-section" },
@@ -78,10 +79,18 @@ export default function Navbar() {
   ) => {
     e.preventDefault();
     console.log(`handleNavLinkClick triggered with href: ${href}`);
+    if (href.startsWith("/")) {
+      router.push(href);
+      setIsOpen(false);
+      return;
+    }
     const sectionId = href.substring(1); // Remove the # from the href
     console.log(`Extracted section ID: ${sectionId}`);
-    if(sectionId === "team"){
+    if (sectionId === "team") {
       router.push("/team");
+    }
+    if (sectionId === "judges") {
+      router.push("/judges");
     }
     scrollToSection(sectionId);
     setIsOpen(false); // Close mobile menu if open

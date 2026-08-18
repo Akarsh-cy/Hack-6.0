@@ -67,9 +67,10 @@ export default function Footer() {
     { label: "About", href: "#about", tag: "02" },
     { label: "Timeline", href: "#timeline", tag: "03" },
     { label: "Prizes", href: "#prizes", tag: "04" },
-    { label: "Sponsors", href: "#sponsors", tag: "05" },
-    { label: "Team", href: "/team", tag: "06" },
-    { label: "Contact", href: "#contact", tag: "07" },
+    { label: "Judges", href: "#judges", tag: "05" },
+    { label: "Sponsors", href: "#sponsors", tag: "06" },
+    { label: "Team", href: "/team", tag: "07" },
+    { label: "Contact", href: "#contact", tag: "08" },
   ];
 
   const resourceLinks = [
