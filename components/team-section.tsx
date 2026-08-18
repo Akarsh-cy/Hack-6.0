@@ -360,7 +360,7 @@ const TeamCard = ({
                         SYSTEM ONLINE
                     </span>
 
-                    <span>HACK 5.0</span>
+                    <span>HACK 6.0</span>
                 </div>
             </div>
         </motion.div>
@@ -395,10 +395,10 @@ export default function TeamSection() {
                         </span>
                     </h2>
 
-                    <p className="mx-auto max-w-2xl font-mono text-sm text-[#3b1647] md:text-base">
-                        Meet the passionate individuals who made HACK 5.0
+                    <pi className="mx-auto max-w-2xl font-mono text-sm text-[#ffffff] md:text-base">
+                        Meet the passionate individuals who made HACK 6.0
                         possible
-                    </p>
+                    </pi>
                 </motion.div>
 
                 {/* Team groups */}

@@ -2,7 +2,12 @@
 
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { motion } from "framer-motion";
+import {
+  motion,
+  useMotionValue,
+  useSpring,
+  useTransform,
+} from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import localFont from "next/font/local";
 
@@ -10,6 +15,10 @@ const Hacked_KerX = localFont({
   src: "../public/fonts/Hacked-KerX.ttf",
   variable: "--custom-font",
 });
+
+/* ============================================================================
+   TYPES
+   ============================================================================ */
 
 interface Sponsor {
   name: string;
@@ -20,6 +29,10 @@ interface SponsorTier {
   tier: string;
   sponsors: Sponsor[];
 }
+
+/* ============================================================================
+   SPONSOR DATA
+   ============================================================================ */
 
 const sponsorTiers: SponsorTier[] = [
   {
@@ -79,48 +92,165 @@ const sponsorTiers: SponsorTier[] = [
   },
 ];
 
-/* -------------------------------------------------------------------------- */
-/* Retro Window                                                               */
-/* -------------------------------------------------------------------------- */
+/* ============================================================================
+   BEVELS
+   ============================================================================ */
+
+const BEVEL_RAISED =
+    "inset -1px -1px 0 rgba(0,0,0,0.35), inset 1px 1px 0 rgba(255,255,255,0.8)";
+
+const BEVEL_INSET =
+    "inset 1px 1px 0 rgba(255,255,255,0.9), inset -1px -1px 0 rgba(0,0,0,0.25)";
+
+/* ============================================================================
+   WINDOW CONTROLS
+   ============================================================================ */
 
 function WindowControls() {
   return (
-      <div className="flex gap-[3px]">
-        <div className="flex h-[17px] w-[17px] items-center justify-center border border-[#555] bg-[#f2f2f2] text-[9px] leading-none text-[#222]">
+      <div className="flex items-center gap-1">
+        <div
+            style={{ boxShadow: BEVEL_RAISED }}
+            className="flex h-[17px] w-[17px] items-center justify-center bg-[#c9c9d4] text-[9px] font-bold text-[#222]"
+        >
           _
         </div>
 
-        <div className="flex h-[17px] w-[17px] items-center justify-center border border-[#555] bg-[#f2f2f2] text-[8px] leading-none text-[#222]">
+        <div
+            style={{ boxShadow: BEVEL_RAISED }}
+            className="flex h-[17px] w-[17px] items-center justify-center bg-[#c9c9d4] text-[8px] font-bold text-[#222]"
+        >
           □
         </div>
 
-        <div className="flex h-[17px] w-[17px] items-center justify-center border border-[#555] bg-[#ff8ed8] text-[9px] font-bold leading-none text-black">
+        <div
+            style={{ boxShadow: BEVEL_RAISED }}
+            className="flex h-[17px] w-[17px] items-center justify-center bg-[#ff8ed8] text-[9px] font-bold text-black"
+        >
           ×
         </div>
       </div>
   );
 }
 
+/* ============================================================================
+   PRIZE-STYLE TILT CARD
+   ============================================================================ */
+
+function TiltCard({
+                    children,
+                    shadow,
+                  }: {
+  children: React.ReactNode;
+  shadow: string;
+}) {
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+
+  const springX = useSpring(x, {
+    stiffness: 220,
+    damping: 25,
+    mass: 0.5,
+  });
+
+  const springY = useSpring(y, {
+    stiffness: 220,
+    damping: 25,
+    mass: 0.5,
+  });
+
+  const rotateX = useTransform(
+      springY,
+      [-0.5, 0.5],
+      ["5deg", "-5deg"],
+  );
+
+  const rotateY = useTransform(
+      springX,
+      [-0.5, 0.5],
+      ["-5deg", "5deg"],
+  );
+
+  function handleMouseMove(
+      e: React.MouseEvent<HTMLDivElement>,
+  ) {
+    const rect = e.currentTarget.getBoundingClientRect();
+
+    const mouseX =
+        (e.clientX - rect.left) / rect.width - 0.5;
+
+    const mouseY =
+        (e.clientY - rect.top) / rect.height - 0.5;
+
+    x.set(mouseX);
+    y.set(mouseY);
+  }
+
+  function handleMouseLeave() {
+    x.set(0);
+    y.set(0);
+  }
+
+  return (
+      <div className="w-full perspective-[1000px]">
+        <motion.div
+            onMouseMove={handleMouseMove}
+            onMouseLeave={handleMouseLeave}
+            style={{
+              rotateX,
+              rotateY,
+              transformPerspective: 1000,
+              transformStyle: "preserve-3d",
+              boxShadow: `7px 7px 0 ${shadow}`,
+            }}
+            className="relative w-full overflow-hidden border-2 border-[#292929] bg-[#eeeeee] will-change-transform"
+        >
+          {children}
+        </motion.div>
+      </div>
+  );
+}
+
+/* ============================================================================
+   WINDOW TITLE BAR
+   ============================================================================ */
+
 function WindowTitleBar({
                           title,
-                          accent = "#8a2be2",
+                          accent,
                         }: {
   title: string;
-  accent?: string;
+  accent: string;
 }) {
   return (
       <div
-          className="flex h-8 items-center justify-between border-b-2 border-[#333] px-2"
+          className="flex h-9 items-center justify-between border-b-2 border-[#292929] px-2.5"
           style={{
-            background: `linear-gradient(90deg, ${accent}, #eeeeee 72%)`,
+            background: `linear-gradient(
+          90deg,
+          ${accent} 0%,
+          ${accent} 28%,
+          #ffc5ee 65%,
+          #eeeeee 100%
+        )`,
           }}
       >
         <div className="flex items-center gap-2">
-          <div className="h-4 w-4 border border-[#555] bg-[#ff9edc] shadow-[2px_2px_0_#00ffff]">
-            <div className="ml-[3px] mt-[3px] h-[6px] w-[8px] bg-[#8a2be2]" />
+          <div
+              style={{
+                boxShadow: BEVEL_RAISED,
+              }}
+              className="flex h-5 w-5 items-center justify-center bg-[#eeeeee]"
+          >
+            <div
+                className="h-2.5 w-3.5"
+                style={{
+                  backgroundColor: accent,
+                }}
+            />
           </div>
 
-          <span className="font-mono text-[9px] font-bold uppercase tracking-[0.12em] text-[#222]">
+          <span className="font-mono text-[9px] font-bold uppercase tracking-[0.1em] text-[#222]">
           {title}
         </span>
         </div>
@@ -130,20 +260,36 @@ function WindowTitleBar({
   );
 }
 
-/* -------------------------------------------------------------------------- */
-/* Vaporwave Decorations                                                      */
-/* -------------------------------------------------------------------------- */
+/* ============================================================================
+   VAPORWAVE BACKGROUND
+   ============================================================================ */
 
 function VaporwaveDecor() {
   return (
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        {/* Floating gradient sphere */}
         <motion.div
-            className="absolute right-[5%] top-[18%] h-12 w-12 rounded-full opacity-30 md:h-16 md:w-16"
+            className="absolute left-1/2 top-[5%] h-[420px] w-[650px] -translate-x-1/2 rounded-full opacity-[0.055] blur-[100px]"
             style={{
               background:
-                  "linear-gradient(145deg, #ff1493 0%, #8a2be2 52%, #00ffff 100%)",
-              boxShadow: "0 0 35px rgba(255,20,147,0.35)",
+                  "linear-gradient(90deg, #8a2be2, #ff1493, #00ffff)",
+            }}
+            animate={{
+              scale: [1, 1.05, 1],
+            }}
+            transition={{
+              duration: 20,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+        />
+
+        <motion.div
+            className="absolute right-[5%] top-[17%] h-12 w-12 rounded-full opacity-30 md:h-16 md:w-16"
+            style={{
+              background:
+                  "linear-gradient(145deg, #ff1493, #8a2be2 52%, #00ffff)",
+              boxShadow:
+                  "0 0 35px rgba(255,20,147,0.35)",
             }}
             animate={{
               y: [0, -10, 0],
@@ -156,17 +302,14 @@ function VaporwaveDecor() {
             }}
         />
 
-        {/* Thin geometric frame */}
         <div className="absolute right-[-25px] top-[28%] h-40 w-28 rotate-2 border border-[#00ffff]/20">
           <div className="absolute -left-5 top-8 h-20 w-20 border border-[#ff1493]/20" />
         </div>
 
-        {/* Small vaporwave text */}
         <span className="absolute left-[-8px] top-[34%] hidden -rotate-90 font-mono text-[7px] uppercase tracking-[0.35em] text-[#00ffff]/25 md:block">
         未来 // DIGITAL DREAM
       </span>
 
-        {/* Very subtle scanlines */}
         <div
             className="absolute inset-0 opacity-[0.025]"
             style={{
@@ -178,9 +321,9 @@ function VaporwaveDecor() {
   );
 }
 
-/* -------------------------------------------------------------------------- */
-/* Logo Treatment                                                             */
-/* -------------------------------------------------------------------------- */
+/* ============================================================================
+   SPONSOR LOGO
+   ============================================================================ */
 
 function SponsorLogo({
                        sponsor,
@@ -191,15 +334,16 @@ function SponsorLogo({
 }) {
   return (
       <div
-          className={`relative flex items-center justify-center overflow-hidden border-2 border-[#625675] bg-[#eeeeee] ${
-              large ? "h-32 md:h-36" : "h-24 md:h-28"
-          }`}
           style={{
-            boxShadow:
-                "inset 2px 2px 0 #ffffff, inset -2px -2px 0 #c5c5c5",
+            boxShadow: BEVEL_INSET,
           }}
+          className={`relative flex items-center justify-center overflow-hidden border-2 border-[#292929] bg-[#f4f4f4] ${
+              large
+                  ? "h-32 md:h-36"
+                  : "h-24 md:h-28"
+          }`}
       >
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#00ffff]/10 via-transparent to-[#ff4fd8]/10" />
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#00ffff]/10 via-transparent to-[#ff1493]/10" />
 
         <div
             className="pointer-events-none absolute inset-0 opacity-[0.12]"
@@ -213,7 +357,7 @@ function SponsorLogo({
         />
 
         <div
-            className="pointer-events-none absolute inset-0 z-10 opacity-[0.06]"
+            className="pointer-events-none absolute inset-0 opacity-[0.06]"
             style={{
               backgroundImage:
                   "repeating-linear-gradient(to bottom, transparent 0px, transparent 2px, rgba(0,0,0,0.7) 3px)",
@@ -221,8 +365,10 @@ function SponsorLogo({
         />
 
         <div
-            className={`relative z-20 ${
-                large ? "h-16 w-[50%] md:h-20" : "h-14 w-[55%] md:h-16"
+            className={`relative z-10 ${
+                large
+                    ? "h-16 w-[55%] md:h-20"
+                    : "h-14 w-[60%] md:h-16"
             }`}
         >
           <Image
@@ -237,180 +383,124 @@ function SponsorLogo({
   );
 }
 
-/* -------------------------------------------------------------------------- */
-/* Gold Sponsor                                                               */
-/* -------------------------------------------------------------------------- */
+/* ============================================================================
+   SPONSOR CARD
+   ============================================================================ */
 
-function GoldSponsor({ sponsor }: { sponsor: Sponsor }) {
+function SponsorCard({
+                       sponsor,
+                       index,
+                       tier,
+                       large = false,
+                     }: {
+  sponsor: Sponsor;
+  index: number;
+  tier: "gold" | "silver" | "bronze" | "inkind";
+  large?: boolean;
+}) {
+  const accents = {
+    gold: "#ff1493",
+    silver: index % 2 === 0 ? "#00ffff" : "#ff1493",
+    bronze: "#8a2be2",
+    inkind: ["#8a2be2", "#ff1493", "#00ffff"],
+  };
+
+  const accent =
+      tier === "inkind"
+          ? accents.inkind[index % 3]
+          : accents[tier];
+
+  const filename =
+      tier === "gold"
+          ? "GOLD_SPONSOR.EXE"
+          : tier === "silver"
+              ? `SILVER_${String(index + 1).padStart(2, "0")}.EXE`
+              : tier === "bronze"
+                  ? "BRONZE_SPONSOR.EXE"
+                  : `IN_KIND_${String(index + 1).padStart(2, "0")}.EXE`;
+
   return (
-      <motion.div
-          whileHover={{
-            y: -6,
-            rotate: -0.5,
-          }}
-          transition={{ duration: 0.25 }}
-          className="relative mx-auto w-full max-w-3xl"
-      >
-        <div className="pointer-events-none absolute -right-2 -bottom-2 left-2 top-2 border-2 border-[#00ffff]" />
+      <TiltCard shadow={accent}>
+        <WindowTitleBar
+            title={filename}
+            accent={accent}
+        />
 
-        <div className="pointer-events-none absolute -top-2 right-2 -bottom-2 left-[-4px] border-2 border-[#ff1493]" />
+        <div className={large ? "p-3 md:p-4" : "p-2.5"}>
+          <SponsorLogo
+              sponsor={sponsor}
+              large={large}
+          />
+
+          <div className="mt-2 flex items-center justify-between gap-2">
+          <span className="truncate font-mono text-[8px] font-bold uppercase tracking-wider text-[#292929]">
+            {sponsor.name}
+          </span>
+
+            <span
+                className="shrink-0 font-mono text-[7px] font-bold uppercase"
+                style={{ color: accent }}
+            >
+            ONLINE
+          </span>
+          </div>
+        </div>
+
+        <div className="flex h-6 items-center justify-between border-t-2 border-[#292929] bg-[#d9d9d9] px-2.5 font-mono text-[7px] uppercase tracking-[0.08em] text-[#555]">
+        <span>
+          SPONSOR://CONNECTED
+        </span>
+
+          <span style={{ color: accent }}>
+          READY
+        </span>
+        </div>
+      </TiltCard>
+  );
+}
+
+/* ============================================================================
+   TIER LABEL
+   ============================================================================ */
+
+function TierLabel({
+                     children,
+                     accent,
+                   }: {
+  children: React.ReactNode;
+  accent: string;
+}) {
+  return (
+      <div className="mb-5 flex items-center gap-3">
+        <div
+            className="h-[2px] flex-1"
+            style={{
+              backgroundColor: accent,
+            }}
+        />
 
         <div
-            className="relative border-2 border-[#333] bg-[#eeeeee]"
             style={{
-              boxShadow:
-                  "7px 7px 0 #8a2be2, -4px -4px 0 rgba(255,79,216,0.9)",
+              boxShadow: `3px 3px 0 ${accent}`,
             }}
+            className="border-2 border-[#555] bg-[#eeeeee] px-3 py-1.5 font-mono text-[8px] font-bold uppercase tracking-[0.18em] text-[#444]"
         >
-          <WindowTitleBar
-              title="GOLD_SPONSOR.EXE"
-              accent="#ff4fd8"
-          />
-
-          <div className="grid gap-0 md:grid-cols-[120px_1fr]">
-            <div className="border-b-2 border-[#aaa] bg-[#e2e2e2] p-3 md:border-b-0 md:border-r-2">
-              <div className="mb-3 font-mono text-[8px] font-bold uppercase text-[#444]">
-                SPONSOR
-              </div>
-
-              <div className="space-y-2 font-mono text-[7px] text-[#555]">
-                <div className="border border-[#999] bg-[#f8f8f8] px-2 py-1.5">
-                  STATUS:
-                  <span className="ml-1 text-[#008c95]">ACTIVE</span>
-                </div>
-
-                <div className="border border-[#999] bg-[#f8f8f8] px-2 py-1.5">
-                  LEVEL:
-                  <span className="ml-1 text-[#d00078]">GOLD</span>
-                </div>
-
-                <div className="border border-[#999] bg-[#f8f8f8] px-2 py-1.5">
-                  HACK_5.0
-                </div>
-              </div>
-            </div>
-
-            <div className="p-3 md:p-4">
-              <SponsorLogo sponsor={sponsor} large />
-
-              <div className="mt-1.5 flex justify-between font-mono text-[7px] uppercase tracking-wider text-[#666]">
-                <span>CONNECTED</span>
-                <span>01 / 01</span>
-              </div>
-            </div>
-          </div>
-
-          <div className="flex h-5 items-center justify-between border-t-2 border-[#aaa] bg-[#d9d9d9] px-2 font-mono text-[7px] text-[#555]">
-            <span>SPONSOR_DIRECTORY</span>
-            <span>READY</span>
-          </div>
+          {children}
         </div>
-      </motion.div>
-  );
-}
 
-/* -------------------------------------------------------------------------- */
-/* Silver Sponsor                                                             */
-/* -------------------------------------------------------------------------- */
-
-function SilverSponsor({
-                         sponsor,
-                         index,
-                       }: {
-  sponsor: Sponsor;
-  index: number;
-}) {
-  return (
-      <motion.div
-          whileHover={{
-            y: -6,
-            rotate: index === 0 ? -1 : 1,
-          }}
-          transition={{ duration: 0.25 }}
-          className="relative w-full"
-      >
         <div
-            className={`pointer-events-none absolute inset-0 ${
-                index === 0
-                    ? "-translate-x-1.5 translate-y-1.5 border-2 border-[#00ffff]"
-                    : "translate-x-1.5 translate-y-1.5 border-2 border-[#ff1493]"
-            }`}
-        />
-
-        <div className="relative border-2 border-[#333] bg-[#eeeeee]">
-          <WindowTitleBar
-              title={`SILVER_${String(index + 1).padStart(2, "0")}.EXE`}
-              accent={index === 0 ? "#00ffff" : "#ff4fd8"}
-          />
-
-          <div className="p-2.5">
-            <SponsorLogo sponsor={sponsor} />
-
-            <div className="mt-1.5 flex justify-between px-1 font-mono text-[7px] uppercase text-[#666]">
-              <span>{sponsor.name}</span>
-              <span className="text-[#008c95]">ONLINE</span>
-            </div>
-          </div>
-
-          <div className="flex h-5 items-center border-t-2 border-[#aaa] bg-[#d9d9d9] px-2 font-mono text-[7px] text-[#555]">
-            SPONSOR_LINK://CONNECTED
-          </div>
-        </div>
-      </motion.div>
-  );
-}
-
-/* -------------------------------------------------------------------------- */
-/* Small Sponsor                                                              */
-/* -------------------------------------------------------------------------- */
-
-function SmallSponsor({
-                        sponsor,
-                        index,
-                      }: {
-  sponsor: Sponsor;
-  index: number;
-}) {
-  const accents = ["#8a2be2", "#ff1493", "#00ffff"];
-
-  return (
-      <motion.div
-          whileHover={{
-            y: -5,
-            rotate: index % 2 === 0 ? -1 : 1,
-          }}
-          transition={{ duration: 0.2 }}
-          className="relative"
-      >
-        <div
-            className="pointer-events-none absolute inset-0 translate-x-1 translate-y-1 border-2"
+            className="h-[2px] flex-1"
             style={{
-              borderColor: accents[index % accents.length],
+              backgroundColor: accent,
             }}
         />
-
-        <div className="relative border-2 border-[#333] bg-[#eeeeee]">
-          <WindowTitleBar
-              title={`APP_${String(index + 1).padStart(2, "0")}.EXE`}
-              accent={accents[index % accents.length]}
-          />
-
-          <div className="p-1.5">
-            <SponsorLogo sponsor={sponsor} />
-          </div>
-
-          <div className="border-t-2 border-[#aaa] bg-[#d9d9d9] px-2 py-1 font-mono text-[6px] uppercase text-[#555]">
-            {sponsor.name} //{" "}
-            <span className="text-[#008c95]">OK</span>
-          </div>
-        </div>
-      </motion.div>
+      </div>
   );
 }
 
-/* -------------------------------------------------------------------------- */
-/* Main Section                                                               */
-/* -------------------------------------------------------------------------- */
+/* ============================================================================
+   MAIN SPONSOR SECTION
+   ============================================================================ */
 
 export default function SponsorsSection() {
   const [ref, inView] = useInView({
@@ -422,11 +512,12 @@ export default function SponsorsSection() {
     hidden: {
       opacity: 0,
     },
+
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.18,
-        delayChildren: 0.15,
+        staggerChildren: 0.15,
+        delayChildren: 0.1,
       },
     },
   };
@@ -436,11 +527,12 @@ export default function SponsorsSection() {
       y: 25,
       opacity: 0,
     },
+
     visible: {
       y: 0,
       opacity: 1,
       transition: {
-        duration: 0.7,
+        duration: 0.65,
         ease: "easeOut",
       },
     },
@@ -465,20 +557,25 @@ export default function SponsorsSection() {
             initial="hidden"
             animate={inView ? "visible" : "hidden"}
         >
-          {/* ---------------------------------------------------------------- */}
-          {/* Directory heading                                                */}
-          {/* ---------------------------------------------------------------- */}
+          {/* ==================================================================
+            HEADER
+        ================================================================== */}
 
           <motion.div
               variants={item}
-              className="relative mb-10 text-center"
+              className="relative mb-12 text-center"
           >
-            <div className="mb-3 inline-block border-2 border-[#777] bg-[#eeeeee] px-3 py-1 font-mono text-[8px] uppercase tracking-[0.2em] text-[#444] shadow-[3px_3px_0_#00ffff]">
+            <div
+                style={{
+                  boxShadow: "3px 3px 0 #00ffff",
+                }}
+                className="mb-4 inline-block border-2 border-[#555] bg-[#eeeeee] px-3 py-1.5 font-mono text-[8px] font-bold uppercase tracking-[0.2em] text-[#444]"
+            >
               SPONSOR DIRECTORY
             </div>
 
             <h2
-                className={`text-3xl text-white drop-shadow-[3px_3px_0_#8a2be2] md:text-5xl ${Hacked_KerX.className}`}
+                className={`text-4xl text-white drop-shadow-[3px_3px_0_#8a2be2] md:text-6xl ${Hacked_KerX.className}`}
             >
               Our{" "}
               <span className="text-[#ff1493]">
@@ -486,142 +583,139 @@ export default function SponsorsSection() {
             </span>
             </h2>
 
-            <div className="mx-auto mt-4 h-[3px] w-24 bg-gradient-to-r from-[#00ffff] via-[#8a2be2] to-[#ff1493]" />
+            <div className="mx-auto mt-5 h-[3px] w-24 bg-gradient-to-r from-[#00ffff] via-[#8a2be2] to-[#ff1493]" />
 
-            <p className="mx-auto mt-4 max-w-xl font-mono text-[10px] leading-relaxed text-white/75 md:text-xs">
-              HACK 5.0 is made possible by the generous
+            <p className="mx-auto mt-5 max-w-xl font-mono text-[10px] leading-relaxed text-white/75 md:text-xs">
+              HACK 6.0 is made possible by the generous
               support of our sponsors.
             </p>
           </motion.div>
 
-          {/* ---------------------------------------------------------------- */}
-          {/* Gold                                                             */}
-          {/* ---------------------------------------------------------------- */}
+          {/* ==================================================================
+            GOLD
+        ================================================================== */}
 
           <motion.div
               variants={item}
-              className="mb-10"
+              className="mb-12"
           >
-            <div className="mb-5 flex items-center gap-3">
-              <div className="h-[2px] flex-1 bg-[#8a2be2]" />
-
-              <span className="border-2 border-[#777] bg-[#eeeeee] px-3 py-1.5 font-mono text-[8px] font-bold uppercase tracking-[0.18em] text-[#444] shadow-[3px_3px_0_#00ffff]">
+            <TierLabel accent="#ff1493">
               {gold.tier}
-            </span>
+            </TierLabel>
 
-              <div className="h-[2px] flex-1 bg-[#8a2be2]" />
+            <div className="mx-auto max-w-3xl">
+              <SponsorCard
+                  sponsor={gold.sponsors[0]}
+                  index={0}
+                  tier="gold"
+                  large
+              />
             </div>
-
-            <GoldSponsor sponsor={gold.sponsors[0]} />
           </motion.div>
 
-          {/* ---------------------------------------------------------------- */}
-          {/* Silver                                                           */}
-          {/* ---------------------------------------------------------------- */}
+          {/* ==================================================================
+            SILVER
+        ================================================================== */}
 
           <motion.div
               variants={item}
-              className="mb-10"
+              className="mb-12"
           >
-            <div className="mb-5 flex items-center gap-3">
-              <div className="h-[2px] flex-1 bg-[#8a2be2]" />
-
-              <span className="border-2 border-[#777] bg-[#eeeeee] px-3 py-1.5 font-mono text-[8px] font-bold uppercase tracking-[0.18em] text-[#444] shadow-[3px_3px_0_#ff1493]">
+            <TierLabel accent="#00ffff">
               {silver.tier}
-            </span>
+            </TierLabel>
 
-              <div className="h-[2px] flex-1 bg-[#8a2be2]" />
-            </div>
-
-            <div className="mx-auto grid max-w-4xl gap-6 md:grid-cols-2">
+            <div className="mx-auto grid max-w-4xl gap-7 md:grid-cols-2">
               {silver.sponsors.map((sponsor, index) => (
-                  <SilverSponsor
+                  <SponsorCard
                       key={sponsor.name}
                       sponsor={sponsor}
                       index={index}
+                      tier="silver"
                   />
               ))}
             </div>
           </motion.div>
 
-          {/* ---------------------------------------------------------------- */}
-          {/* Bronze + In Kind                                                 */}
-          {/* ---------------------------------------------------------------- */}
+          {/* ==================================================================
+            BRONZE + IN-KIND
+        ================================================================== */}
 
           <motion.div
               variants={item}
               className="mx-auto grid max-w-4xl gap-8 lg:grid-cols-[0.85fr_1.5fr]"
           >
-            {/* Bronze */}
+            {/* ================================================================
+              BRONZE
+          ================================================================ */}
+
             <div>
-              <div className="mb-4 flex items-center gap-2">
-                <div className="h-[2px] flex-1 bg-[#8a2be2]" />
-
-                <span className="border border-[#777] bg-[#eeeeee] px-2.5 py-1.5 font-mono text-[7px] font-bold uppercase text-[#444]">
+              <TierLabel accent="#8a2be2">
                 {bronze.tier}
-              </span>
-              </div>
+              </TierLabel>
 
-              <SilverSponsor
+              <SponsorCard
                   sponsor={bronze.sponsors[0]}
                   index={0}
+                  tier="bronze"
               />
             </div>
 
-            {/* In Kind */}
+            {/* ================================================================
+              IN-KIND
+          ================================================================ */}
+
             <div>
-              <div className="mb-4 flex items-center gap-2">
-                <div className="h-[2px] flex-1 bg-[#8a2be2]" />
-
-                <span className="border border-[#777] bg-[#eeeeee] px-2.5 py-1.5 font-mono text-[7px] font-bold uppercase text-[#444]">
+              <TierLabel accent="#ff1493">
                 {inKind.tier}
-              </span>
-              </div>
+              </TierLabel>
 
-              <div className="grid gap-4 sm:grid-cols-3">
+              <div className="grid gap-5 sm:grid-cols-3">
                 {inKind.sponsors.map((sponsor, index) => (
-                    <SmallSponsor
+                    <SponsorCard
                         key={sponsor.name}
                         sponsor={sponsor}
                         index={index}
+                        tier="inkind"
                     />
                 ))}
               </div>
             </div>
           </motion.div>
 
-          {/* ---------------------------------------------------------------- */}
-          {/* CTA                                                              */}
-          {/* ---------------------------------------------------------------- */}
+          {/* ==================================================================
+            CTA
+        ================================================================== */}
 
           <motion.div
               variants={item}
-              className="mx-auto mt-14 max-w-2xl"
+              className="mx-auto mt-16 max-w-2xl"
           >
-            <div
-                className="relative border-2 border-[#333] bg-[#eeeeee] p-5 text-center md:p-6"
-                style={{
-                  boxShadow:
-                      "6px 6px 0 #ff1493, -4px -4px 0 #00ffff",
-                }}
-            >
+            <TiltCard shadow="#ff1493">
               <WindowTitleBar
                   title="BECOME_A_SPONSOR.EXE"
                   accent="#00ffff"
               />
 
-              <div className="py-6">
-                <div className="mx-auto mb-4 h-10 w-10 border-2 border-[#777] bg-[#ff9edc] p-2 shadow-[3px_3px_0_#8a2be2]">
-                  <div className="h-full w-full border-2 border-[#8a2be2] bg-[#00ffff]" />
+              <div className="bg-[#eeeeee] px-5 py-7 text-center md:px-8">
+                <div
+                    style={{
+                      boxShadow:
+                          "3px 3px 0 #8a2be2",
+                    }}
+                    className="mx-auto mb-5 flex h-12 w-12 items-center justify-center border-2 border-[#333] bg-[#ff9edc]"
+                >
+                  <div className="h-6 w-6 border-2 border-[#8a2be2] bg-[#00ffff]" />
                 </div>
 
                 <h3 className="mb-2 font-mono text-lg font-bold uppercase text-[#222] md:text-xl">
                   Interested in Sponsoring?
                 </h3>
 
-                <p className="mx-auto mb-5 max-w-lg font-mono text-[10px] leading-relaxed text-[#555] md:text-xs">
-                  Join our growing list of sponsors and connect
-                  with top talent and innovative projects.
+                <p className="mx-auto mb-6 max-w-lg font-mono text-[10px] leading-relaxed text-[#555] md:text-xs">
+                  Join our growing list of sponsors and
+                  connect with top talent and innovative
+                  projects.
                 </p>
 
                 <Button
@@ -641,12 +735,36 @@ export default function SponsorsSection() {
                 </Button>
               </div>
 
-              <div className="flex justify-between border-t-2 border-[#aaa] pt-2 font-mono text-[6px] uppercase text-[#666]">
+              <div className="flex h-6 items-center justify-between border-t-2 border-[#292929] bg-[#d9d9d9] px-2.5 font-mono text-[7px] uppercase tracking-[0.08em] text-[#555]">
                 <span>READY</span>
-                <span>CONTACT://AVAILABLE</span>
+
+                <span className="text-[#008c95]">
+                CONTACT://AVAILABLE
+              </span>
               </div>
-            </div>
+            </TiltCard>
           </motion.div>
+
+          {/* ==================================================================
+            BOTTOM TRANSITION
+        ================================================================== */}
+
+          <div className="relative mt-20 h-16">
+            <div className="absolute left-0 right-0 top-1/2 h-[2px] bg-[#8a2be2]" />
+
+            <div className="absolute left-0 right-0 top-[calc(50%-6px)] h-[2px] bg-[#00ffff]/70" />
+
+            <div className="absolute left-0 right-0 top-[calc(50%+6px)] h-[2px] bg-[#ff1493]/70" />
+
+            <div
+                style={{
+                  boxShadow: "4px 4px 0 #8a2be2",
+                }}
+                className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 border-2 border-[#333] bg-[#eeeeee] px-4 py-2 font-mono text-[8px] font-bold uppercase tracking-[0.15em] text-[#333]"
+            >
+              SPONSOR_DIRECTORY://END
+            </div>
+          </div>
         </motion.div>
       </section>
   );
