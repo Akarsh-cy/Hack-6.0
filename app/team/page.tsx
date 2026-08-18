@@ -466,7 +466,7 @@ function MemberCard({ member, index }: { member: TeamMember; index: number }) {
               <span className="h-1.5 w-1.5 bg-[#00bfff]" />
               SYSTEM ONLINE
             </span>
-            <span>HACK 5.0</span>
+            <span>HACK 6.0</span>
           </div>
         </div>
       </div>
@@ -545,7 +545,7 @@ export default function Team() {
               <span
                 className={`text-2xl lg:text-3xl font-bold text-white drop-shadow-[2px_2px_0_#8a2be2] ${Hacked_KerX.className}`}
               >
-                HACK <span className="text-[#ff1493]">5.0</span>
+                HACK <span className="text-[#ff1493]">6.0</span>
               </span>
             </div>
           </div>
@@ -570,8 +570,8 @@ export default function Team() {
 
           <div className="mx-auto mt-4 h-[3px] w-28 bg-gradient-to-r from-[#00ffff] via-[#8a2be2] to-[#ff1493]" />
 
-          <p className="mx-auto mt-5 max-w-2xl font-mono text-xs sm:text-sm md:text-base text-[#3b1647] font-semibold leading-relaxed">
-            Meet the passionate individuals who drive innovation, creativity, and technological excellence across HACK 5.0.
+          <p className="mx-auto mt-5 max-w-2xl font-mono text-xs sm:text-sm md:text-base text-[#ffffff] font-semibold leading-relaxed">
+            Meet the passionate individuals who drive innovation, creativity, and technological excellence across HACK 6.0.
           </p>
         </div>
 
