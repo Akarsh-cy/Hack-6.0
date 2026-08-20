@@ -408,30 +408,32 @@ function MemberCard({ member, index }: { member: TeamMember; index: number }) {
               <WindowControls />
             </div>
 
-            {/* Member Photo */}
-            <div className="relative aspect-[4/5] w-full overflow-hidden bg-[#e0e0e0] border-b-2 border-[#292929]">
-              <img
+            {/* Member Photo Container with Modern Glassmorphism & Neon Glow */}
+            <div className="relative p-4 sm:p-5 flex items-center justify-center bg-[#f7f7f9] border-b-2 border-[#292929] overflow-hidden">
+              {/* Subtle ambient background glow */}
+              <div className="pointer-events-none absolute inset-0 -z-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-[radial-gradient(ellipse_at_center,rgba(255,20,147,0.15),transparent_70%)]" />
+
+              {/* Top Right Batch Tag Overlay */}
+              <div className="absolute top-2.5 right-2.5 z-20">
+                <span className="border-2 border-[#292929] bg-white px-2 py-0.5 font-mono text-[9px] font-bold text-[#222] shadow-[2px_2px_0_#00ffff]">
+                  BATCH {member.batch}
+                </span>
+              </div>
+
+              {/* Photo Frame */}
+              <div className="relative mx-auto w-[140px] h-[170px] sm:w-[160px] sm:h-[190px] overflow-hidden rounded-2xl border border-black/10 bg-white/50 backdrop-blur-sm shadow-md transition-all duration-500 group-hover:-translate-y-1 group-hover:border-[#ff1493]/60 group-hover:shadow-[0_0_25px_rgba(138,43,226,0.35)]">
+                {/* Blurred glow layer */}
+                <div className="pointer-events-none absolute -inset-1 rounded-2xl bg-gradient-to-r from-[#ff1493] via-[#8a2be2] to-[#00ffff] opacity-0 blur-sm transition-opacity duration-500 group-hover:opacity-30" />
+
+                <img
                   src={imgError ? "/placeholder.svg" : member.imgSrc}
                   alt={member.name}
                   onError={() => setImgError(true)}
-                  className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-              />
+                  className="relative z-10 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                />
 
-              {/* Subtle vaporwave wash & scanlines overlay */}
-              <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-80" />
-              <div
-                  className="pointer-events-none absolute inset-0 opacity-[0.08]"
-                  style={{
-                    backgroundImage:
-                        "repeating-linear-gradient(to bottom, transparent 0px, transparent 2px, rgba(0,0,0,0.6) 3px)",
-                  }}
-              />
-
-              {/* Top Right Batch Tag Overlay */}
-              <div className="absolute top-2.5 right-2.5">
-              <span className="border-2 border-[#292929] bg-white px-2 py-0.5 font-mono text-[9px] font-bold text-[#222] shadow-[2px_2px_0_#00ffff]">
-                BATCH {member.batch}
-              </span>
+                {/* Subtle gradient overlay at the bottom */}
+                <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-1/3 bg-gradient-to-t from-purple-950/60 to-transparent" />
               </div>
             </div>
 
