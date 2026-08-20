@@ -216,24 +216,24 @@ section {
   background:
           radial-gradient(
                   ellipse 75% 60% at 12% 18%,
-                  rgba(0, 255, 255, 0.13),
+                  rgb(2 246 246 / 0.13),
                   transparent 65%
           ),
           radial-gradient(
                   ellipse 80% 65% at 88% 28%,
-                  rgba(255, 79, 216, 0.18),
+                  rgb(245 4 186 / 0.18),
                   transparent 65%
           ),
           radial-gradient(
                   ellipse 75% 70% at 48% 92%,
-                  rgba(138, 43, 226, 0.22),
+                  rgb(134 0 255 / 0.22),
                   transparent 70%
           ),
           linear-gradient(
                   180deg,
-                  #14013a 0%,
-                  #240146 46%,
-                  #410032 100%
+                  #4a00d9 0%,
+                  #7000dc 46%,
+                  #ea02bb 100%
           );
 
   background-size:
