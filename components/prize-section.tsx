@@ -18,38 +18,30 @@ import {
 import { useInView } from "react-intersection-observer";
 import { cn } from "@/lib/utils";
 
-// Convert a hex color like "#ff2a85" into an rgba() string with a given alpha
 const hexToRgba = (hex: string, alpha: number) => {
   const sanitized = hex.replace("#", "");
   const bigint = parseInt(sanitized, 16);
-
   const r = (bigint >> 16) & 255;
   const g = (bigint >> 8) & 255;
   const b = bigint & 255;
-
   return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 };
 
-// Win9x-style raised/inset bevel
 const BEVEL_RAISED =
-  "inset -1px -1px 0 rgba(0,0,0,0.35), inset 1px 1px 0 rgba(255,255,255,0.65)";
-
+    "inset -1px -1px 0 rgba(0,0,0,0.35), inset 1px 1px 0 rgba(255,255,255,0.65)";
 const BEVEL_INSET =
-  "inset 1px 1px 0 rgba(255,255,255,0.9), inset -1px -1px 0 rgba(0,0,0,0.25)";
+    "inset 1px 1px 0 rgba(0,0,0,0.1), inset -1px -1px 0 rgba(255,255,255,0.9)";
 
-// CRT boot animation
 const crtBootVariants = {
   hidden: {
     scaleY: 0.02,
     opacity: 0,
     filter: "brightness(3) blur(2px)",
   },
-
   visible: {
     scaleY: 1,
     opacity: 1,
     filter: "brightness(1) blur(0px)",
-
     transition: {
       scaleY: {
         duration: 0.35,
@@ -66,10 +58,8 @@ const crtBootVariants = {
   },
 };
 
-// Flicker animation
 const flickerKeyframes = {
   opacity: [0, 1, 0.4, 1, 0.6, 1],
-
   transition: {
     duration: 0.4,
     delay: 0.35,
@@ -77,14 +67,13 @@ const flickerKeyframes = {
   },
 };
 
-// 3D Tilt Wrapper Component
 const TiltCard = ({
-  children,
-  className,
-  dropShadowColor = "#ff2a85",
-  onMouseEnter,
-  onMouseLeave,
-}: {
+                    children,
+                    className,
+                    dropShadowColor = "#ff2a85",
+                    onMouseEnter,
+                    onMouseLeave,
+                  }: {
   children: React.ReactNode;
   className?: string;
   dropShadowColor?: string;
@@ -100,307 +89,178 @@ const TiltCard = ({
   useEffect(() => {
     if (typeof window !== "undefined") {
       const isTouch =
-        window.matchMedia("(pointer: coarse)").matches ||
-        "ontouchstart" in window ||
-        navigator.maxTouchPoints > 0;
-
+          window.matchMedia("(pointer: coarse)").matches ||
+          "ontouchstart" in window ||
+          navigator.maxTouchPoints > 0;
       setIsTouchDevice(isTouch);
     }
   }, []);
 
   useEffect(() => {
     return () => {
-      if (rafRef.current) {
-        cancelAnimationFrame(rafRef.current);
-      }
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
     };
   }, []);
 
   const x = useMotionValue(0);
   const y = useMotionValue(0);
 
-  const springConfig = {
-    stiffness: 220,
-    damping: 26,
-    mass: 0.5,
-  };
-
+  const springConfig = { stiffness: 220, damping: 26, mass: 0.5 };
   const mouseX = useSpring(x, springConfig);
   const mouseY = useSpring(y, springConfig);
 
-  const rotateX = useTransform(
-    mouseY,
-    [-0.5, 0.5],
-    ["5deg", "-5deg"]
-  );
+  const rotateX = useTransform(mouseY, [-0.5, 0.5], ["5deg", "-5deg"]);
+  const rotateY = useTransform(mouseX, [-0.5, 0.5], ["-5deg", "5deg"]);
+  const glareX = useTransform(mouseX, [-0.5, 0.5], ["10%", "90%"]);
+  const glareY = useTransform(mouseY, [-0.5, 0.5], ["10%", "90%"]);
 
-  const rotateY = useTransform(
-    mouseX,
-    [-0.5, 0.5],
-    ["-5deg", "5deg"]
-  );
+  const shadowX = useTransform(mouseX, [-0.5, 0.5], [14, -14]);
+  const shadowY = useTransform(mouseY, [-0.5, 0.5], [14, -14]);
 
-  const glareX = useTransform(
-    mouseX,
-    [-0.5, 0.5],
-    ["10%", "90%"]
-  );
+  const boxShadowValue = useTransform([shadowX, shadowY], (latest) => {
+    const [sx, sy] = latest as [number, number];
+    return `${sx}px ${sy}px 0px 0px ${dropShadowColor}, ${sx * 1.4}px ${
+        sy * 1.4 + 10
+    }px 24px -4px rgba(0,0,0,0.45)`;
+  });
 
-  const glareY = useTransform(
-    mouseY,
-    [-0.5, 0.5],
-    ["10%", "90%"]
-  );
-
-  // Directional shadow
-  const shadowX = useTransform(
-    mouseX,
-    [-0.5, 0.5],
-    [17, -17]
-  );
-
-  const shadowY = useTransform(
-    mouseY,
-    [-0.5, 0.5],
-    [17, -17]
-  );
-
-  const boxShadowValue = useTransform(
-    [shadowX, shadowY],
-    (latest) => {
-      const [sx, sy] = latest as [number, number];
-
-      return `${sx}px ${sy}px 0px 0px ${dropShadowColor}, ${
-        sx * 1.6
-      }px ${sy * 1.6 + 14}px 32px -6px rgba(0,0,0,0.55)`;
-    }
-  );
-
-  const handleMouseMove = (
-    e: React.MouseEvent<HTMLDivElement>
-  ) => {
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (isTouchDevice) return;
-
-    if (!rectRef.current) {
-      rectRef.current = e.currentTarget.getBoundingClientRect();
-    }
-
+    if (!rectRef.current) rectRef.current = e.currentTarget.getBoundingClientRect();
     const rect = rectRef.current;
-
     const clientX = e.clientX;
     const clientY = e.clientY;
 
-    if (rafRef.current) {
-      cancelAnimationFrame(rafRef.current);
-    }
-
+    if (rafRef.current) cancelAnimationFrame(rafRef.current);
     rafRef.current = requestAnimationFrame(() => {
-      const rawX =
-        (clientX - rect.left) / rect.width - 0.5;
-
-      const rawY =
-        (clientY - rect.top) / rect.height - 0.5;
-
-      const pctX = Math.min(
-        0.5,
-        Math.max(-0.5, rawX)
-      );
-
-      const pctY = Math.min(
-        0.5,
-        Math.max(-0.5, rawY)
-      );
-
-      x.set(pctX);
-      y.set(pctY);
+      const rawX = (clientX - rect.left) / rect.width - 0.5;
+      const rawY = (clientY - rect.top) / rect.height - 0.5;
+      x.set(Math.min(0.5, Math.max(-0.5, rawX)));
+      y.set(Math.min(0.5, Math.max(-0.5, rawY)));
     });
   };
 
   const handleMouseLeaveEvent = () => {
-    if (rafRef.current) {
-      cancelAnimationFrame(rafRef.current);
-    }
-
+    if (rafRef.current) cancelAnimationFrame(rafRef.current);
     rectRef.current = null;
-
     x.set(0);
     y.set(0);
-
     setIsPressed(false);
-
-    if (onMouseLeave) {
-      onMouseLeave();
-    }
+    if (onMouseLeave) onMouseLeave();
   };
 
-  const handleMouseEnterEvent = (
-    e: React.MouseEvent<HTMLDivElement>
-  ) => {
-    rectRef.current =
-      e.currentTarget.getBoundingClientRect();
-
-    if (onMouseEnter) {
-      onMouseEnter();
-    }
+  const handleMouseEnterEvent = (e: React.MouseEvent<HTMLDivElement>) => {
+    rectRef.current = e.currentTarget.getBoundingClientRect();
+    if (onMouseEnter) onMouseEnter();
   };
 
   return (
-    <div className="perspective-[1000px] w-full h-full">
-      <motion.div
-        onMouseMove={handleMouseMove}
-        onMouseEnter={handleMouseEnterEvent}
-        onMouseLeave={handleMouseLeaveEvent}
-        onMouseDown={() => setIsPressed(true)}
-        onMouseUp={() => setIsPressed(false)}
-        style={{
-          rotateX: isTouchDevice ? 0 : rotateX,
-          rotateY: isTouchDevice ? 0 : rotateY,
-
-          transformPerspective: 1000,
-          transformStyle: "preserve-3d",
-
-          backfaceVisibility: "hidden",
-          WebkitBackfaceVisibility: "hidden",
-
-          WebkitFontSmoothing: "antialiased",
-          textRendering: "optimizeLegibility",
-
-          boxShadow: isTouchDevice
-            ? `6px 6px 0px 0px ${dropShadowColor}`
-            : boxShadowValue,
-        }}
-        animate={{
-          scale: isPressed ? 0.98 : 1,
-        }}
-        transition={{
-          duration: 0.15,
-          ease: "easeOut",
-        }}
-        className={cn(
-          "group relative bg-[#f4f4f6] border-3 border-[#1e1e2f] font-body overflow-hidden select-none flex flex-col justify-between h-full will-change-transform transition-colors duration-300",
-          className
-        )}
-      >
-        {/* Holographic Sheen */}
-        {!isTouchDevice && (
-          <motion.div
-            className="pointer-events-none absolute inset-0 z-30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 overflow-hidden"
+      <div className="perspective-[1000px] w-full h-full">
+        <motion.div
+            onMouseMove={handleMouseMove}
+            onMouseEnter={handleMouseEnterEvent}
+            onMouseLeave={handleMouseLeaveEvent}
+            onMouseDown={() => setIsPressed(true)}
+            onMouseUp={() => setIsPressed(false)}
             style={{
-              background: useTransform(
-                [glareX, glareY],
-                (latest) => {
-                  const [gx, gy] = latest as [
-                    string,
-                    string
-                  ];
-
-                  return `radial-gradient(circle at ${gx} ${gy}, rgba(255,255,255,0.5), ${hexToRgba(
-                    dropShadowColor,
-                    0.02
-                  )} 15%, transparent 48%)`;
-                }
-              ),
+              rotateX: isTouchDevice ? 0 : rotateX,
+              rotateY: isTouchDevice ? 0 : rotateY,
+              transformPerspective: 1000,
+              transformStyle: "preserve-3d",
+              boxShadow: isTouchDevice
+                  ? `6px 6px 0px 0px ${dropShadowColor}`
+                  : boxShadowValue,
             }}
-          />
-        )}
-
-        {children}
-      </motion.div>
-    </div>
+            animate={{ scale: isPressed ? 0.98 : 1 }}
+            transition={{ duration: 0.15, ease: "easeOut" }}
+            className={cn(
+                "group relative bg-[#eeeeee] border-2 border-[#1e1e2f] font-body overflow-hidden select-none flex flex-col justify-between h-full will-change-transform",
+                className
+            )}
+        >
+          {!isTouchDevice && (
+              <motion.div
+                  className="pointer-events-none absolute inset-0 z-30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 overflow-hidden"
+                  style={{
+                    background: useTransform([glareX, glareY], (latest) => {
+                      const [gx, gy] = latest as [string, string];
+                      return `radial-gradient(circle at ${gx} ${gy}, rgba(255,255,255,0.4), ${hexToRgba(
+                          dropShadowColor,
+                          0.02
+                      )} 15%, transparent 50%)`;
+                    }),
+                  }}
+              />
+          )}
+          {children}
+        </motion.div>
+      </div>
   );
 };
 
-// Win9x-style window controls
 const WindowControls = () => (
-  <div className="flex items-center gap-1.5 flex-shrink-0 font-subheading">
+    <div className="flex items-center gap-1 shrink-0">
     <span
-      style={{
-        boxShadow: BEVEL_RAISED,
-      }}
-      className="w-5 h-5 bg-[#c9c9d4] text-[#1e1e2f] flex items-center justify-center text-[10px] font-bold"
+        style={{ boxShadow: BEVEL_RAISED }}
+        className="w-4 h-4 bg-[#c9c9d4] text-[#1e1e2f] flex items-center justify-center text-[9px] font-bold"
     >
       _
     </span>
-
-    <span
-      style={{
-        boxShadow: BEVEL_RAISED,
-      }}
-      className="w-5 h-5 bg-[#c9c9d4] text-[#1e1e2f] flex items-center justify-center text-[10px] font-bold"
-    >
+      <span
+          style={{ boxShadow: BEVEL_RAISED }}
+          className="w-4 h-4 bg-[#c9c9d4] text-[#1e1e2f] flex items-center justify-center text-[8px] font-bold"
+      >
       □
     </span>
-
-    <span
-      style={{
-        boxShadow: BEVEL_RAISED,
-      }}
-      className="w-5 h-5 bg-[#ff2a85] text-white flex items-center justify-center text-[10px] font-extrabold"
-    >
+      <span
+          style={{ boxShadow: BEVEL_RAISED }}
+          className="w-4 h-4 bg-[#ff2a85] text-white flex items-center justify-center text-[9px] font-bold"
+      >
       ×
     </span>
-  </div>
+    </div>
 );
 
-// Optimized Confetti component
 const Confetti = () => {
-  const confettiPieces = Array.from({
-    length: 15,
-  }).map((_, i) => {
+  const confettiPieces = Array.from({ length: 15 }).map((_, i) => {
     const size = Math.random() * 6 + 4;
     const left = Math.random() * 100;
-
-    const animationDuration =
-      Math.random() * 1 + 0.5;
-
-    const animationDelay =
-      Math.random() * 0.2;
-
-    const colors = [
-      "#ff2a85",
-      "#00f0ff",
-      "#b967ff",
-      "#ffd319",
-    ];
-
-    const color =
-      colors[Math.floor(Math.random() * colors.length)];
+    const animationDuration = Math.random() * 1 + 0.5;
+    const animationDelay = Math.random() * 0.2;
+    const colors = ["#ff2a85", "#00f0ff", "#b967ff", "#ffd319"];
+    const color = colors[Math.floor(Math.random() * colors.length)];
 
     return (
-      <motion.div
-        key={i}
-        initial={{
-          top: "-5%",
-          left: `${left}%`,
-          opacity: 0,
-        }}
-        animate={{
-          top: "105%",
-          left: `${left}%`,
-          opacity: [0, 1, 0],
-        }}
-        transition={{
-          duration: animationDuration,
-          delay: animationDelay,
-          ease: "linear",
-        }}
-        style={{
-          position: "absolute",
-          width: size,
-          height: size,
-          backgroundColor: color,
-          borderRadius: "50%",
-          boxShadow: `0 0 8px ${color}`,
-          zIndex: 10,
-        }}
-      />
+        <motion.div
+            key={i}
+            initial={{ top: "-5%", left: `${left}%`, opacity: 0 }}
+            animate={{
+              top: "105%",
+              left: `${left}%`,
+              opacity: [0, 1, 0],
+            }}
+            transition={{
+              duration: animationDuration,
+              delay: animationDelay,
+              ease: "linear",
+            }}
+            style={{
+              position: "absolute",
+              width: size,
+              height: size,
+              backgroundColor: color,
+              borderRadius: "50%",
+              boxShadow: `0 0 8px ${color}`,
+              zIndex: 10,
+            }}
+        />
     );
   });
 
   return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none">
-      {confettiPieces}
-    </div>
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        {confettiPieces}
+      </div>
   );
 };
 
@@ -411,55 +271,32 @@ export default function PrizeSection() {
     rootMargin: "50px 0px",
   });
 
-  const [forcedVisible, setForcedVisible] =
-    useState(false);
-
-  const [
-    showGrandPrizeConfetti,
-    setShowGrandPrizeConfetti,
-  ] = useState(false);
-
-  const [
-    hasTriggeredInitialConfetti,
-    setHasTriggeredInitialConfetti,
-  ] = useState(false);
+  const [forcedVisible, setForcedVisible] = useState(false);
+  const [showGrandPrizeConfetti, setShowGrandPrizeConfetti] = useState(false);
+  const [hasTriggeredInitialConfetti, setHasTriggeredInitialConfetti] = useState(false);
 
   useEffect(() => {
     const timer = setTimeout(() => {
       setForcedVisible(true);
     }, 1000);
-
     return () => clearTimeout(timer);
   }, []);
 
   useEffect(() => {
-    if (
-      (sectionInView || forcedVisible) &&
-      !hasTriggeredInitialConfetti
-    ) {
+    if ((sectionInView || forcedVisible) && !hasTriggeredInitialConfetti) {
       setShowGrandPrizeConfetti(true);
       setHasTriggeredInitialConfetti(true);
-
       const hideTimer = setTimeout(() => {
         setShowGrandPrizeConfetti(false);
       }, 3000);
-
       return () => clearTimeout(hideTimer);
     }
-  }, [
-    sectionInView,
-    forcedVisible,
-    hasTriggeredInitialConfetti,
-  ]);
+  }, [sectionInView, forcedVisible, hasTriggeredInitialConfetti]);
 
   const containerVariants = {
-    hidden: {
-      opacity: 0,
-    },
-
+    hidden: { opacity: 0 },
     visible: {
       opacity: 1,
-
       transition: {
         staggerChildren: 0.15,
         delayChildren: 0.05,
@@ -468,18 +305,11 @@ export default function PrizeSection() {
   };
 
   const itemVariants = {
-    hidden: {
-      opacity: 0,
-      y: 20,
-    },
-
+    hidden: { opacity: 0, y: 20 },
     visible: {
       opacity: 1,
       y: 0,
-
-      transition: {
-        duration: 0.5,
-      },
+      transition: { duration: 0.5 },
     },
   };
 
@@ -491,30 +321,13 @@ export default function PrizeSection() {
       amount: "₹30,000",
       color: "#00f0ff",
       filename: "TRACK_AIML.EXE",
-      tag: "AI_ML",
-
-      description:
-        "Outstanding performance and creative solutions in AI & Machine Learning",
-
+      description: "Outstanding performance and creative solutions in AI & Machine Learning",
       distribution: [
-        {
-          position: "1st Prize",
-          amount: "₹15,000",
-        },
-        {
-          position: "2nd Prize",
-          amount: "₹10,000",
-        },
-        {
-          position: "3rd Prize",
-          amount: "₹5,000",
-        },
+        { position: "1st", amount: "₹15,000" },
+        { position: "2nd", amount: "₹10,000" },
+        { position: "3rd", amount: "₹5,000" },
       ],
-
-      path: "C:\\HACK6\\TRACKS\\AIML.EXE",
-      status: " ONLINE",
     },
-
     {
       id: "track-blockchain",
       icon: Hexagon,
@@ -522,30 +335,13 @@ export default function PrizeSection() {
       amount: "₹30,000",
       color: "#ff2a85",
       filename: "TRACK_BLOCKCHAIN.EXE",
-      tag: "WEB3",
-
-      description:
-        "Exceptional decentralized applications and Web3 solutions",
-
+      description: "Exceptional decentralized applications and Web3 solutions",
       distribution: [
-        {
-          position: "1st Prize",
-          amount: "₹15,000",
-        },
-        {
-          position: "2nd Prize",
-          amount: "₹10,000",
-        },
-        {
-          position: "3rd Prize",
-          amount: "₹5,000",
-        },
+        { position: "1st", amount: "₹15,000" },
+        { position: "2nd", amount: "₹10,000" },
+        { position: "3rd", amount: "₹5,000" },
       ],
-
-      path: "C:\\HACK6\\TRACKS\\BLOCKCHAIN.EXE",
-      status: " ACTIVE",
     },
-
     {
       id: "track-open",
       icon: Gem,
@@ -553,28 +349,12 @@ export default function PrizeSection() {
       amount: "₹30,000",
       color: "#00f0ff",
       filename: "TRACK_OPEN.EXE",
-      tag: "INNOVATION",
-
-      description:
-        "Breakthrough ideas and creative hacks outside specialized tracks",
-
+      description: "Breakthrough ideas and creative hacks outside specialized tracks",
       distribution: [
-        {
-          position: "1st Prize",
-          amount: "₹15,000",
-        },
-        {
-          position: "2nd Prize",
-          amount: "₹10,000",
-        },
-        {
-          position: "3rd Prize",
-          amount: "₹5,000",
-        },
+        { position: "1st", amount: "₹15,000" },
+        { position: "2nd", amount: "₹10,000" },
+        { position: "3rd", amount: "₹5,000" },
       ],
-
-      path: "C:\\HACK6\\TRACKS\\OPEN.EXE",
-      status: " READY",
     },
   ];
 
@@ -586,18 +366,8 @@ export default function PrizeSection() {
       amount: "₹10,000",
       color: "#ff2a85",
       filename: "CATEGORY_GIRLS.DLL",
-      tag: "WOMEN_TECH",
-
-      description:
-        "Best hack developed by an all-female team",
-
-      distribution:
-        "Entirely female team members.",
-
-      path: "C:\\HACK6\\CATEGORY\\GIRLS.DLL",
-      status: "■ ONLINE",
+      description: "Best hack developed by an all-female team.",
     },
-
     {
       id: "special-beginners",
       icon: GraduationCap,
@@ -605,527 +375,256 @@ export default function PrizeSection() {
       amount: "₹10,000",
       color: "#00f0ff",
       filename: "CATEGORY_BEGINNERS.DLL",
-      tag: "BEGINNER_DEVS",
-
-      description:
-        "Best hack by a first-time beginner team",
-
-      distribution:
-        "First-year student team members.",
-
-      path: "C:\\HACK6\\CATEGORY\\BEGINNERS.DLL",
-      status: "■ ACTIVE",
+      description: "Best hack by a first-year beginner team.",
     },
   ];
 
   return (
-    <section
-      id="prizes"
-      className="py-16 md:py-24 relative overflow-hidden text-white font-body select-none"
-    >
-      <div
-        ref={sectionRef}
-        className="max-w-6xl mx-auto px-4 sm:px-6"
+      <section
+          id="prizes"
+          className="py-16 md:py-24 relative overflow-hidden text-white font-body select-none"
       >
-        {/* Section Header */}
-        <motion.div
-          variants={crtBootVariants}
-          initial="hidden"
-          animate={
-            sectionInView || forcedVisible
-              ? "visible"
-              : "hidden"
-          }
-          style={{
-            transformOrigin: "center",
-          }}
-          className="text-center mb-10 md:mb-14"
-        >
-          <div className="relative inline-block">
-            {/* RGB Ghost Layer */}
-            <motion.h2
-              aria-hidden
-              initial={{
-                x: -6,
-                opacity: 0.6,
-              }}
-              animate={
-                sectionInView || forcedVisible
-                  ? {
-                      x: 0,
-                      opacity: 0,
-                      transition: {
-                        duration: 0.5,
-                        delay: 0.2,
-                      },
-                    }
-                  : {
-                      x: -6,
-                      opacity: 0.6,
-                    }
-              }
-              className="absolute inset-0 text-3xl sm:text-4xl md:text-5xl font-heading font-black tracking-[0.15em] uppercase text-[#00f0ff] pointer-events-none select-none"
-            >
-              PRIZE POOL
-            </motion.h2>
+        <div ref={sectionRef} className="max-w-6xl mx-auto px-4 sm:px-6">
+          {/* Section Header */}
+          <motion.div
+              variants={crtBootVariants}
+              initial="hidden"
+              animate={sectionInView || forcedVisible ? "visible" : "hidden"}
+              className="text-center mb-12 md:mb-16"
+          >
+            <div className="relative inline-block">
+              <motion.h2
+                  aria-hidden
+                  initial={{ x: -4, opacity: 0.5 }}
+                  animate={
+                    sectionInView || forcedVisible
+                        ? { x: 0, opacity: 0, transition: { duration: 0.5, delay: 0.2 } }
+                        : { x: -4, opacity: 0.5 }
+                  }
+                  className="absolute inset-0 text-3xl sm:text-4xl md:text-5xl font-heading font-black tracking-[0.15em] uppercase text-[#00f0ff] pointer-events-none"
+              >
+                PRIZE POOL
+              </motion.h2>
 
-            <motion.h2
-              aria-hidden
-              initial={{
-                x: 6,
-                opacity: 0.6,
-              }}
-              animate={
-                sectionInView || forcedVisible
-                  ? {
-                      x: 0,
-                      opacity: 0,
-                      transition: {
-                        duration: 0.5,
-                        delay: 0.2,
-                      },
-                    }
-                  : {
-                      x: 6,
-                      opacity: 0.6,
-                    }
-              }
-              className="absolute inset-0 text-3xl sm:text-4xl md:text-5xl font-heading font-black tracking-[0.15em] uppercase text-[#ff2a85] pointer-events-none select-none"
-            >
-              PRIZE POOL
-            </motion.h2>
-
-            {/* Main Heading */}
-            <motion.h2
-              animate={
-                sectionInView || forcedVisible
-                  ? flickerKeyframes
-                  : {
-                      opacity: 0,
-                    }
-              }
-              className="relative text-3xl sm:text-4xl md:text-5xl font-heading font-black tracking-[0.15em] uppercase mb-3 text-white"
-            >
-              PRIZE{" "}
-              <span className="bg-gradient-to-r from-[#ff2a85] via-[#b967ff] to-[#00f0ff] bg-clip-text text-transparent drop-shadow-[0_0_15px_rgba(255,42,133,0.8)]">
+              <motion.h2
+                  animate={sectionInView || forcedVisible ? flickerKeyframes : { opacity: 0 }}
+                  className="relative text-3xl sm:text-4xl md:text-5xl font-heading font-black tracking-[0.15em] uppercase mb-3 text-white"
+              >
+                PRIZE{" "}
+                <span className="bg-gradient-to-r from-[#ff2a85] via-[#b967ff] to-[#00f0ff] bg-clip-text text-transparent">
                 POOL
               </span>
-            </motion.h2>
-          </div>
+              </motion.h2>
+            </div>
 
-          {/* Gradient Divider */}
-          <motion.div
-            initial={{
-              scaleX: 0,
-            }}
-            animate={
-              sectionInView || forcedVisible
-                ? {
-                    scaleX: 1,
-                    transition: {
-                      duration: 0.4,
-                      delay: 0.5,
-                      ease: "easeOut",
-                    },
-                  }
-                : {
-                    scaleX: 0,
-                  }
-            }
-            className="w-32 h-1 bg-gradient-to-r from-[#ff2a85] via-[#b967ff] to-[#00f0ff] mx-auto mb-4 shadow-[0_0_12px_#ff2a85]"
-          />
+            <motion.div
+                initial={{ scaleX: 0 }}
+                animate={
+                  sectionInView || forcedVisible
+                      ? { scaleX: 1, transition: { duration: 0.4, delay: 0.4, ease: "easeOut" } }
+                      : { scaleX: 0 }
+                }
+                className="w-24 h-1 bg-gradient-to-r from-[#ff2a85] via-[#b967ff] to-[#00f0ff] mx-auto mb-4"
+            />
 
-          {/* Japanese Text */}
-          <div className="relative group inline-block text-center cursor-default">
-            <p className="text-sm sm:text-base font-serif text-gray-200 tracking-wider transition-opacity duration-500 group-hover:opacity-0">
-              君のことをいつまでも忘れない。
+            <p className="text-xs sm:text-sm font-mono text-gray-300 tracking-wider">
+              Compete, innovate, and claim your share of the bounty.
             </p>
+          </motion.div>
 
-            <p className="absolute inset-0 flex items-center justify-center font-serif text-xl text-gray-100 opacity-0 transition-opacity duration-500 group-hover:opacity-100 pointer-events-none">
-              I’ll never forget you.
-            </p>
-          </div>
-        </motion.div>
-
-        {/* Main Layout */}
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          animate={
-            sectionInView || forcedVisible
-              ? "visible"
-              : "hidden"
-          }
-          className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch"
-        >
-          {/* LEFT SIDE */}
+          {/* Main Layout */}
           <motion.div
-            variants={itemVariants}
-            className="lg:col-span-7 flex flex-col h-full"
+              variants={containerVariants}
+              initial="hidden"
+              animate={sectionInView || forcedVisible ? "visible" : "hidden"}
+              className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch"
           >
-            <TiltCard
-              dropShadowColor="#ff2a85"
-              onMouseEnter={() =>
-                setShowGrandPrizeConfetti(true)
-              }
-              onMouseLeave={() =>
-                setShowGrandPrizeConfetti(false)
-              }
-              className="border-2 border-black"
+            {/* GRAND PRIZE */}
+            <motion.div
+                variants={itemVariants}
+                className="lg:col-span-6 flex flex-col h-full"
             >
-              {/* Titlebar */}
-              <div className="bg-gradient-to-r from-[#ff71ce] via-[#fbcfe8] to-[#f4f4f6] px-3 py-2 border-b-2 border-black flex items-center justify-between select-none shrink-0">
-                <div className="flex items-center gap-2 truncate">
-                  <span className="text-[10px] text-[#1e1e2f] leading-none">
-                    ■
-                  </span>
-
-                  <span className="font-subheading font-serif font-bold text-xs uppercase text-[#1e1e2f] tracking-wider truncate">
-                    GRAND_PRIZE.EXE // MAIN_CHAMPIONSHIP
-                  </span>
-                </div>
-
-                <WindowControls />
-              </div>
-
-              {/* Status Strip */}
-              <div className="px-3 py-1.5 bg-[#e2e8f0] border-b-2 border-black flex items-center justify-between text-[11px] font-subheading text-[#475569] select-none shrink-0">
-                <span className="tracking-wider">
-                  ■ PROTOCOL: MAIN_CHAMPIONSHIP
-                </span>
-
-                <span className="text-[#00c2cb] font-bold tracking-wider">
-                  ■ DISPATCH_NODE: ONLINE
-                </span>
-              </div>
-
-              {/* Main Content */}
-              <div
-                style={{
-                  boxShadow: BEVEL_INSET,
-                }}
-                className="m-2 p-6 sm:p-8 flex-1 flex flex-col justify-between items-center text-center relative z-10 bg-[#f4f4f6]"
+              <TiltCard
+                  dropShadowColor="#ff2a85"
+                  onMouseEnter={() => setShowGrandPrizeConfetti(true)}
+                  onMouseLeave={() => setShowGrandPrizeConfetti(false)}
               >
-                <div>
-                  {/* Trophy */}
-                  <div
-                    style={{
-                      transform: "translateZ(45px)",
-                      transformStyle: "preserve-3d",
-                    }}
-                    className="w-16 h-16 sm:w-20 sm:h-20 bg-[#4B0082] border-none border-[#00f0ff] shadow-[4px_4px_0px_0px_#ff2a85] flex items-center justify-center mx-auto mb-4 transition-transform duration-300"
-                  >
-                    <Trophy className="w-8 h-8 sm:w-10 sm:h-10 text-[#00f0ff] drop-shadow-[0_0_10px_#00f0ff]" />
-                  </div>
-
-                  <h2 className="text-xl sm:text-2xl md:text-3xl font-heading font-black mb-2 text-[#1e1e2f] tracking-[0.2em] uppercase">
-                    GRAND CHAMPION
-                  </h2>
-
-                  <div className="text-4xl sm:text-5xl md:text-6xl font-heading font-black bg-gradient-to-r from-[#ff2a85] via-[#7928ca] to-[#00f0ff] bg-clip-text text-transparent mb-4 drop-shadow-[0_0_15px_rgba(255,42,133,0.4)]">
-                    ₹40,000
-                  </div>
-
-                  <p className="text-[#475569] font-body text-sm sm:text-base max-w-md mx-auto leading-relaxed mb-6">
-                    Grand prize awarded for overall exceptional achievement,
-                    technical execution, and innovation across all hackathon
-                    tracks.
-                  </p>
+                <div className="bg-gradient-to-r from-[#ff71ce] via-[#fbcfe8] to-[#eeeeee] px-3 py-2 border-b-2 border-[#1e1e2f] flex items-center justify-between">
+                <span className="font-mono font-bold text-xs uppercase text-[#1e1e2f] tracking-wider">
+                  GRAND_PRIZE.EXE
+                </span>
+                  <WindowControls />
                 </div>
 
-                {/* Track Breakdown */}
-                <div className="w-full grid grid-cols-3 gap-2 py-3 px-3 bg-[#e2e8f0] border-2 border-[#1e1e2f] mb-6 text-center font-subheading">
-                  <div className="border-r border-[#cbd5e1] pr-1">
-                    <span className="block text-[10px] text-[#64748b] font-serif uppercase">
-                      AI/ML
-                    </span>
-
-                    <span className="text-xs sm:text-sm font-bold text-[#ff2a85]">
-                      ₹30,000
-                    </span>
-                  </div>
-
-                  <div className="border-r border-[#cbd5e1] pr-1">
-                    <span className="block text-[10px] text-[#64748b] font-serif uppercase">
-                      WEB3
-                    </span>
-
-                    <span className="text-xs sm:text-sm font-bold text-[#00c2cb]">
-                      ₹30,000
-                    </span>
-                  </div>
-
+                <div
+                    style={{ boxShadow: BEVEL_INSET }}
+                    className="m-2.5 p-6 sm:p-8 flex-1 flex flex-col justify-between items-center text-center bg-[#f7f7f9] border border-[#d0d0d8]"
+                >
                   <div>
-                    <span className="block text-[10px] text-[#64748b] font-serif uppercase">
-                      OPEN
-                    </span>
+                    <div className="w-16 h-16 sm:w-20 sm:h-20 bg-[#2b0845] border-2 border-[#ff2a85] shadow-[4px_4px_0px_0px_#00f0ff] flex items-center justify-center mx-auto mb-4">
+                      <Trophy className="w-8 h-8 sm:w-10 sm:h-10 text-[#00f0ff] drop-shadow-[0_0_8px_#00f0ff]" />
+                    </div>
 
-                    <span className="text-xs sm:text-sm font-bold text-[#7928ca]">
-                      ₹30,000
-                    </span>
+                    <h2 className="text-xl sm:text-2xl font-heading font-black mb-1 text-[#1e1e2f] tracking-wider uppercase">
+                      GRAND CHAMPION
+                    </h2>
+
+                    <div className="text-4xl sm:text-5xl font-heading font-black bg-gradient-to-r from-[#ff2a85] via-[#7928ca] to-[#00f0ff] bg-clip-text text-transparent mb-3">
+                      ₹40,000
+                    </div>
+
+                    <p className="text-[#475569] text-xs sm:text-sm max-w-sm mx-auto leading-relaxed mb-6 font-mono">
+                      Awarded for overall highest score, technical excellence, and impact across all domains.
+                    </p>
+                  </div>
+
+                  <div className="w-full grid grid-cols-3 gap-2 py-2.5 px-3 bg-[#e2e8f0] border-2 border-[#1e1e2f] text-center font-mono">
+                    <div className="border-r border-[#cbd5e1] pr-1">
+                      <span className="block text-[9px] text-[#64748b] font-bold">AI/ML</span>
+                      <span className="text-xs sm:text-sm font-bold text-[#ff2a85]">₹30,000</span>
+                    </div>
+                    <div className="border-r border-[#cbd5e1] pr-1">
+                      <span className="block text-[9px] text-[#64748b] font-bold">WEB3</span>
+                      <span className="text-xs sm:text-sm font-bold text-[#00c2cb]">₹30,000</span>
+                    </div>
+                    <div>
+                      <span className="block text-[9px] text-[#64748b] font-bold">OPEN</span>
+                      <span className="text-xs sm:text-sm font-bold text-[#7928ca]">₹30,000</span>
+                    </div>
                   </div>
                 </div>
 
-                {/* Action Button */}
-                <div className="w-full bg-gradient-to-r from-[#ff2a85] to-[#7928ca] text-white font-subheading font-extrabold text-xs sm:text-sm tracking-[0.15em] uppercase py-3 px-6 border-2 border-[#1e1e2f] shadow-[4px_4px_0px_0px_#00f0ff] hover:brightness-110 active:translate-x-1 active:translate-y-1 active:shadow-none transition-all flex items-center justify-center gap-2 cursor-pointer select-none">
-                  <Trophy className="w-4 h-4 text-white" />
+                {showGrandPrizeConfetti && <Confetti />}
+              </TiltCard>
+            </motion.div>
 
-                  <span>
-                    GRAND CHAMPIONSHIP POOL
-                  </span>
-                </div>
-              </div>
-
-              {/* Confetti */}
-              {showGrandPrizeConfetti && <Confetti />}
-
-              {/* Footer */}
-              <div className="px-3 py-2 bg-[#e2e8f0] border-t-2 border-[#1e1e2f] flex items-center justify-between text-[11px] font-subheading text-[#475569] select-none shrink-0">
-                <span className="text-[#00c2cb] font-bold font-serif tracking-wider">
-                  ■ SYSTEM ONLINE
-                </span>
-
-                <span className="tracking-wider font-serif text-[#64748b]">
-                  HACK 6.0 // GRAND POOL
-                </span>
-              </div>
-            </TiltCard>
-          </motion.div>
-
-          {/* RIGHT SIDE */}
-          <motion.div
-            variants={itemVariants}
-            className="lg:col-span-5 flex flex-col gap-5 justify-between"
-          >
-            {trackPrizes.map((prize) => (
-              <TiltCard
-                key={prize.id}
-                dropShadowColor={prize.color}
-                className="border-2 border-black"
-              >
-                {/* Titlebar */}
-                <div
-                  style={{
-                    background: `linear-gradient(to right, ${prize.color}, #fbcfe8 60%, #f4f4f6)`,
-                  }}
-                  className="px-3 py-1.5 border-b-2 border-[#1e1e2f] flex items-center justify-between select-none"
-                >
-                  <div className="flex items-center gap-2 truncate">
-                    <span className="text-[10px] text-[#1e1e2f] leading-none">
-                      ■
-                    </span>
-
-                    <span className="font-subheading font-bold font-serif text-xs uppercase text-[#1e1e2f] tracking-wider truncate">
-                      {prize.filename}
-                    </span>
-                  </div>
-
-                  <div className="flex items-center gap-2">
-                    <span className="text-[10px] font-subheading font-bold text-[#1e1e2f] bg-white/60 px-1.5 py-0.5">
-                      {prize.tag}
-                    </span>
-
-                    <span
-                      style={{
-                        boxShadow: BEVEL_RAISED,
-                      }}
-                      className="w-4 h-4 text-[#1e1e2f] flex items-center justify-center text-[10px] font-bold"
+            {/* TRACK PRIZES */}
+            <motion.div
+                variants={itemVariants}
+                className="lg:col-span-6 flex flex-col gap-4 justify-between"
+            >
+              {trackPrizes.map((prize) => (
+                  <TiltCard
+                      key={prize.id}
+                      dropShadowColor={prize.color}
+                  >
+                    <div
+                        style={{
+                          background: `linear-gradient(to right, ${prize.color}, #fbcfe8 60%, #eeeeee)`,
+                        }}
+                        className="px-3 py-1.5 border-b-2 border-[#1e1e2f] flex items-center justify-between"
                     >
-                      ×
-                    </span>
-                  </div>
-                </div>
-
-                {/* Card Body */}
-                <div
-                  style={{
-                    boxShadow: BEVEL_INSET,
-                  }}
-                  className="m-1.5 p-4 flex items-start gap-4 flex-1 bg-[#f4f4f6]"
-                >
-                  {/* Icon */}
-                  <div
-                    style={{
-                      transform: "translateZ(45px)",
-                      transformStyle: "preserve-3d",
-                      boxShadow: `3px 3px 0px 0px ${prize.color}`,
-                    }}
-                    className="w-10 h-10 bg-[#f4f4f6] border-2 border-[#1e1e2f] flex items-center justify-center font-bold shrink-0 transition-transform duration-300"
-                  >
-                    <prize.icon
-                      className="w-5 h-5"
-                      style={{
-                        color: prize.color,
-                      }}
-                    />
-                  </div>
-
-                  <div className="flex-1">
-                    <div className="flex justify-between items-baseline">
-                      <h3 className="font-heading font-extrabold text-sm text-[#1e1e2f] uppercase tracking-wide">
-                        {prize.title}
-                      </h3>
-
-                      <span
-                        style={{
-                          color: prize.color,
-                        }}
-                        className="font-heading font-extrabold text-lg"
-                      >
-                        {prize.amount}
-                      </span>
+                  <span className="font-mono font-bold text-xs uppercase text-[#1e1e2f] tracking-wider">
+                    {prize.filename}
+                  </span>
+                      <WindowControls />
                     </div>
 
-                    <p className="font-body text-xs text-[#64748b] mt-0.5 leading-tight">
-                      {prize.description}
-                    </p>
+                    <div
+                        style={{ boxShadow: BEVEL_INSET }}
+                        className="m-2 p-3 sm:p-4 flex items-start gap-3.5 flex-1 bg-[#f7f7f9] border border-[#d0d0d8]"
+                    >
+                      <div
+                          style={{ boxShadow: `3px 3px 0px 0px ${prize.color}` }}
+                          className="w-10 h-10 bg-[#1e1e2f] border border-[#1e1e2f] flex items-center justify-center shrink-0"
+                      >
+                        <prize.icon className="w-5 h-5" style={{ color: prize.color }} />
+                      </div>
 
-                    {/* Breakdown */}
-                    <div className="mt-2.5 flex items-center gap-2 font-subheading text-[10px]">
-                      {prize.distribution.map(
-                        (dist, i) => (
+                      <div className="flex-1">
+                        <div className="flex justify-between items-baseline mb-0.5">
+                          <h3 className="font-heading font-extrabold text-sm text-[#1e1e2f] uppercase">
+                            {prize.title}
+                          </h3>
                           <span
-                            key={i}
-                            className="px-2 py-0.5 bg-white/90 text-[#1e1e2f] font-semibold rounded-sm"
+                              style={{ color: prize.color }}
+                              className="font-heading font-black text-base"
                           >
-                            {dist.position}:{" "}
-                            <strong
-                              style={{
-                                color: prize.color,
-                              }}
-                            >
-                              {dist.amount}
-                            </strong>
-                          </span>
-                        )
-                      )}
-                    </div>
-                  </div>
-                </div>
-
-                {/* Footer Metadata */}
-                <div className="px-3 py-1.5 bg-[#e2e8f0] border-t-2 border-[#1e1e2f] flex items-center font-serif justify-between text-[10px] text-[#475569] select-none shrink-0">
-                  <span className="tracking-wider truncate">
-                    {prize.path}
-                  </span>
-
-                  <span
-                    className="font-bold tracking-wider shrink-0 pl-2"
-                    style={{
-                      color: prize.color,
-                    }}
-                  >
-                    {prize.status}
-                  </span>
-                </div>
-              </TiltCard>
-            ))}
-          </motion.div>
-        </motion.div>
-
-        {/* Special Categories */}
-        <div className="mt-12">
-          <div className="text-center mb-6">
-            <span className="inline-block px-3 py-1 text-[#ff2a85] font-subheading text-xs font-bold uppercase tracking-widest">
-              SPECIAL CATEGORY WIDGETS
-            </span>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-4xl mx-auto">
-            {specialCategories.map((prize) => (
-              <TiltCard
-                key={prize.id}
-                dropShadowColor={prize.color}
-                className="border-2 border-black"
-              >
-                {/* Titlebar */}
-                <div
-                  style={{
-                    background: `linear-gradient(to right, ${prize.color}, #fbcfe8 60%, #f4f4f6)`,
-                  }}
-                  className="px-3 py-1.5 border-b-2 border-[#1e1e2f] flex items-center justify-between select-none"
-                >
-                  <div className="flex items-center gap-2 truncate">
-                    <span className="text-[10px] text-[#1e1e2f] leading-none">
-                      ■
-                    </span>
-
-                    <span className="font-subheading font-bold text-xs uppercase text-[#1e1e2f] tracking-wider truncate">
-                      {prize.filename}
-                    </span>
-                  </div>
-
-                  <span className="text-[10px] font-subheading font-bold text-[#1e1e2f] bg-white/70 px-2 py-0.5 rounded">
-                    {prize.tag}
-                  </span>
-                </div>
-
-                {/* Card Body */}
-                <div
-                  style={{
-                    boxShadow: BEVEL_INSET,
-                  }}
-                  className="m-1.5 p-4 flex items-center gap-4 flex-1 bg-[#f4f4f6]"
-                >
-                  {/* Icon */}
-                  <div
-                    style={{
-                      transform: "translateZ(45px)",
-                      transformStyle: "preserve-3d",
-                      boxShadow: `3px 3px 0px 0px ${prize.color}`,
-                    }}
-                    className="w-10 h-10 bg-[#f4f4f6] border-2 border-[#1e1e2f] flex items-center justify-center font-bold shrink-0 transition-transform duration-300"
-                  >
-                    <prize.icon
-                      className="w-5 h-5"
-                      style={{
-                        color: prize.color,
-                      }}
-                    />
-                  </div>
-
-                  <div className="flex-1">
-                    <div className="flex justify-between items-baseline">
-                      <h3 className="font-heading font-extrabold text-sm text-[#1e1e2f] uppercase tracking-wide">
-                        {prize.title}
-                      </h3>
-
-                      <span
-                        style={{
-                          color: prize.color,
-                        }}
-                        className="font-heading font-extrabold text-lg"
-                      >
                         {prize.amount}
                       </span>
+                        </div>
+
+                        <p className="font-mono text-[11px] text-[#64748b] leading-tight mb-2">
+                          {prize.description}
+                        </p>
+
+                        <div className="flex flex-wrap items-center gap-1.5 font-mono text-[9px]">
+                          {prize.distribution.map((dist, i) => (
+                              <span
+                                  key={i}
+                                  className="px-2 py-0.5 bg-[#e2e8f0] text-[#1e1e2f] font-bold border border-[#cbd5e1]"
+                              >
+                          {dist.position}: <span style={{ color: prize.color }}>{dist.amount}</span>
+                        </span>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </TiltCard>
+              ))}
+            </motion.div>
+          </motion.div>
+
+          {/* SPECIAL CATEGORIES */}
+          <div className="mt-12">
+            <div className="text-center mb-6">
+            <span className="inline-block px-3 py-1 bg-[#1e1e2f] border border-[#ff2a85] text-[#ff2a85] font-mono text-xs font-bold uppercase tracking-wider">
+              SPECIAL CATEGORIES
+            </span>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-4xl mx-auto">
+              {specialCategories.map((prize) => (
+                  <TiltCard
+                      key={prize.id}
+                      dropShadowColor={prize.color}
+                  >
+                    <div
+                        style={{
+                          background: `linear-gradient(to right, ${prize.color}, #fbcfe8 60%, #eeeeee)`,
+                        }}
+                        className="px-3 py-1.5 border-b-2 border-[#1e1e2f] flex items-center justify-between"
+                    >
+                  <span className="font-mono font-bold text-xs uppercase text-[#1e1e2f] tracking-wider">
+                    {prize.filename}
+                  </span>
+                      <WindowControls />
                     </div>
 
-                    <p className="font-body text-xs text-[#64748b] mt-0.5">
-                      {prize.description}
-                    </p>
-                  </div>
-                </div>
+                    <div
+                        style={{ boxShadow: BEVEL_INSET }}
+                        className="m-2 p-3 sm:p-4 flex items-center gap-3.5 flex-1 bg-[#f7f7f9] border border-[#d0d0d8]"
+                    >
+                      <div
+                          style={{ boxShadow: `3px 3px 0px 0px ${prize.color}` }}
+                          className="w-10 h-10 bg-[#1e1e2f] border border-[#1e1e2f] flex items-center justify-center shrink-0"
+                      >
+                        <prize.icon className="w-5 h-5" style={{ color: prize.color }} />
+                      </div>
 
-                {/* Footer */}
-                <div className="px-3 py-1.5 bg-[#e2e8f0] border-t-2 border-[#1e1e2f] flex items-center justify-between text-[10px] font-subheading text-[#475569] select-none shrink-0">
-                  <span className="tracking-wider truncate">
-                    {prize.path}
-                  </span>
+                      <div className="flex-1">
+                        <div className="flex justify-between items-baseline mb-0.5">
+                          <h3 className="font-heading font-extrabold text-sm text-[#1e1e2f] uppercase">
+                            {prize.title}
+                          </h3>
+                          <span
+                              style={{ color: prize.color }}
+                              className="font-heading font-black text-base"
+                          >
+                        {prize.amount}
+                      </span>
+                        </div>
 
-                  <span
-                    className="font-bold tracking-wider shrink-0 pl-2"
-                    style={{
-                      color: prize.color,
-                    }}
-                  >
-                    {prize.status}
-                  </span>
-                </div>
-              </TiltCard>
-            ))}
+                        <p className="font-mono text-[11px] text-[#64748b] leading-tight">
+                          {prize.description}
+                        </p>
+                      </div>
+                    </div>
+                  </TiltCard>
+              ))}
+            </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
   );
 }
