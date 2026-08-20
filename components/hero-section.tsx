@@ -11,23 +11,21 @@ const Hacked_KerX = localFont({
 })
 
 export default function HeroSection() {
+  // Main title glitch with pink/cyan slice tear
   const glitch = useGlitch({
     timing: {
       duration: 3950,
     },
-
     shake: false,
-
     glitchTimeSpan: {
       start: 0.15,
       end: 0.75,
     },
-
     slice: {
-      count: 6,
-      velocity: 12,
+      count: 7,
+      velocity: 15,
       minHeight: 0.02,
-      maxHeight: 0.12,
+      maxHeight: 0.14,
       hueRotate: false,
     },
   })
@@ -44,11 +42,9 @@ export default function HeroSection() {
   // Devfolio script
   useEffect(() => {
     const script = document.createElement("script")
-
     script.src = "https://apply.devfolio.co/v2/sdk.js"
     script.async = true
     script.defer = true
-
     document.body.appendChild(script)
 
     return () => {
@@ -76,15 +72,12 @@ export default function HeroSection() {
       days: formatTime(
           Math.floor(difference / (1000 * 60 * 60 * 24))
       ),
-
       hours: formatTime(
           Math.floor((difference / (1000 * 60 * 60)) % 24)
       ),
-
       minutes: formatTime(
           Math.floor((difference / (1000 * 60)) % 60)
       ),
-
       seconds: formatTime(
           Math.floor((difference / 1000) % 60)
       ),
@@ -109,10 +102,8 @@ export default function HeroSection() {
     hidden: {
       opacity: 0,
     },
-
     show: {
       opacity: 1,
-
       transition: {
         staggerChildren: 0.2,
         delayChildren: 0.3,
@@ -125,11 +116,9 @@ export default function HeroSection() {
       y: 20,
       opacity: 0,
     },
-
     show: {
       y: 0,
       opacity: 1,
-
       transition: {
         duration: 0.8,
         ease: "easeOut",
@@ -138,77 +127,21 @@ export default function HeroSection() {
   }
 
   return (
-      <section id="home" className="relative">
+      <section id="home" className="relative select-none">
         <div className="h-screen flex flex-col">
-
-          {/* Background */}
-          <div className="absolute inset-0 -z-10">
-
-            {/* Main gradient */}
-            <div className="absolute inset-0 bg-gradient-to-b from-transparent to-gray-900/90 z-10" />
-
-            {/* Blur */}
-            <div className="absolute inset-0 backdrop-blur-md z-0" />
-
-            {/* Purple glow */}
-            <div className="absolute top-1/4 left-1/4 w-64 h-64 rounded-full bg-purple-700/20 blur-[80px] animate-pulse" />
-
-            {/* Magenta glow */}
-            <div
-                className="absolute bottom-1/4 right-1/4 w-72 h-72 rounded-full bg-fuchsia-600/20 blur-[100px] animate-pulse"
-                style={{
-                  animationDelay: "1s",
-                }}
-            />
-
-            {/* Cyan accent glow */}
-            <div
-                className="absolute top-1/2 right-1/3 w-48 h-48 rounded-full bg-cyan-500/10 blur-[90px] animate-pulse"
-                style={{
-                  animationDelay: "2s",
-                }}
-            />
-          </div>
-
           {/* Navbar spacing */}
           <div className="h-20" />
 
           {/* Main content */}
           <div className="flex-1 flex items-center justify-center">
-
             <motion.div
                 className="container mx-auto px-4 z-10 text-center"
                 variants={container}
                 initial="hidden"
                 animate="show"
             >
-
-              {/* HACK 5.0 */}
-              <motion.div
-                  variants={item}
-                  className="relative"
-              >
-
-                {/* Magenta / cyan glow behind title */}
-                <div
-                    className="
-                  absolute
-                  w-full
-                  h-24
-                  md:h-72
-                  rounded-full
-                  blur-[60px]
-                  top-[90%]
-                  left-0
-                  -z-10
-                  opacity-40
-                  bg-gradient-to-r
-                  from-fuchsia-500/20
-                  via-purple-500/20
-                  to-cyan-400/20
-                "
-                />
-
+              {/* HACK 6.0 */}
+              <motion.div variants={item} className="relative">
                 <h1
                     className={`
                   relative
@@ -223,31 +156,47 @@ export default function HeroSection() {
                   ${Hacked_KerX.className}
                 `}
                 >
+                  {/* HACK with glitch-only cyan/pink RGB split */}
+                  <span className="relative inline-block">
+                  {/* Cyan Glitch Clone — only active during powerglitch frames */}
+                    <span
+                        ref={glitch.ref}
+                        aria-hidden="true"
+                        className="
+                      absolute
+                      inset-0
+                      text-[#00f0ff]
+                      opacity-80
+                      pointer-events-none
+                      mix-blend-screen
+                    "
+                    >
+                    HACK
+                  </span>
 
-                  {/* HACK */}
-                  <span
-                      ref={glitch.ref}
-                      className="
-                    inline-block
-                    text-fuchsia-500
-                    drop-shadow-[4px_0_0_rgba(0,255,255,0.8)]
-                  "
-                  >
-                  HACK
-                </span>
+                    {/* Base HACK text (Pure pink, clean dark backing shadow) */}
+                    <span
+                        className="
+                      relative
+                      z-10
+                      inline-block
+                      text-[#ff2a85]
+                      drop-shadow-[3px_3px_0_rgba(0,0,0,0.85)]
+                    "
+                    >
+                    HACK
+                  </span>
+                </span>{" "}
 
-                  {" "}
-
-                  {/* 5.0 */}
+                  {/* 6.0 */}
                   <span
                       className="
                     text-white
-                    drop-shadow-[3px_0_0_rgba(168,85,247,0.8)]
+                    drop-shadow-[3px_3px_0_#ff2a85]
                   "
                   >
-                  5.0
+                  6.0
                 </span>
-
                 </h1>
               </motion.div>
 
@@ -268,20 +217,17 @@ export default function HeroSection() {
                   Apply with Devfolio
                 </div>
               </motion.div>
-
             </motion.div>
           </div>
 
           {/* Countdown */}
           <div className="w-full px-4 pb-12 sm:pb-16">
-
             <motion.div
                 variants={container}
                 initial="hidden"
                 animate="show"
                 className="max-w-xs sm:max-w-md md:max-w-2xl mx-auto"
             >
-
               <motion.div
                   variants={item}
                   className="
@@ -291,82 +237,79 @@ export default function HeroSection() {
                 md:text-base
                 lg:text-lg
                 text-gray-300
+                font-mono
               "
               >
                 Registration Closes in
               </motion.div>
 
               <div className="grid grid-cols-4 gap-2 md:gap-3">
+                {Object.entries(timeLeft).map(([key, value], index) => {
+                  const isPink = key === "days" || key === "seconds"
 
-                {Object.entries(timeLeft).map(
-                    ([key, value], index) => (
-                        <motion.div
-                            key={key}
-                            variants={item}
-                            className="
-                      bg-gradient-to-br
-                      from-gray-900/80
-                      to-gray-800/40
+                  return (
+                      <motion.div
+                          key={key}
+                          variants={item}
+                          className="
+                      bg-[#0f041c]/70
                       backdrop-blur-sm
                       p-2
                       md:p-3
-                      rounded-lg
-                      border
-                      border-gray-700
-                      shadow-lg
+                      border-2
+                      border-black
+                      shadow-[3px_3px_0px_#00f0ff]
                       flex
                       flex-col
                       items-center
                       justify-center
                     "
-                            initial={{
-                              opacity: 0,
-                              y: 20,
-                            }}
-                            animate={{
-                              opacity: 1,
-                              y: 0,
-                            }}
-                            transition={{
-                              delay: 0.1 * index,
-                              duration: 0.5,
-                            }}
-                        >
-
-                          <div
-                              className="
+                          initial={{
+                            opacity: 0,
+                            y: 20,
+                          }}
+                          animate={{
+                            opacity: 1,
+                            y: 0,
+                          }}
+                          transition={{
+                            delay: 0.1 * index,
+                            duration: 0.5,
+                          }}
+                      >
+                        <div
+                            className={`
                         text-2xl
                         md:text-3xl
                         lg:text-4xl
                         font-bold
-                        text-fuchsia-500
+                        font-mono
                         mb-1
-                      "
-                          >
-                            {value}
-                          </div>
+                        ${isPink ? "text-[#ff2a85]" : "text-[#00f0ff]"}
+                      `}
+                        >
+                          {value}
+                        </div>
 
-                          <div
-                              className="
+                        <div
+                            className="
                         text-[10px]
                         md:text-xs
                         lg:text-sm
                         text-gray-300
                         uppercase
                         tracking-wider
+                        font-mono
                       "
-                          >
-                            {key}
-                          </div>
-
-                        </motion.div>
-                    )
-                )}
-
+                        >
+                          {key}
+                        </div>
+                      </motion.div>
+                  )
+                })}
               </div>
             </motion.div>
           </div>
-
         </div>
       </section>
   )

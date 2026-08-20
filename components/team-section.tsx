@@ -135,6 +135,33 @@ const teamData: TeamGroup[] = [
     },
 ];
 
+/* CRT Screen Turn-on & Turn-off Keyframe Variants */
+const crtBootVariants = {
+    hidden: {
+        scaleY: 0.005,
+        scaleX: 0,
+        opacity: 0,
+        filter: "brightness(4) blur(4px)",
+    },
+    visible: (customIndex: number) => ({
+        scaleY: [0.005, 0.005, 1, 1],
+        scaleX: [0, 1, 1, 1],
+        opacity: [0, 1, 1, 1],
+        filter: [
+            "brightness(4) blur(4px)",
+            "brightness(3) blur(2px)",
+            "brightness(1.5) blur(0.5px)",
+            "brightness(1) blur(0px)",
+        ],
+        transition: {
+            duration: 0.55,
+            delay: customIndex * 0.08,
+            times: [0, 0.25, 0.7, 1],
+            ease: [0.22, 1, 0.36, 1],
+        },
+    }),
+};
+
 const TeamCard = ({
                       member,
                       index,
@@ -146,7 +173,6 @@ const TeamCard = ({
 
     const handleMouseEnter = () => {
         setGlitching(true);
-
         setTimeout(() => {
             setGlitching(false);
         }, 500);
@@ -154,16 +180,14 @@ const TeamCard = ({
 
     return (
         <motion.div
-            initial={{ opacity: 0, y: 25 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-50px" }}
-            transition={{
-                duration: 0.6,
-                delay: index * 0.04,
-            }}
+            custom={index}
+            variants={crtBootVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-40px" }}
             whileHover={{ y: -7 }}
             onMouseEnter={handleMouseEnter}
-            className="group relative"
+            className="group relative z-0 origin-center"
         >
             {/* Cyan offset window */}
             <div className="pointer-events-none absolute -right-2 -bottom-2 left-2 top-2 border-2 border-[#00ffff]" />
@@ -175,14 +199,12 @@ const TeamCard = ({
             <div
                 className="relative overflow-hidden border-2 border-[#292929] bg-[#f2f2f2]"
                 style={{
-                    boxShadow:
-                        "5px 5px 0 #8a2be2, -3px -3px 0 #ff4fd8",
+                    boxShadow: "5px 5px 0 #8a2be2, -3px -3px 0 #ff4fd8",
                 }}
             >
                 {/* Classic title bar */}
                 <div className="flex h-10 items-center justify-between border-b-2 border-[#292929] bg-[#e7e7e7] px-2">
                     <div className="flex items-center gap-2">
-                        {/* Small retro icon */}
                         <div className="relative h-5 w-5 border border-[#555] bg-[#ff9edc]">
                             <div className="absolute left-[3px] top-[3px] h-2 w-3 bg-[#8a2be2]" />
                         </div>
@@ -192,7 +214,6 @@ const TeamCard = ({
                         </span>
                     </div>
 
-                    {/* Classic window buttons */}
                     <div className="flex items-center gap-1">
                         <div className="flex h-5 w-5 items-center justify-center border border-[#555] bg-[#f8f8f8] text-[10px] text-black">
                             _
@@ -208,7 +229,7 @@ const TeamCard = ({
                     </div>
                 </div>
 
-                {/* Photo */}
+                {/* Photo Area */}
                 <div className="relative aspect-[4/5] overflow-hidden bg-[#d8d8d8]">
                     <img
                         src={member.image}
@@ -227,8 +248,7 @@ const TeamCard = ({
                         aria-hidden="true"
                         className="pointer-events-none absolute inset-0 z-20 h-full w-full object-cover mix-blend-screen"
                         style={{
-                            filter:
-                                "sepia(1) saturate(8) hue-rotate(135deg)",
+                            filter: "sepia(1) saturate(8) hue-rotate(135deg)",
                         }}
                         initial={{ opacity: 0 }}
                         animate={
@@ -259,8 +279,7 @@ const TeamCard = ({
                         aria-hidden="true"
                         className="pointer-events-none absolute inset-0 z-20 h-full w-full object-cover mix-blend-screen"
                         style={{
-                            filter:
-                                "sepia(1) saturate(8) hue-rotate(275deg)",
+                            filter: "sepia(1) saturate(8) hue-rotate(275deg)",
                         }}
                         initial={{ opacity: 0 }}
                         animate={
@@ -284,11 +303,11 @@ const TeamCard = ({
                         }}
                     />
 
-                    {/* Glitch bars */}
+                    {/* Glitch horizontal lines */}
                     {glitching && (
                         <>
                             <motion.div
-                                className="pointer-events-none absolute left-0 right-0 z-30 h-[3px] bg-[#00ffff]"
+                                className="pointer-events-none absolute left-0 right-0 z-20 h-[3px] bg-[#00ffff]"
                                 initial={{ top: "18%", opacity: 0 }}
                                 animate={{
                                     top: ["18%", "42%", "72%", "31%"],
@@ -301,7 +320,7 @@ const TeamCard = ({
                             />
 
                             <motion.div
-                                className="pointer-events-none absolute left-0 right-0 z-30 h-[2px] bg-[#ff1493]"
+                                className="pointer-events-none absolute left-0 right-0 z-20 h-[2px] bg-[#ff1493]"
                                 initial={{ top: "70%", opacity: 0 }}
                                 animate={{
                                     top: ["70%", "25%", "58%", "84%"],
@@ -315,18 +334,18 @@ const TeamCard = ({
                         </>
                     )}
 
-                    {/* CRT scanlines */}
+                    {/* CRT Scanlines */}
                     <div
-                        className="pointer-events-none absolute inset-0 z-40 opacity-[0.1]"
+                        className="pointer-events-none absolute inset-0 z-20 opacity-[0.12]"
                         style={{
                             backgroundImage:
-                                "repeating-linear-gradient(to bottom, transparent 0px, transparent 2px, rgba(0,0,0,0.3) 3px)",
+                                "repeating-linear-gradient(to bottom, transparent 0px, transparent 2px, rgba(0,0,0,0.4) 3px)",
                         }}
                     />
 
-                    {/* Dither / old screen texture */}
+                    {/* Dither Texture */}
                     <div
-                        className="pointer-events-none absolute inset-0 z-40 opacity-[0.07]"
+                        className="pointer-events-none absolute inset-0 z-20 opacity-[0.08]"
                         style={{
                             backgroundImage:
                                 "radial-gradient(circle, rgba(0,0,0,0.9) 0.6px, transparent 0.7px)",
@@ -334,11 +353,11 @@ const TeamCard = ({
                         }}
                     />
 
-                    {/* Slight vaporwave color wash */}
-                    <div className="pointer-events-none absolute inset-0 z-40 bg-gradient-to-br from-[#00ffff]/10 via-transparent to-[#ff4fd8]/20 mix-blend-screen" />
+                    {/* Vaporwave Tint Wash */}
+                    <div className="pointer-events-none absolute inset-0 z-20 bg-gradient-to-br from-[#00ffff]/10 via-transparent to-[#ff4fd8]/20 mix-blend-screen" />
 
-                    {/* Information panel */}
-                    <div className="absolute bottom-0 left-0 right-0 z-50 border-t-2 border-[#292929] bg-[#eeeeee]/95 px-4 py-3">
+                    {/* Information Panel */}
+                    <div className="absolute bottom-0 left-0 right-0 z-30 border-t-2 border-[#292929] bg-[#eeeeee]/95 px-4 py-3">
                         <div className="flex items-center gap-2">
                             <span className="h-3 w-3 border border-[#333] bg-[#ff4fd8]" />
 
@@ -351,16 +370,6 @@ const TeamCard = ({
                             {member.role}
                         </p>
                     </div>
-                </div>
-
-                {/* Retro status bar */}
-                <div className="flex h-7 items-center justify-between border-t-2 border-[#292929] bg-[#dedede] px-2 font-mono text-[8px] uppercase tracking-[0.12em] text-[#333]">
-                    <span className="flex items-center gap-1">
-                        <span className="h-2 w-2 bg-[#00bfff]" />
-                        SYSTEM ONLINE
-                    </span>
-
-                    <span>HACK 6.0</span>
                 </div>
             </div>
         </motion.div>
@@ -395,17 +404,17 @@ export default function TeamSection() {
                         </span>
                     </h2>
 
-                    <pi className="mx-auto max-w-2xl font-mono text-sm text-[#ffffff] md:text-base">
+                    <p className="mx-auto max-w-2xl font-mono text-sm text-[#ffffff] md:text-base">
                         Meet the passionate individuals who made HACK 6.0
                         possible
-                    </pi>
+                    </p>
                 </motion.div>
 
-                {/* Team groups */}
+                {/* Team Groups */}
                 <div className="space-y-20">
                     {teamData.map((group, groupIndex) => (
                         <div key={group.title}>
-                            {/* Group label */}
+                            {/* Group Label */}
                             <div className="mb-8 flex items-center gap-4">
                                 <div className="h-[2px] flex-1 bg-[#4b0082]" />
 

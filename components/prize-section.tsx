@@ -17,6 +17,13 @@ import {
 } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import { cn } from "@/lib/utils";
+import localFont from "next/font/local";
+
+const Hacked_KerX = localFont({
+  src: "../public/fonts/Hacked-KerX.ttf",
+  variable: "--custom-font",
+  fallback: ["monospace", "sans-serif"],
+});
 
 const hexToRgba = (hex: string, alpha: number) => {
   const sanitized = hex.replace("#", "");
@@ -55,15 +62,6 @@ const crtBootVariants = {
         delay: 0.15,
       },
     },
-  },
-};
-
-const flickerKeyframes = {
-  opacity: [0, 1, 0.4, 1, 0.6, 1],
-  transition: {
-    duration: 0.4,
-    delay: 0.35,
-    times: [0, 0.2, 0.35, 0.5, 0.7, 1],
   },
 };
 
@@ -382,7 +380,7 @@ export default function PrizeSection() {
   return (
       <section
           id="prizes"
-          className="py-16 md:py-24 relative overflow-hidden text-white font-body select-none"
+          className="py-16 md:py-24 relative overflow-hidden text-white font-mono select-none"
       >
         <div ref={sectionRef} className="max-w-6xl mx-auto px-4 sm:px-6">
           {/* Section Header */}
@@ -390,45 +388,26 @@ export default function PrizeSection() {
               variants={crtBootVariants}
               initial="hidden"
               animate={sectionInView || forcedVisible ? "visible" : "hidden"}
-              className="text-center mb-12 md:mb-16"
+              className="text-center mb-12 md:mb-16 flex flex-col items-center"
           >
-            <div className="relative inline-block">
-              <motion.h2
-                  aria-hidden
-                  initial={{ x: -4, opacity: 0.5 }}
-                  animate={
-                    sectionInView || forcedVisible
-                        ? { x: 0, opacity: 0, transition: { duration: 0.5, delay: 0.2 } }
-                        : { x: -4, opacity: 0.5 }
-                  }
-                  className="absolute inset-0 text-3xl sm:text-4xl md:text-5xl font-heading font-black tracking-[0.15em] uppercase text-[#00f0ff] pointer-events-none"
-              >
-                PRIZE POOL
-              </motion.h2>
-
-              <motion.h2
-                  animate={sectionInView || forcedVisible ? flickerKeyframes : { opacity: 0 }}
-                  className="relative text-3xl sm:text-4xl md:text-5xl font-heading font-black tracking-[0.15em] uppercase mb-3 text-white"
-              >
-                PRIZE{" "}
-                <span className="bg-gradient-to-r from-[#ff2a85] via-[#b967ff] to-[#00f0ff] bg-clip-text text-transparent">
-                POOL
-              </span>
-              </motion.h2>
+            {/* Retro Directory Tag Header */}
+            <div className="relative mb-3 inline-block">
+              <div className="absolute inset-0 bg-[#ff2a85] translate-x-1 translate-y-1"></div>
+              <div className="relative bg-white text-black px-4 py-1 text-xs md:text-sm font-bold tracking-widest border-2 border-black flex items-center gap-2">
+                <span className="w-2.5 h-2.5 bg-[#9333ea] inline-block"></span>
+                DIRECTORY_03 // PRIZES
+              </div>
             </div>
 
-            <motion.div
-                initial={{ scaleX: 0 }}
-                animate={
-                  sectionInView || forcedVisible
-                      ? { scaleX: 1, transition: { duration: 0.4, delay: 0.4, ease: "easeOut" } }
-                      : { scaleX: 0 }
-                }
-                className="w-24 h-1 bg-gradient-to-r from-[#ff2a85] via-[#b967ff] to-[#00f0ff] mx-auto mb-4"
-            />
+            <h2
+                className={`text-4xl md:text-6xl tracking-wider uppercase font-black ${Hacked_KerX.className}`}
+            >
+              <span className="text-white drop-shadow-[2px_2px_0px_#00f0ff]">PRIZE </span>
+              <span className="text-[#ff2a85] drop-shadow-[2px_2px_0px_#00f0ff]">POOL</span>
+            </h2>
 
-            <p className="text-xs sm:text-sm font-mono text-gray-300 tracking-wider">
-              Compete, innovate, and claim your share of the bounty.
+            <p className="text-gray-300 text-xs sm:text-sm mt-3 tracking-widest uppercase">
+              Compete, innovate, and claim your share of the bounty
             </p>
           </motion.div>
 
@@ -465,11 +444,11 @@ export default function PrizeSection() {
                       <Trophy className="w-8 h-8 sm:w-10 sm:h-10 text-[#00f0ff] drop-shadow-[0_0_8px_#00f0ff]" />
                     </div>
 
-                    <h2 className="text-xl sm:text-2xl font-heading font-black mb-1 text-[#1e1e2f] tracking-wider uppercase">
+                    <h2 className="text-xl sm:text-2xl font-mono font-black mb-1 text-[#1e1e2f] tracking-wider uppercase">
                       GRAND CHAMPION
                     </h2>
 
-                    <div className="text-4xl sm:text-5xl font-heading font-black bg-gradient-to-r from-[#ff2a85] via-[#7928ca] to-[#00f0ff] bg-clip-text text-transparent mb-3">
+                    <div className="text-4xl sm:text-5xl font-mono font-black bg-gradient-to-r from-[#ff2a85] via-[#7928ca] to-[#00f0ff] bg-clip-text text-transparent mb-3">
                       ₹40,000
                     </div>
 
@@ -533,12 +512,12 @@ export default function PrizeSection() {
 
                       <div className="flex-1">
                         <div className="flex justify-between items-baseline mb-0.5">
-                          <h3 className="font-heading font-extrabold text-sm text-[#1e1e2f] uppercase">
+                          <h3 className="font-mono font-black text-sm text-[#1e1e2f] uppercase tracking-wide">
                             {prize.title}
                           </h3>
                           <span
                               style={{ color: prize.color }}
-                              className="font-heading font-black text-base"
+                              className="font-mono font-black text-base"
                           >
                         {prize.amount}
                       </span>
@@ -604,12 +583,12 @@ export default function PrizeSection() {
 
                       <div className="flex-1">
                         <div className="flex justify-between items-baseline mb-0.5">
-                          <h3 className="font-heading font-extrabold text-sm text-[#1e1e2f] uppercase">
+                          <h3 className="font-mono font-black text-sm text-[#1e1e2f] uppercase tracking-wide">
                             {prize.title}
                           </h3>
                           <span
                               style={{ color: prize.color }}
-                              className="font-heading font-black text-base"
+                              className="font-mono font-black text-base"
                           >
                         {prize.amount}
                       </span>
