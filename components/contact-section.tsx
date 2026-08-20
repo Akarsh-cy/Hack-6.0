@@ -49,6 +49,8 @@ interface ContactItem {
   value: string;
   href: string;
   accentColor: string;
+  textColor: string;
+  hoverColor: string;
 }
 
 const contactChannels: ContactItem[] = [
@@ -60,7 +62,9 @@ const contactChannels: ContactItem[] = [
     line1: "Questions or sponsor inquiries?",
     value: "csec@nith.ac.in",
     href: "mailto:csec@nith.ac.in",
-    accentColor: "#00f0ff",
+    accentColor: "#00CFE8",
+    textColor: "#243B64",
+    hoverColor: "#FF3B8D",
   },
   {
     id: "location",
@@ -70,7 +74,9 @@ const contactChannels: ContactItem[] = [
     line1: "Join us onsite at the arena",
     value: "NIT Hamirpur, HP - 177005",
     href: "https://www.google.com/maps/search/?api=1&query=National+Institute+of+Technology+Hamirpur",
-    accentColor: "#ff2a85",
+    accentColor: "#FF3B8D",
+    textColor: "#5A315D",
+    hoverColor: "#FF3B8D",
   },
   {
     id: "phone",
@@ -80,7 +86,9 @@ const contactChannels: ContactItem[] = [
     line1: "Student & Team Coordinators",
     value: "+91 62306 46657 / +91 93582 57509",
     href: "tel:+916230646657",
-    accentColor: "#00f0ff",
+    accentColor: "#00CFE8",
+    textColor: "#243B64",
+    hoverColor: "#FF3B8D",
   },
 ];
 
@@ -91,7 +99,7 @@ const contactChannels: ContactItem[] = [
 const TiltCard = ({
   children,
   className = "",
-  dropShadowColor = "#ff2a85",
+  dropShadowColor = "#FF3B8D",
 }: {
   children: React.ReactNode;
   className?: string;
@@ -239,20 +247,20 @@ const TiltCard = ({
    ======================================================================== */
 
 const WindowControls = ({
-  closeColor = "#ff2a85",
+  closeColor = "#FF3B8D",
 }: {
   closeColor?: string;
 }) => (
   <div className="flex items-center gap-1.5 flex-shrink-0">
     <span
       style={{ boxShadow: BEVEL_RAISED }}
-      className="w-4 h-4 sm:w-5 sm:h-5 bg-[#c9c9d4] text-[#1e1e2f] flex items-center justify-center text-[10px] font-bold"
+      className="w-4 h-4 sm:w-5 sm:h-5 bg-[#c9c9d4] text-[#25233A] flex items-center justify-center text-[10px] font-bold"
     >
       _
     </span>
     <span
       style={{ boxShadow: BEVEL_RAISED }}
-      className="w-4 h-4 sm:w-5 sm:h-5 bg-[#c9c9d4] text-[#1e1e2f] flex items-center justify-center text-[10px] font-bold"
+      className="w-4 h-4 sm:w-5 sm:h-5 bg-[#c9c9d4] text-[#25233A] flex items-center justify-center text-[10px] font-bold"
     >
       □
     </span>
@@ -322,11 +330,11 @@ export default function ContactSection() {
             <h2
               className={`text-3xl sm:text-4xl md:text-5xl font-black tracking-[0.15em] uppercase text-white ${Hacked_KerX.className}`}
             >
-              GET <span className="text-[#ff2a85]">IN TOUCH</span>
+              GET <span className="text-[#FF3B8D]">IN TOUCH</span>
             </h2>
           </div>
 
-          <div className="mx-auto mt-4 h-1 w-32 bg-gradient-to-r from-[#ff2a85] via-[#b967ff] to-[#00f0ff] shadow-[0_0_12px_#ff2a85]" />
+          <div className="mx-auto mt-4 h-1 w-32 bg-gradient-to-r from-[#FF3B8D] via-[#b967ff] to-[#00CFE8] shadow-[0_0_12px_#FF3B8D]" />
 
           <p className="mx-auto mt-5 max-w-2xl font-mono text-xs sm:text-sm md:text-base font-semibold text-[#ffffff]">
             Have queries regarding HACK 6.0? Connect with the operations grid
@@ -344,18 +352,18 @@ export default function ContactSection() {
             transition={{ duration: 0.5 }}
             className="lg:col-span-7 flex flex-col"
           >
-            <TiltCard dropShadowColor="#ff2a85" className="border-2 border-black">
+            <TiltCard dropShadowColor="#FF3B8D" className="border-2 border-black">
               {/* TITLE BAR */}
               <div className="bg-gradient-to-r from-[#ff71ce] via-[#fbcfe8] to-[#f4f4f6] px-3 py-2 border-b-2 border-black flex items-center justify-between select-none shrink-0">
                 <div className="flex items-center gap-2 truncate">
-                  <span className="text-[10px] text-[#1e1e2f] leading-none">
+                  <span className="text-[10px] text-[#25233A] leading-none">
                     ■
                   </span>
-                  <span className="font-bold text-xs uppercase text-[#1e1e2f] tracking-wider truncate">
+                  <span className="font-bold text-xs uppercase text-[#25233A] tracking-wider truncate">
                     DISPATCH_MESSAGE.EXE
                   </span>
                 </div>
-                <WindowControls closeColor="#ff2a85" />
+                <WindowControls closeColor="#FF3B8D" />
               </div>
 
               {/* FORM BODY */}
@@ -367,8 +375,8 @@ export default function ContactSection() {
                   {/* NAME + EMAIL */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                     <div className="space-y-1.5">
-                      <label className="flex items-center gap-1.5 font-mono text-xs font-bold uppercase tracking-wider text-[#1e1e2f]">
-                        <span className="text-[#ff2a85] font-black">&gt;</span>
+                      <label className="flex items-center gap-1.5 font-mono text-xs font-bold uppercase tracking-wider text-[#25233A]">
+                        <span className="text-[#FF3B8D] font-black">&gt;</span>
                         SENDER_NAME
                       </label>
                       <input
@@ -379,13 +387,13 @@ export default function ContactSection() {
                         onChange={(e) =>
                           setForm({ ...form, name: e.target.value })
                         }
-                        className="w-full border-2 border-[#1e1e2f] bg-white px-3.5 py-2.5 font-mono text-xs sm:text-sm text-[#111] placeholder-[#888] outline-none transition-all focus:border-[#ff2a85] focus:shadow-[3px_3px_0_#00f0ff]"
+                        className="w-full border-2 border-[#1e1e2f] bg-white px-3.5 py-2.5 font-mono text-xs sm:text-sm text-[#25233A] placeholder-[#4B556B] outline-none transition-all focus:border-[#FF3B8D] focus:shadow-[3px_3px_0_#00CFE8]"
                       />
                     </div>
 
                     <div className="space-y-1.5">
-                      <label className="flex items-center gap-1.5 font-mono text-xs font-bold uppercase tracking-wider text-[#1e1e2f]">
-                        <span className="text-[#00c2cb] font-black">&gt;</span>
+                      <label className="flex items-center gap-1.5 font-mono text-xs font-bold uppercase tracking-wider text-[#25233A]">
+                        <span className="text-[#00CFE8] font-black">&gt;</span>
                         SENDER_EMAIL
                       </label>
                       <input
@@ -396,15 +404,15 @@ export default function ContactSection() {
                         onChange={(e) =>
                           setForm({ ...form, email: e.target.value })
                         }
-                        className="w-full border-2 border-[#1e1e2f] bg-white px-3.5 py-2.5 font-mono text-xs sm:text-sm text-[#111] placeholder-[#888] outline-none transition-all focus:border-[#00c2cb] focus:shadow-[3px_3px_0_#ff2a85]"
+                        className="w-full border-2 border-[#1e1e2f] bg-white px-3.5 py-2.5 font-mono text-xs sm:text-sm text-[#25233A] placeholder-[#4B556B] outline-none transition-all focus:border-[#00CFE8] focus:shadow-[3px_3px_0_#FF3B8D]"
                       />
                     </div>
                   </div>
 
                   {/* SUBJECT */}
                   <div className="space-y-1.5">
-                    <label className="flex items-center gap-1.5 font-mono text-xs font-bold uppercase tracking-wider text-[#1e1e2f]">
-                      <span className="text-[#ff2a85] font-black">&gt;</span>
+                    <label className="flex items-center gap-1.5 font-mono text-xs font-bold uppercase tracking-wider text-[#25233A]">
+                      <span className="text-[#FF3B8D] font-black">&gt;</span>
                       SUBJECT_HEADER
                     </label>
                     <input
@@ -415,14 +423,14 @@ export default function ContactSection() {
                       onChange={(e) =>
                         setForm({ ...form, subject: e.target.value })
                       }
-                      className="w-full border-2 border-[#1e1e2f] bg-white px-3.5 py-2.5 font-mono text-xs sm:text-sm text-[#111] placeholder-[#888] outline-none transition-all focus:border-[#ff2a85] focus:shadow-[3px_3px_0_#00f0ff]"
+                      className="w-full border-2 border-[#1e1e2f] bg-white px-3.5 py-2.5 font-mono text-xs sm:text-sm text-[#25233A] placeholder-[#4B556B] outline-none transition-all focus:border-[#FF3B8D] focus:shadow-[3px_3px_0_#00CFE8]"
                     />
                   </div>
 
                   {/* MESSAGE */}
                   <div className="space-y-1.5">
-                    <label className="flex items-center gap-1.5 font-mono text-xs font-bold uppercase tracking-wider text-[#1e1e2f]">
-                      <span className="text-[#00c2cb] font-black">&gt;</span>
+                    <label className="flex items-center gap-1.5 font-mono text-xs font-bold uppercase tracking-wider text-[#25233A]">
+                      <span className="text-[#00CFE8] font-black">&gt;</span>
                       MESSAGE_PAYLOAD
                     </label>
                     <textarea
@@ -433,7 +441,7 @@ export default function ContactSection() {
                       onChange={(e) =>
                         setForm({ ...form, message: e.target.value })
                       }
-                      className="w-full resize-none border-2 border-[#1e1e2f] bg-white px-3.5 py-2.5 font-mono text-xs sm:text-sm text-[#111] placeholder-[#888] outline-none transition-all focus:border-[#00c2cb] focus:shadow-[3px_3px_0_#ff2a85]"
+                      className="w-full resize-none border-2 border-[#1e1e2f] bg-white px-3.5 py-2.5 font-mono text-xs sm:text-sm text-[#25233A] placeholder-[#4B556B] outline-none transition-all focus:border-[#00CFE8] focus:shadow-[3px_3px_0_#FF3B8D]"
                     />
                   </div>
 
@@ -442,7 +450,7 @@ export default function ContactSection() {
                     <motion.div
                       initial={{ opacity: 0, y: -6 }}
                       animate={{ opacity: 1, y: 0 }}
-                      className="flex items-center gap-2 border-2 border-[#1e1e2f] bg-[#e2e8f0] p-3 font-mono text-xs font-bold text-[#166534] shadow-[3px_3px_0_#00c2cb]"
+                      className="flex items-center gap-2 border-2 border-[#1e1e2f] bg-[#e2e8f0] p-3 font-mono text-xs font-bold text-[#166534] shadow-[3px_3px_0_#00CFE8]"
                     >
                       <CheckCircle2 size={16} className="shrink-0" />
                       <span>TRANSMISSION SENT SUCCESSFULLY</span>
@@ -453,7 +461,7 @@ export default function ContactSection() {
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="flex w-full cursor-pointer items-center justify-center gap-2 border-2 border-[#1e1e2f] bg-gradient-to-r from-[#ff2a85] via-[#b967ff] to-[#7928ca] px-6 py-3.5 font-mono text-xs sm:text-sm font-bold uppercase tracking-[0.15em] text-white shadow-[4px_4px_0_#00f0ff] transition-all hover:brightness-110 active:translate-x-1 active:translate-y-1 active:shadow-none disabled:opacity-60"
+                    className="flex w-full cursor-pointer items-center justify-center gap-2 border-2 border-[#1e1e2f] bg-gradient-to-r from-[#FF3B8D] via-[#b967ff] to-[#7928ca] px-6 py-3.5 font-mono text-xs sm:text-sm font-bold uppercase tracking-[0.15em] text-white shadow-[4px_4px_0_#00CFE8] transition-all hover:brightness-110 active:translate-x-1 active:translate-y-1 active:shadow-none disabled:opacity-60"
                   >
                     {isSubmitting ? (
                       <>
@@ -497,10 +505,10 @@ export default function ContactSection() {
                     className="px-3 py-1.5 border-b-2 border-[#1e1e2f] flex items-center justify-between select-none shrink-0"
                   >
                     <div className="flex items-center gap-2 truncate">
-                      <span className="text-[10px] text-[#1e1e2f] leading-none">
+                      <span className="text-[10px] text-[#25233A] leading-none">
                         ■
                       </span>
-                      <span className="font-bold text-xs uppercase text-[#1e1e2f] tracking-wider truncate">
+                      <span className="font-bold text-xs uppercase text-[#25233A] tracking-wider truncate">
                         {item.exeName}
                       </span>
                     </div>
@@ -527,11 +535,11 @@ export default function ContactSection() {
                     </div>
 
                     <div className="flex-1 min-w-0">
-                      <h3 className="font-bold text-sm text-[#1e1e2f] uppercase tracking-wide">
+                      <h3 className="font-bold text-sm text-[#25233A] uppercase tracking-wide">
                         {item.title}
                       </h3>
 
-                      <p className="font-mono text-[10px] sm:text-xs text-[#64748b] mt-0.5 leading-tight">
+                      <p className="font-mono text-[10px] sm:text-xs text-[#4B556B] mt-0.5 leading-tight">
                         {item.line1}
                       </p>
 
@@ -542,32 +550,21 @@ export default function ContactSection() {
                           rel="noopener noreferrer"
                           className="group/loc mt-2.5 inline-flex flex-col cursor-pointer transition-all duration-200"
                         >
-                          <span
-                            className="inline-flex items-center gap-1.5 font-mono text-xs sm:text-sm font-bold transition-colors duration-200 group-hover/loc:text-[#ff2a85] underline underline-offset-4"
-                            style={{
-                              color: item.accentColor,
-                              textDecorationColor: "#ff2a85",
-                            }}
-                          >
-                            <MapPin className="h-3.5 w-3.5 shrink-0 transition-transform duration-200 group-hover/loc:-translate-y-0.5" />
+                          <span className="inline-flex items-center gap-1.5 font-mono text-xs sm:text-sm font-bold text-[#5A315D] transition-colors duration-200 group-hover/loc:text-[#FF3B8D] underline underline-offset-4 decoration-[#5A315D]/40 group-hover/loc:decoration-[#FF3B8D]">
+                            <MapPin className="h-3.5 w-3.5 shrink-0 text-[#FF3B8D] transition-transform duration-200 group-hover/loc:-translate-y-0.5" />
                             <span>{item.value}</span>
-                            <span className="text-[11px] opacity-70 transition-transform duration-200 group-hover/loc:translate-x-0.5 group-hover/loc:-translate-y-0.5">
+                            <span className="text-[11px] text-[#FF3B8D] opacity-80 transition-transform duration-200 group-hover/loc:translate-x-0.5 group-hover/loc:-translate-y-0.5">
                               ↗
                             </span>
                           </span>
-                          <span className="mt-1 font-mono text-[10px] text-[#71717a] group-hover/loc:text-[#ff2a85]/90 transition-colors duration-200">
+                          <span className="mt-1 font-mono text-[10px] text-[#4B556B] group-hover/loc:text-[#FF3B8D] transition-colors duration-200">
                             Click to view location on map
                           </span>
                         </a>
                       ) : (
                         <a
                           href={item.href}
-                          className="mt-2 inline-block font-mono text-xs sm:text-sm font-bold break-all transition-colors underline underline-offset-4 cursor-pointer hover:opacity-80"
-                          style={{
-                            color: item.accentColor,
-                            textDecorationColor:
-                              item.id === "email" ? "#00c2cb" : "#ff2a85",
-                          }}
+                          className="mt-2 inline-block font-mono text-xs sm:text-sm font-bold break-all transition-colors underline underline-offset-4 cursor-pointer text-[#243B64] hover:text-[#FF3B8D] decoration-[#243B64]/40 hover:decoration-[#FF3B8D]"
                         >
                           {item.value}
                         </a>
