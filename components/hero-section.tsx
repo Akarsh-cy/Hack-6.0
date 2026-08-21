@@ -200,7 +200,36 @@ export default function HeroSection() {
                 </h1>
               </motion.div>
 
-              {/* Devfolio */}
+              {/* Aesthetic Register Button */}
+              <motion.div variants={item} className="mt-8 mb-12 relative z-20 flex justify-center">
+                <a
+                  href="https://hack-1158.devfolio.co/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="
+                    inline-block
+                    bg-[#ff2a85]
+                    text-white
+                    font-mono
+                    font-bold
+                    uppercase
+                    tracking-[0.2em]
+                    text-lg md:text-xl
+                    px-10 py-4
+                    border-2 border-[#292929]
+                    shadow-[5px_5px_0px_#00f0ff]
+                    hover:shadow-[7px_7px_0px_#00f0ff]
+                    active:shadow-[2px_2px_0px_#00f0ff]
+                    active:translate-y-[3px]
+                    active:translate-x-[3px]
+                    transition-all duration-200
+                  "
+                >
+                  [ Register Now ]
+                </a>
+              </motion.div>
+
+              {/* Devfolio 
               <motion.div
                   variants={item}
                   className="flex justify-center mt-12"
@@ -217,6 +246,8 @@ export default function HeroSection() {
                   Apply with Devfolio
                 </div>
               </motion.div>
+              */}
+
             </motion.div>
           </div>
 
