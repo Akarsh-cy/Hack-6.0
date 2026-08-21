@@ -197,7 +197,7 @@ export default function Navbar() {
                         onClick={(e) => handleNavLinkClick(e, "#home")}
                         className="text-2xl md:text-4xl font-black text-[#ff2a85] drop-shadow-[2px_2px_0px_#00f0ff] ml-1 tracking-wider"
                     >
-                      HACK<span className="text-white drop-shadow-[2px_2px_0px_#ff2a85]"> 5.0</span>
+                      HACK<span className="text-white drop-shadow-[2px_2px_0px_#ff2a85]"> 6.0</span>
                     </a>
                   </motion.div>
               )}
