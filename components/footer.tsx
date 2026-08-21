@@ -114,7 +114,7 @@ export default function Footer() {
     },
     {
       label: "Instagram",
-      href: "https://www.instagram.com/hacknith?igsh=N3VtczNwa3pjNjNo",
+      href: "https://www.instagram.com/csec_nith/",
       icon: Instagram,
       hoverClass:
         "hover:text-[#ff2a85] hover:border-[#ff2a85]/40 hover:bg-[#ff2a85]/10 hover:shadow-[0_0_15px_rgba(255,42,133,0.3)]",
