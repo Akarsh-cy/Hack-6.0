@@ -187,7 +187,8 @@ const TeamCard = ({
             viewport={{ once: true, margin: "-40px" }}
             whileHover={{ y: -7 }}
             onMouseEnter={handleMouseEnter}
-            className="group relative z-0 origin-center"
+            /* Added w-[80%] and mx-auto to scale down the card smoothly by 20% */
+            className="group relative z-0 origin-center w-[80%] mx-auto"
         >
             {/* Cyan offset window */}
             <div className="pointer-events-none absolute -right-2 -bottom-2 left-2 top-2 border-2 border-[#00ffff]" />
