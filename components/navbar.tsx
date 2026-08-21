@@ -50,26 +50,39 @@ export default function Navbar() {
       const isScrolled = window.scrollY > 10;
       setScrolled(isScrolled);
 
-      // Show HACK 5.0 text only when scrolled away from hero section
+      // Show HACK 6.0 text only when scrolled away from hero section
       const heroSection = document.getElementById("home");
       if (heroSection) {
         const heroHeight = heroSection.offsetHeight;
         setShowHackText(window.scrollY > heroHeight * 0.5);
       }
 
-      // Update active section based on scroll position
-      const sections = navLinks.map((link) => link.href.substring(1));
+      // Filter out external routes (like /team) and get only valid hash links
+      const pageSections = navLinks
+        .filter((link) => link.href.startsWith("#"))
+        .map((link) => link.href.substring(1));
 
-      for (const section of sections.reverse()) {
+      let currentActive = "home"; // Default fallback
+
+      for (const section of pageSections) {
         const element = document.getElementById(section);
-        if (element && window.scrollY >= element.offsetTop - 200) {
-          setActiveSection(section);
-          break;
+        if (element) {
+          // 150px offset to trigger slightly before the section hits the top
+          // This prevents it from getting stuck and guarantees smooth transitions
+          if (window.scrollY >= element.offsetTop - 150) {
+            currentActive = section;
+          }
         }
       }
+
+      setActiveSection(currentActive);
     };
 
     window.addEventListener("scroll", handleScroll);
+    
+    // Call once on mount to set initial state correctly
+    handleScroll();
+    
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
@@ -80,19 +93,23 @@ export default function Navbar() {
   ) => {
     e.preventDefault();
     console.log(`handleNavLinkClick triggered with href: ${href}`);
+    
     if (href.startsWith("/")) {
       router.push(href);
       setIsOpen(false);
       return;
     }
+    
     const sectionId = href.substring(1); // Remove the # from the href
     console.log(`Extracted section ID: ${sectionId}`);
+    
     if (sectionId === "team") {
       router.push("/team");
     }
     if (sectionId === "judges") {
       router.push("/judges");
     }
+    
     scrollToSection(sectionId);
     setIsOpen(false); // Close mobile menu if open
   };
