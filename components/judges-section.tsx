@@ -336,7 +336,8 @@ export default function JudgesSection() {
             transition={{
                 duration: 0.8,
             }}
-            className="relative overflow-hidden py-24"
+            // Added z-10 here to establish a safe stacking context
+            className="relative z-10 overflow-hidden py-24"
         >
             <div id="judges-section" className="container relative mx-auto px-6">
                 {/* ============================================================
