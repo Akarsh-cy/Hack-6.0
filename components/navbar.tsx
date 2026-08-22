@@ -64,15 +64,21 @@ export default function Navbar() {
 
       let currentActive = "home"; // Default fallback
 
+      // Use getBoundingClientRect for bulletproof scroll tracking
       for (const section of pageSections) {
         const element = document.getElementById(section);
         if (element) {
-          // 150px offset to trigger slightly before the section hits the top
-          // This prevents it from getting stuck and guarantees smooth transitions
-          if (window.scrollY >= element.offsetTop - 150) {
+          const rect = element.getBoundingClientRect();
+          // Trigger when section comes within 300px of the top of the screen
+          if (rect.top <= 300) {
             currentActive = section;
           }
         }
+      }
+
+      // Special case: If user scrolls to the absolute bottom of the page, highlight the last section (Contact)
+      if (window.innerHeight + Math.round(window.scrollY) >= document.body.offsetHeight - 50) {
+        currentActive = pageSections[pageSections.length - 1];
       }
 
       setActiveSection(currentActive);
@@ -92,7 +98,6 @@ export default function Navbar() {
       href: string
   ) => {
     e.preventDefault();
-    console.log(`handleNavLinkClick triggered with href: ${href}`);
     
     if (href.startsWith("/")) {
       router.push(href);
@@ -101,7 +106,6 @@ export default function Navbar() {
     }
     
     const sectionId = href.substring(1); // Remove the # from the href
-    console.log(`Extracted section ID: ${sectionId}`);
     
     if (sectionId === "team") {
       router.push("/team");
