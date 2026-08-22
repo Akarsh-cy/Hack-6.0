@@ -25,58 +25,44 @@ const teamData: TeamGroup[] = [
         title: "Group 1",
         members: [
             {
-                name: "Prince Jaiswal",
-                role: "Student Coordinator",
-                image:
-                    "https://res.cloudinary.com/dnbf0uwku/image/upload/v1726945441/IMG_20230720_192947_flr5wg.jpg",
+                name: "Abhishika",
+                role: "Executive",
+                image: "https://res.cloudinary.com/dqftjf73g/image/upload/v1770051535/IMG_20251223_153641_284_ivwq8b.jpg",
             },
             {
-                name: "Ankush Thakur",
-                role: "Lead Organizer",
-                image:
-                    "https://res.cloudinary.com/dkcrhkz4m/image/upload/v1738080439/IMG_20240720_122823_ikkncj.jpg",
+                name: "Anshu Kumari",
+                role: "Executive",
+                image: "https://res.cloudinary.com/dqftjf73g/image/upload/v1770051544/anshu_ddqvhu.jpg",
             },
             {
-                name: "Harshal Sakhare",
-                role: "Lead Organizer",
-                image:
-                    "https://res.cloudinary.com/dkcrhkz4m/image/upload/v1738079965/Harshal_1_ljrjiy.jpg",
+                name: "Aryaman Chauhan",
+                role: "Executive",
+                image: "https://res.cloudinary.com/dqftjf73g/image/upload/v1770051507/IMG-20260111-WA0184_bkqlzj.jpg",
             },
             {
-                name: "Aditya Kumar",
-                role: "Treasurer",
-                image:
-                    "https://res.cloudinary.com/dkcrhkz4m/image/upload/v1738080338/IMG_0237_beywm0.jpg",
+                name: "Aryan",
+                role: "Executive",
+                image: "https://res.cloudinary.com/dqftjf73g/image/upload/v1770051509/PFP_orcdec.jpg",
             },
             {
-                name: "Arnav Gupta",
-                role: "Treasurer",
-                image:
-                    "https://res.cloudinary.com/dkcrhkz4m/image/upload/v1738080697/e6a54564-6a33-48e1-ac19-e847758fd349_hqfhh8.jpg",
+                name: "Ayushi",
+                role: "Executive",
+                image: "https://res.cloudinary.com/dqftjf73g/image/upload/v1770051547/IMG_003529_0_Original_xmm6us.jpg",
             },
             {
-                name: "Antriksh Katna",
-                role: "Marketing Head & External Affairs",
-                image:
-                    "https://res.cloudinary.com/dnbf0uwku/image/upload/v1741529798/-ktgck2_dhyxpv.jpg",
+                name: "Bhola Prasad Sah",
+                role: "Executive",
+                image: "https://res.cloudinary.com/dkcrhkz4m/image/upload/v1738088411/1738076772514_ql73vg.jpg",
             },
             {
-                name: "Tanamy Sharma",
-                role: "Marketing Head & External Affairs",
-                image:
-                    "https://res.cloudinary.com/dnif0edly/image/upload/v1728535568/IMG-20240307-WA0033_mfojpp.jpg",
+                name: "Chetna Singh",
+                role: "Executive",
+                image: "https://res.cloudinary.com/dkcrhkz4m/image/upload/v1738134304/c823d071-af30-45a7-9182-a85015e0cb33_fn17g3.jpg",
             },
             {
-                name: "Tanishq Chauhan",
-                role: "Internal Affairs",
-                image:
-                    "https://res.cloudinary.com/dnbf0uwku/image/upload/v1726945307/IMG_20231001_124926_evwtzl.jpg",
-            },
-            {
-                name: "Tanishq Verma",
-                role: "Internal Affairs",
-                image:
-                    "https://res.cloudinary.com/dnbf0uwku/image/upload/v1726945246/IMG_20240414_053937_668_nbxfaq.jpg",
+                name: "Jatin",
+                role: "Executive",
+                image: "https://res.cloudinary.com/dkpnbush2/image/upload/v1771081952/WhatsApp_Image_2026-02-14_at_5.03.05_PM_zmsnhm.jpg",
             },
         ],
     },
@@ -84,52 +70,74 @@ const teamData: TeamGroup[] = [
         title: "Group 2",
         members: [
             {
-                name: "Avinash Sharma",
-                role: "Web Lead",
-                image:
-                    "https://res.cloudinary.com/dnbf0uwku/image/upload/v1739191084/AVIN_exe_uu0yqx_k2wamg.webp",
+                name: "Khushvinder",
+                role: "Executive",
+                image: "https://res.cloudinary.com/dqftjf73g/image/upload/v1770051540/IMG-20250606-WA0026_wdhj8i.jpg",
             },
             {
-                name: "Kirti Sharma",
-                role: "Web Lead",
-                image:
-                    "https://res.cloudinary.com/dkcrhkz4m/image/upload/v1738080065/IMG-20241110-WA0018_1_anaulw.jpg",
+                name: "Lavish",
+                role: "Executive",
+                image: "https://res.cloudinary.com/dtrv7xbm5/image/upload/v1768491424/lavish_peoxgv.jpg",
             },
             {
-                name: "Shryansh",
-                role: "Web Lead",
-                image:
-                    "https://res.cloudinary.com/dkcrhkz4m/image/upload/v1738136152/csec_shry_kwh5tn.jpg",
+                name: "Manoj Mohi",
+                role: "Executive",
+                image: "https://i.ibb.co/MyT4MBzB/My-photo.jpg",
             },
             {
-                name: "Arshita Kangoo",
-                role: "Public Relations",
-                image:
-                    "https://res.cloudinary.com/dnbf0uwku/image/upload/v1726945377/IMG_20240920_223145_tc4rbp.jpg",
+                name: "Mohammad Asad",
+                role: "Executive",
+                image: "https://res.cloudinary.com/dqftjf73g/image/upload/v1770053013/1768897004233_ihwvo4.jpg",
             },
             {
-                name: "Krishna Narzary",
-                role: "Media & Promotions",
-                image:
-                    "https://res.cloudinary.com/dvnrlqqpq/image/upload/v1728579687/krishna_zp05q6.jpg",
+                name: "Neerad Sood",
+                role: "Executive",
+                image: "https://res.cloudinary.com/dqftjf73g/image/upload/v1770051986/20260124_141323_y7mnq7.jpg",
             },
             {
-                name: "Akash Kanwar",
-                role: "Discipline Head",
-                image:
-                    "https://res.cloudinary.com/dvnrlqqpq/image/upload/v1739960542/akash_bqdy3d.jpg",
+                name: "Raman Bansal",
+                role: "Executive",
+                image: "https://res.cloudinary.com/dkpnbush2/image/upload/v1771082448/DSC_3638.JPG_s7l02t.jpg",
             },
             {
-                name: "Himanshu Gupta",
-                role: "Technical Lead",
-                image:
-                    "https://res.cloudinary.com/dvnrlqqpq/image/upload/v1739194635/WhatsApp_Image_2025-02-10_at_18.19.54_eddb4d72_dah6jq.jpg",
+                name: "Sameer Varshney",
+                role: "Executive",
+                image: "https://res.cloudinary.com/dqftjf73g/image/upload/v1770051518/IMG_20240919_214713_277_Original_t9f7dp.jpg",
             },
             {
-                name: "Lakshay Kantiwal",
-                role: "Discipline Head",
-                image:
-                    "https://res.cloudinary.com/dnbf0uwku/image/upload/v1741533922/DSC_0568_diq1x9.jpg",
+                name: "Sanket Singh Sameer",
+                role: "Executive",
+                image: "https://res.cloudinary.com/dqftjf73g/image/upload/v1770051533/1000156654-01_ridyfs_f5n46n.jpg",
+            },
+        ],
+    },
+    {
+        title: "Group 3",
+        members: [
+            {
+                name: "Sourav Choudhary",
+                role: "Executive",
+                image: "https://res.cloudinary.com/dqftjf73g/image/upload/v1770051556/IMG-20260120-WA0006_allwpg.jpg",
+            },
+            {
+                name: "Sujal",
+                role: "Executive",
+                image: "https://res.cloudinary.com/dkpnbush2/image/upload/v1771082595/WhatsApp_Image_2026-02-14_at_8.52.00_PM_gpv3h8.jpg",
+            },
+            {
+                name: "Sumit Kumar",
+                role: "Executive",
+                image: "https://res.cloudinary.com/dqftjf73g/image/upload/v1770051564/BeautyPlus_20251111031426182_save_yis9r7.jpg",
+            },
+            {
+                name: "Utkarsh Shukla",
+                role: "Executive",
+                image: "https://res.cloudinary.com/dqftjf73g/image/upload/v1770052951/image_utkarsh_dh2ard.png",
+            },
+            {
+                name: "Hridanshu",
+                role: "Executive",
+                image: "https://res.cloudinary.com/dfgnzhgko/image/upload/v1771672514/WhatsApp_Image_2026-02-21_at_4.44.29_PM_fo8odm.jpg",
             },
         ],
     },
