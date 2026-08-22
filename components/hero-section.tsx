@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { motion } from "framer-motion"
+import { motion, useScroll, useTransform } from "framer-motion"
 import { useGlitch } from "react-powerglitch"
 import localFont from "next/font/local"
 
@@ -11,6 +11,11 @@ const Hacked_KerX = localFont({
 })
 
 export default function HeroSection() {
+  // Parallax effect for the background image
+  const { scrollY } = useScroll()
+  // As the user scrolls down 1000px, the background only moves down 300px
+  const backgroundY = useTransform(scrollY, [0, 1000], ["0%", "30%"])
+
   // Main title glitch with pink/cyan slice tear
   const glitch = useGlitch({
     timing: {
@@ -30,7 +35,7 @@ export default function HeroSection() {
     },
   })
 
-  const targetDate = new Date("2025-03-21T23:59:00").getTime()
+  const targetDate = new Date("2026-10-09T00:00:00").getTime()
 
   const [timeLeft, setTimeLeft] = useState({
     days: "00",
@@ -38,21 +43,6 @@ export default function HeroSection() {
     minutes: "00",
     seconds: "00",
   })
-
-  // Devfolio script
-  useEffect(() => {
-    const script = document.createElement("script")
-    script.src = "https://apply.devfolio.co/v2/sdk.js"
-    script.async = true
-    script.defer = true
-    document.body.appendChild(script)
-
-    return () => {
-      if (document.body.contains(script)) {
-        document.body.removeChild(script)
-      }
-    }
-  }, [])
 
   // Countdown
   function calculateTimeLeft() {
@@ -127,15 +117,35 @@ export default function HeroSection() {
   }
 
   return (
-      <section id="home" className="relative select-none">
-        <div className="h-screen flex flex-col">
+      <section id="home" className="relative select-none overflow-hidden bg-[#0e0419]">
+        
+        {/* PARALLAX BACKGROUND IMAGE */}
+        <motion.div 
+          style={{ y: backgroundY }}
+          className="absolute inset-0 w-full h-[120%] z-0"
+        >
+          <img 
+            src="/7529524373709043.jpg" 
+            alt="Retro Vaporwave City" 
+            className="w-full h-full object-cover"
+            style={{
+              // These filters tune the image to match your site's aesthetic perfectly
+              filter: "brightness(0.7) contrast(1.15) saturate(1.3) hue-rotate(-10deg)"
+            }}
+          />
+        </motion.div>
+
+        {/* SMOOTH DARK PURPLE TRANSITION GRADIENT */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-[#0e0419]/40 to-[#0e0419] z-10 pointer-events-none"></div>
+
+        <div className="h-screen flex flex-col relative z-20">
           {/* Navbar spacing */}
           <div className="h-20" />
 
           {/* Main content */}
           <div className="flex-1 flex items-center justify-center">
             <motion.div
-                className="container mx-auto px-4 z-10 text-center"
+                className="container mx-auto px-4 text-center"
                 variants={container}
                 initial="hidden"
                 animate="show"
@@ -228,31 +238,11 @@ export default function HeroSection() {
                   [ Register Now ]
                 </a>
               </motion.div>
-
-              {/* Devfolio 
-              <motion.div
-                  variants={item}
-                  className="flex justify-center mt-12"
-              >
-                <div
-                    className="apply-button"
-                    data-hackathon-slug="hack-1158"
-                    data-button-theme="dark-inverted"
-                    style={{
-                      height: "44px",
-                      width: "312px",
-                    }}
-                >
-                  Apply with Devfolio
-                </div>
-              </motion.div>
-              */}
-
             </motion.div>
           </div>
 
           {/* Countdown */}
-          <div className="w-full px-4 pb-12 sm:pb-16">
+          <div className="w-full px-4 pb-12 sm:pb-16 relative z-20">
             <motion.div
                 variants={container}
                 initial="hidden"
@@ -288,7 +278,7 @@ export default function HeroSection() {
                       p-2
                       md:p-3
                       border-2
-                      border-black
+                      border-[#292929]
                       shadow-[3px_3px_0px_#00f0ff]
                       flex
                       flex-col
