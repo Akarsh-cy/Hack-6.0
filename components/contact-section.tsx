@@ -7,6 +7,7 @@ import {
   Phone,
   Send,
   CheckCircle2,
+  AlertCircle,
 } from "lucide-react";
 import {
   motion,
@@ -289,29 +290,46 @@ export default function ContactSection() {
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState<"idle" | "success">("idle");
+  const [submitStatus, setSubmitStatus] = useState<"idle" | "success" | "error">("idle");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
     setIsSubmitting(true);
     setSubmitStatus("idle");
 
-    setTimeout(() => {
-      setIsSubmitting(false);
-      setSubmitStatus("success");
-
-      setForm({
-        name: "",
-        email: "",
-        subject: "",
-        message: "",
+    try {
+      const response = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          access_key: "3fa442a1-9ac9-4751-ab62-8716bc1c6c8b",
+          name: form.name,
+          email: form.email,
+          subject: form.subject,
+          message: form.message,
+          from_name: "HACK 6.0 Contact Dispatcher",
+        }),
       });
 
-      setTimeout(() => {
-        setSubmitStatus("idle");
-      }, 5000);
-    }, 1000);
+      const result = await response.json();
+
+      if (result.success) {
+        setSubmitStatus("success");
+        setForm({ name: "", email: "", subject: "", message: "" });
+        setTimeout(() => setSubmitStatus("idle"), 5000);
+      } else {
+        setSubmitStatus("error");
+        setTimeout(() => setSubmitStatus("idle"), 5000);
+      }
+    } catch (error) {
+      setSubmitStatus("error");
+      setTimeout(() => setSubmitStatus("idle"), 5000);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -445,7 +463,7 @@ export default function ContactSection() {
                     />
                   </div>
 
-                  {/* SUCCESS MESSAGE */}
+                  {/* STATUS MESSAGES */}
                   {submitStatus === "success" && (
                     <motion.div
                       initial={{ opacity: 0, y: -6 }}
@@ -454,6 +472,17 @@ export default function ContactSection() {
                     >
                       <CheckCircle2 size={16} className="shrink-0" />
                       <span>TRANSMISSION SENT SUCCESSFULLY</span>
+                    </motion.div>
+                  )}
+
+                  {submitStatus === "error" && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -6 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="flex items-center gap-2 border-2 border-[#1e1e2f] bg-[#ffe4e6] p-3 font-mono text-xs font-bold text-[#e11d48] shadow-[3px_3px_0_#FF3B8D]"
+                    >
+                      <AlertCircle size={16} className="shrink-0" />
+                      <span>TRANSMISSION FAILED. PLEASE RETRY.</span>
                     </motion.div>
                   )}
 
